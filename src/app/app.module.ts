@@ -5,6 +5,10 @@ import { AppComponent } from './app.component';
 import {AngularFireModule} from '@angular/fire';
 import {environment} from '../environments/environment';
 import {AngularFirestoreModule} from '@angular/fire/firestore';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {AppRoutingModule} from './app-routing.module';
+import { NgxAuthFirebaseUIModule } from 'ngx-auth-firebaseui';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -12,8 +16,11 @@ import {AngularFirestoreModule} from '@angular/fire/firestore';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
+    AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
-    AngularFirestoreModule
+    AngularFirestoreModule,
+    // NgxAuthFirebaseUIModule.forRoot(environment.firebaseConfig)  // auth ui module
   ],
   providers: [],
   bootstrap: [AppComponent]

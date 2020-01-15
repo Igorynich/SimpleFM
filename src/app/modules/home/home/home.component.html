@@ -1,0 +1,39 @@
+<!--<div class="row">
+  <div class="col-9"></div>
+  <div class="col-3">
+    <ngx-auth-firebaseui (onSuccess)="printUser($event)"
+                         (onError)="printError($event)" [providers]="authProviders">
+    </ngx-auth-firebaseui>
+  </div>
+</div>-->
+<div class="row justify-content-center">
+  <div class="col-8">
+    <mat-card class="enter-name-card">
+      <div class="row justify-content-center">
+        <div class="col-12">
+          <h2 class="enter-name-header text-center">
+            Добро пожаловать в SimpleFM. Пожалуйста, введите свое имя, чтобы начать игру:
+          </h2>
+        </div>
+      </div>
+
+      <div class="row justify-content-center">
+        <div class="col-5">
+          <mat-form-field hintLabel="Максимум 20 символов" class="enter-name-ff w-100 mt-5">
+            <input matInput #input maxlength="20" placeholder="Введите имя" autocomplete="off" [formControl]="userName"
+                   (keyup.enter)="submitName()" autofocus>
+            <mat-hint align="end">{{input.value?.length || 0}}/20</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row justify-content-center mt-5">
+        <div class="col-4">
+          <button class="w-100" mat-flat-button color="primary" (click)="submitName()" [disabled]="userName.invalid">
+            Начать игру!
+          </button>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>

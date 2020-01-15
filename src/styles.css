@@ -1,1 +1,18 @@
+@import '~bootstrap/dist/css/bootstrap-grid.min.css';
+@import '~bootstrap/dist/css/bootstrap.min.css';
+
 /* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.main-background {
+  /*background-color: darkolivegreen;*/
+  background: url('assets/images/soccer-field-background.jpg') repeat;
+  -moz-background-size: 100%; /* Firefox 3.6+ */
+  -webkit-background-size: 100%; /* Safari 3.1+ и Chrome 4.0+ */
+  -o-background-size: 100%; /* Opera 9.6+ */
+  background-size: 100%; /* Современные браузеры */
+  /*background-image: url("assets/images/soccer-field-background.jpg");*/
+  height: 100%;
+}

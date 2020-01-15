@@ -1,0 +1,33 @@
+/* some auth styles \/*/
+/*.mat-tab-label {
+  height: 25px !important;
+}
+.mat-card {
+  margin: 1rem !important;
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.5rem !important;
+  padding-bottom: 10px !important;
+  padding-top: 10px !important;
+}
+.mat-card-title {
+  font-size: 16px !important;
+}
+.mat-card-content, .mat-card-subtitle {
+  font-size: 12px !important;
+}
+.space-top {
+  margin-top: 0.5rem !important;
+}
+.mat-raised-button, .mat-button {
+  line-height: 26px !important;
+}
+.signed-in-container .account-circle {
+  width: 3rem !important;
+  height: 3rem !important;
+}*/
+.enter-name-card {
+  position: relative;
+  top: 30vh;
+  height: 40vh;
+  background-color: navajowhite;
+}
