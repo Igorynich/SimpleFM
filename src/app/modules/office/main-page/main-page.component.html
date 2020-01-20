@@ -4,14 +4,18 @@
       <div class="row justify-content-center h-25 pb-5">
         <div class="col">
           <mat-card class="office-card--top-panel h-100">
-
+            <p class="text-right">{{userService.userName}}</p>
+            <button mat-raised-button color="accent" (click)="navigateToAdmin()" class="float-right"
+                    *ngIf="userService.isAdmin()">
+              Админка
+            </button>
           </mat-card>
         </div>
       </div>
       <div class="row justify-content-center h-75">
         <div class="col">
           <mat-card class="office-card--bot-panel h-100">
-
+            <router-outlet></router-outlet>
           </mat-card>
         </div>
       </div>

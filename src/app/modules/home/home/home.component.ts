@@ -24,7 +24,7 @@ export class HomeComponent implements OnInit {
   submitName() {
     console.log(this.userName.value);
     if (this.userName.valid) {
-      this.userService.setUserName(this.userName.value);
+      this.userService.userName = this.userName.value;
       this.router.navigate(['office']).catch(reason => {
         console.error('Navigation fail by ', reason);
       });

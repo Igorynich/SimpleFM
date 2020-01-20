@@ -13,7 +13,7 @@ export class UserGuard implements CanActivate, CanLoad {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    if (!!this.userService.getUserName()) {
+    if (!!this.userService.userName) {
       return true;
     }
     this.router.navigate(['']);
@@ -22,7 +22,7 @@ export class UserGuard implements CanActivate, CanLoad {
   canLoad(
     route: Route,
     segments: UrlSegment[]): Observable<boolean> | Promise<boolean> | boolean {
-    if (!!this.userService.getUserName()) {
+    if (!!this.userService.userName) {
       return true;
     }
     this.router.navigate(['']);

@@ -9,6 +9,7 @@ const routes = [
     path: 'office',
     loadChildren: () => import('./modules/office/office.module').then(mod => mod.OfficeModule),
     canLoad: [UserGuard],
+    data: { preload: true }
     // canActivate: [UserGuard]
   },
   {

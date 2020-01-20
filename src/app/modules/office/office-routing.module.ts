@@ -6,8 +6,14 @@ import {RouterModule} from '@angular/router';
 const officeRoutes = [
   {
     path: '',
-    component: MainPageComponent
-  }
+    component: MainPageComponent,
+    children: [
+      {
+        path: 'admin',
+        loadChildren: () => import('../admin/admin.module').then(mod => mod.AdminModule)
+      },
+    ]
+  },
 ];
 
 @NgModule({
