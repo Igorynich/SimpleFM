@@ -1,0 +1,33 @@
+<h2>Редактирование страны</h2>
+<div *ngIf="loaded">
+  <form [formGroup]="countryForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="col">
+        <mat-form-field class="w-100">
+          <input matInput placeholder="nameEn" formControlName="nameEn" required>
+          <!--<mat-error *ngIf="nameEn.invalid">{{getErrorMessage()}}</mat-error>-->
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <mat-form-field class="w-100">
+          <input matInput placeholder="nameRu" formControlName="nameRu" required>
+          <!--<mat-error *ngIf="nameEn.invalid">{{getErrorMessage()}}</mat-error>-->
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+  <div class="row">
+    <div class="col">
+      <button mat-raised-button color="warn" mat-dialog-close="false" class="float-right ml-3">
+        Отмена
+      </button>
+      <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="countryForm.invalid || this.countryForm.pristine" class="float-right">
+        Применить
+      </button>
+    </div>
+  </div>
+</div>
+
+

@@ -1,21 +1,47 @@
 <mat-tab-group (selectedTabChange)="loadAppropriateContent($event)">
+  <!--          Страны            -->
   <mat-tab label="Страны">
     <ng-template matTabContent>
-      <div *ngFor="let country of countries | async">
+      <!--<div *ngFor="let country of countries1 | async">
         {{country | json}}
-      </div>
+      </div>-->
+      <table mat-table [dataSource]="countries | async">
+
+        <ng-container matColumnDef="index">
+          <th mat-header-cell *matHeaderCellDef class="w-25 pl-0 pr-4">#</th>
+          <td mat-cell *matCellDef="let country; let i = index" class="pl-0 pr-4"> {{i + 1}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="nameRu">
+          <th mat-header-cell *matHeaderCellDef  class="w-25 text-center">NameRu</th>
+          <td mat-cell *matCellDef="let country" class="text-center"> {{country.nameRu}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="nameEn">
+          <th mat-header-cell *matHeaderCellDef  class="w-25 text-center">NameEn</th>
+          <td mat-cell *matCellDef="let country" class="text-center"> {{country.nameEn}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef  class="w-25 text-center">Actions</th>
+          <td mat-cell *matCellDef="let country" class="text-center">
+            <button mat-button color='primary' (click)="editCountryDialog(country)">Edit</button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsCountries; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsCountries;"></tr>
+      </table>
     </ng-template>
   </mat-tab>
+  <!--       Лиги         -->
   <mat-tab label="Лиги" class="w-100">
     <ng-template matTabContent>
-      <!--<div *ngFor="let league of leagues | async">
-        {{league | json}}
-      </div>-->
       <table mat-table [dataSource]="leagues | async">
 
         <ng-container matColumnDef="index">
           <th mat-header-cell *matHeaderCellDef class="pl-0 pr-4">#</th>
-          <td mat-cell *matCellDef="let league" class="pl-0 pr-4"> {{league.index}} </td>
+          <td mat-cell *matCellDef="let league; let i = index" class="pl-0 pr-4"> {{i + 1}} </td>
         </ng-container>
 
         <ng-container matColumnDef="nameRu">
@@ -28,9 +54,9 @@
           <td mat-cell *matCellDef="let league" class="text-center"> {{league.nameEn}} </td>
         </ng-container>
 
-        <ng-container matColumnDef="country">
+        <ng-container matColumnDef="countryNameEn">
           <th mat-header-cell *matHeaderCellDef  class="w-25 text-center">Страна</th>
-          <td mat-cell *matCellDef="let league" class="text-center"> {{league.country}} </td>
+          <td mat-cell *matCellDef="let league" class="text-center"> {{league.countryNameEn}} </td>
         </ng-container>
 
         <ng-container matColumnDef="altNameRu">
@@ -43,8 +69,15 @@
           <td mat-cell *matCellDef="let league" class="text-center"> {{league.altNameEn || '---'}} </td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef  class="w-25 text-center">Actions</th>
+          <td mat-cell *matCellDef="let league" class="text-center">
+            <button mat-button color='primary' (click)="editLeagueDialog(league)">Edit</button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsLeagues; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsLeagues;"></tr>
       </table>
 
 
