@@ -21,6 +21,16 @@ export class FirebaseService {
     return of(countryDoc.update(data));
   }
 
+  getLeague(id: string): Observable<League> {
+    console.log('getleague ', id);
+    return this.afs.doc<League>(`leagues/${id}`).valueChanges();
+  }
+
+  updateLeague(id: string, data: League): Observable<any> {
+    const leagueDoc = this.afs.doc<League>(`leagues/${id}`);
+    return of(leagueDoc.update(data));
+  }
+
   getCountries(): Observable<Country[]> {
     return this.afs.collection<Country>('countries').snapshotChanges().pipe(map(value => {
       console.log('countries', value);
@@ -45,6 +55,7 @@ export class FirebaseService {
           ...item.payload.doc.data()
         });
       });
+      console.log('leagues with id', leaguesArray);
       return leaguesArray;
     }));
   }

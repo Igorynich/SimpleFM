@@ -5,6 +5,7 @@ import {Country} from '../../../interfaces/country';
 import {League} from '../../../interfaces/league';
 import {EditCountryDialogComponent} from '../edit-country-dialog/edit-country-dialog.component';
 import {FirebaseService} from '../../../services/firebase.service';
+import {EditLeagueDialogComponent} from '../edit-league-dialog/edit-league-dialog.component';
 
 @Component({
   selector: 'app-admin-main-page',
@@ -17,7 +18,7 @@ export class AdminMainPageComponent implements OnInit {
   leagues: Observable<League[]>;
 
   displayedColumnsCountries: string[] = ['index', 'nameRu', 'nameEn', 'actions'];
-  displayedColumnsLeagues: string[] = ['index', 'nameRu', 'nameEn', 'countryNameEn', 'altNameRu', 'altNameEn'];
+  displayedColumnsLeagues: string[] = ['index', 'nameRu', 'nameEn', 'countryNameEn', 'altNameRu', 'altNameEn', 'actions'];
 
   constructor(private fs: FirebaseService, private dialog: MatDialog) { }
 
@@ -65,5 +66,13 @@ export class AdminMainPageComponent implements OnInit {
 
   editLeagueDialog(league: League) {
     console.log('EditLeagueDialog', league);
+    const dialogRef = this.dialog.open(EditLeagueDialogComponent, {
+      width: '350px',
+      data: league.id
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+    });
   }
 }

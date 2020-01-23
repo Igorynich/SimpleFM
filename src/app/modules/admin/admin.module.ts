@@ -2,9 +2,19 @@ import { NgModule } from '@angular/core';
 import {AsyncPipe, CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import { AdminMainPageComponent } from './admin-main-page/admin-main-page.component';
-import {MatButtonModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatTableModule, MatTabsModule} from '@angular/material';
+import {
+  MatButtonModule,
+  MatDialogModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatSelectModule,
+  MatTableModule,
+  MatTabsModule
+} from '@angular/material';
 import { EditCountryDialogComponent } from './edit-country-dialog/edit-country-dialog.component';
 import {ReactiveFormsModule} from '@angular/forms';
+import { EditLeagueDialogComponent } from './edit-league-dialog/edit-league-dialog.component';
+import {NgSelectModule} from '@ng-select/ng-select';
 
 const routes = [
   {
@@ -16,7 +26,8 @@ const routes = [
 @NgModule({
   declarations: [
     AdminMainPageComponent,
-    EditCountryDialogComponent
+    EditCountryDialogComponent,
+    EditLeagueDialogComponent
   ],
   imports: [
     CommonModule,
@@ -27,10 +38,13 @@ const routes = [
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSelectModule,
+    NgSelectModule
   ],
   entryComponents: [
-    EditCountryDialogComponent
+    EditCountryDialogComponent,
+    EditLeagueDialogComponent
   ]
 })
 export class AdminModule { }
