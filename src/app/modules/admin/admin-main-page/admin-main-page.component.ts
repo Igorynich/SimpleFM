@@ -65,7 +65,7 @@ export class AdminMainPageComponent implements OnInit {
   }
 
   editLeagueDialog(league: League) {
-    console.log('EditLeagueDialog', league);
+    console.log('EditLeagueDialog111', league);
     const dialogRef = this.dialog.open(EditLeagueDialogComponent, {
       width: '350px',
       data: league.id
