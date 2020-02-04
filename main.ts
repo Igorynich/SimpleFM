@@ -1,9 +1,8 @@
-// const { app, BrowserWindow } = require('electron');
-import { app, BrowserWindow, ipcMain, Menu, Tray } from 'electron';
+import {app, BrowserWindow, ipcMain, Menu, Tray, nativeImage} from 'electron';
 import * as url from 'url';
 import * as path from 'path';
 // @ts-ignore
-import { version } from './package.json';
+import {version} from './package.json';
 
 // Храните глобальную ссылку на объект окна, если вы этого не сделаете, окно будет
 // автоматически закрываться, когда объект JavaScript собирает мусор.
@@ -13,18 +12,19 @@ const args = process.argv.slice(1);
 const serve = args.some(val => val === '--serve');
 
 function createWindow() {
+  console.log('create window');
   // Создаём окно браузера.
   win = new BrowserWindow({
     width: 1200,
     height: 800,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      webSecurity: false
     },
     title: 'SimpleFM'
   });
   win.removeMenu();
   loadApp(win);
-
   // Будет вызвано, когда окно будет закрыто.
   win.on('closed', () => {
     // Разбирает объект окна, обычно вы можете хранить окна
@@ -38,9 +38,11 @@ let tray: Tray;
 
 function createTray(): Tray {
   console.log('Dirname', __dirname);
-  tray = serve
+  const icon = nativeImage.createFromPath(path.join(__dirname, 'src/favicon.ico'));
+  tray = new Tray(icon);
+  /*tray = serve
     ? new Tray(path.join(__dirname, 'src/favicon.ico'))
-    : new Tray(path.join(__dirname, 'dist/favicon.ico'));
+    : new Tray(path.join(__dirname, 'dist/SimpleFM/favicon.ico'));*/
 
   const menu = Menu.buildFromTemplate([
     /*{
@@ -57,6 +59,10 @@ function createTray(): Tray {
       label: 'Exit',
       type: 'normal',
       click: () => app.quit()
+    },
+    {
+      label: 'OtherExit',
+      role: 'quit'
     }
   ]);
   tray.setToolTip(`SimpleFM: ${version}`);
@@ -98,15 +104,18 @@ function loadApp(window: BrowserWindow, route: string = '') {
     });
     window.loadURL('http://localhost:4200' + route);
   } else {
+    console.log('lololo');
     const appUrl = url.format({
       pathname: path.join(__dirname, 'dist/SimpleFM/index.html'),
       protocol: 'file:',
       slashes: true
     });
+    console.log('prod url', appUrl + route);
     window.loadURL(appUrl + route);
   }
 
-  if (serve) {
-    window.webContents.openDevTools({mode: 'undocked'});
-  }
+  // if (serve) {
+  window.webContents.openDevTools({mode: 'undocked'});
+  console.log('Web Contents', window.webContents);
+  // }
 }

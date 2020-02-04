@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-// const { app, BrowserWindow } = require('electron');
 var electron_1 = require("electron");
 var url = require("url");
 var path = require("path");
@@ -12,12 +11,14 @@ var win = null;
 var args = process.argv.slice(1);
 var serve = args.some(function (val) { return val === '--serve'; });
 function createWindow() {
+    console.log('create window');
     // Создаём окно браузера.
     win = new electron_1.BrowserWindow({
         width: 1200,
         height: 800,
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true,
+            webSecurity: false
         },
         title: 'SimpleFM'
     });
@@ -34,9 +35,11 @@ function createWindow() {
 var tray;
 function createTray() {
     console.log('Dirname', __dirname);
-    tray = serve
-        ? new electron_1.Tray(path.join(__dirname, 'src/favicon.ico'))
-        : new electron_1.Tray(path.join(__dirname, 'dist/favicon.ico'));
+    var icon = electron_1.nativeImage.createFromPath(path.join(__dirname, 'src/favicon.ico'));
+    tray = new electron_1.Tray(icon);
+    /*tray = serve
+      ? new Tray(path.join(__dirname, 'src/favicon.ico'))
+      : new Tray(path.join(__dirname, 'dist/SimpleFM/favicon.ico'));*/
     var menu = electron_1.Menu.buildFromTemplate([
         /*{
           label: 'Open Settings',
@@ -52,6 +55,10 @@ function createTray() {
             label: 'Exit',
             type: 'normal',
             click: function () { return electron_1.app.quit(); }
+        },
+        {
+            label: 'OtherExit',
+            role: 'quit'
         }
     ]);
     tray.setToolTip("SimpleFM: " + package_json_1.version);
@@ -91,15 +98,18 @@ function loadApp(window, route) {
         window.loadURL('http://localhost:4200' + route);
     }
     else {
+        console.log('lololo');
         var appUrl = url.format({
             pathname: path.join(__dirname, 'dist/SimpleFM/index.html'),
             protocol: 'file:',
             slashes: true
         });
+        console.log('prod url', appUrl + route);
         window.loadURL(appUrl + route);
     }
-    if (serve) {
-        window.webContents.openDevTools({ mode: 'undocked' });
-    }
+    // if (serve) {
+    window.webContents.openDevTools({ mode: 'undocked' });
+    console.log('Web Contents', window.webContents);
+    // }
 }
 //# sourceMappingURL=main.js.map
