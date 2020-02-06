@@ -1,8 +1,9 @@
-import {app, BrowserWindow, ipcMain, Menu, Tray, nativeImage} from 'electron';
+import {app, BrowserWindow, ipcMain, Menu, Tray, nativeImage, globalShortcut } from 'electron';
 import * as url from 'url';
 import * as path from 'path';
 // @ts-ignore
 import {version} from './package.json';
+import Accelerator = Electron.Accelerator;
 
 // Храните глобальную ссылку на объект окна, если вы этого не сделаете, окно будет
 // автоматически закрываться, когда объект JavaScript собирает мусор.
@@ -10,6 +11,14 @@ let win: BrowserWindow = null;
 
 const args = process.argv.slice(1);
 const serve = args.some(val => val === '--serve');
+
+function registerShortcuts() {
+  ipcMain.on('register-shortcut', (event, accelerator: Accelerator, callback) => {
+    console.log('Accel', event, accelerator);
+    // globalShortcut.register(accelerator, callback);
+    event.returnValue = true;
+  });
+}
 
 function createWindow() {
   console.log('create window');
@@ -76,6 +85,8 @@ function createTray(): Tray {
 app.on('ready', () => {
   createWindow();
   createTray();
+  // registerShortcuts();
+  win.webContents.send('ready');
 });
 
 // Выходим, когда все окна будут закрыты.
@@ -95,16 +106,22 @@ app.on('activate', () => {
   }
 });
 
+app.on('will-quit', () => {
+  // Отменяем регистрацию сочетания клавиш.
+  // globalShortcut.unregister('CommandOrControl+X')
+
+  // Отменяем регистрацию всех сочетаний.
+  globalShortcut.unregisterAll();
+});
+
 function loadApp(window: BrowserWindow, route: string = '') {
   if (serve) {
-    console.log('lalala');
     require('electron-reload')(__dirname, {
       // electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
       electron: require(`${__dirname}/node_modules/electron`)
     });
     window.loadURL('http://localhost:4200' + route);
   } else {
-    console.log('lololo');
     const appUrl = url.format({
       pathname: path.join(__dirname, 'dist/SimpleFM/index.html'),
       protocol: 'file:',
@@ -116,6 +133,5 @@ function loadApp(window: BrowserWindow, route: string = '') {
 
   // if (serve) {
   window.webContents.openDevTools({mode: 'undocked'});
-  console.log('Web Contents', window.webContents);
   // }
 }

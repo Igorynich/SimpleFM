@@ -10,6 +10,13 @@ var package_json_1 = require("./package.json");
 var win = null;
 var args = process.argv.slice(1);
 var serve = args.some(function (val) { return val === '--serve'; });
+function registerShortcuts() {
+    electron_1.ipcMain.on('register-shortcut', function (event, accelerator, callback) {
+        console.log('Accel', event, accelerator);
+        // globalShortcut.register(accelerator, callback);
+        event.returnValue = true;
+    });
+}
 function createWindow() {
     console.log('create window');
     // Создаём окно браузера.
@@ -71,6 +78,8 @@ function createTray() {
 electron_1.app.on('ready', function () {
     createWindow();
     createTray();
+    // registerShortcuts();
+    win.webContents.send('ready');
 });
 // Выходим, когда все окна будут закрыты.
 electron_1.app.on('window-all-closed', function () {
@@ -87,10 +96,15 @@ electron_1.app.on('activate', function () {
         createWindow();
     }
 });
+electron_1.app.on('will-quit', function () {
+    // Отменяем регистрацию сочетания клавиш.
+    // globalShortcut.unregister('CommandOrControl+X')
+    // Отменяем регистрацию всех сочетаний.
+    electron_1.globalShortcut.unregisterAll();
+});
 function loadApp(window, route) {
     if (route === void 0) { route = ''; }
     if (serve) {
-        console.log('lalala');
         require('electron-reload')(__dirname, {
             // electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
             electron: require(__dirname + "/node_modules/electron")
@@ -98,7 +112,6 @@ function loadApp(window, route) {
         window.loadURL('http://localhost:4200' + route);
     }
     else {
-        console.log('lololo');
         var appUrl = url.format({
             pathname: path.join(__dirname, 'dist/SimpleFM/index.html'),
             protocol: 'file:',
@@ -109,7 +122,6 @@ function loadApp(window, route) {
     }
     // if (serve) {
     window.webContents.openDevTools({ mode: 'undocked' });
-    console.log('Web Contents', window.webContents);
     // }
 }
 //# sourceMappingURL=main.js.map
