@@ -11,7 +11,7 @@ var win = null;
 var args = process.argv.slice(1);
 var serve = args.some(function (val) { return val === '--serve'; });
 function registerShortcuts() {
-    electron_1.ipcMain.on('register-shortcut', function (event, accelerator, callback) {
+    electron_1.ipcMain.on("register-shortcut" /* RegisterShortcut */, function (event, accelerator, callback) {
         console.log('Accel', event, accelerator);
         // globalShortcut.register(accelerator, callback);
         event.returnValue = true;
@@ -40,6 +40,15 @@ function createWindow() {
     });
 }
 var tray;
+var showAdminIcon = false;
+electron_1.ipcMain.on("show-admin-tray-icon" /* ShowAdminTrayIcon */, function (event, args1) {
+    showAdminIcon = args1;
+    console.log('showAdminIcon', showAdminIcon);
+    if (tray) {
+        tray.destroy();
+        createTray();
+    }
+});
 function createTray() {
     console.log('Dirname', __dirname);
     var icon = electron_1.nativeImage.createFromPath(path.join(__dirname, 'src/favicon.ico'));
@@ -52,19 +61,21 @@ function createTray() {
           label: 'Open Settings',
           type: 'normal',
           click: () => win.webContents.send('show-user-settings'),
-        },
-        {
-          label: 'Restore Focus',
-          type: 'normal',
-          click: () => win.setIgnoreMouseEvents(true),
         },*/
         {
-            label: 'Exit',
+            label: 'Admin Panel',
             type: 'normal',
-            click: function () { return electron_1.app.quit(); }
+            accelerator: 'CmdOrCtrl+Shift+F9',
+            enabled: showAdminIcon,
+            click: function () {
+                win.webContents.send("admin-tray-click" /* AdminTrayClick */);
+            }
         },
         {
-            label: 'OtherExit',
+            type: 'separator'
+        },
+        {
+            label: 'Quit',
             role: 'quit'
         }
     ]);
@@ -79,7 +90,7 @@ electron_1.app.on('ready', function () {
     createWindow();
     createTray();
     // registerShortcuts();
-    win.webContents.send('ready');
+    win.webContents.send("ready" /* Ready */);
 });
 // Выходим, когда все окна будут закрыты.
 electron_1.app.on('window-all-closed', function () {
@@ -97,8 +108,7 @@ electron_1.app.on('activate', function () {
     }
 });
 electron_1.app.on('will-quit', function () {
-    // Отменяем регистрацию сочетания клавиш.
-    // globalShortcut.unregister('CommandOrControl+X')
+    // remove channel listeners?
     // Отменяем регистрацию всех сочетаний.
     electron_1.globalShortcut.unregisterAll();
 });

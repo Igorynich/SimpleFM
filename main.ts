@@ -4,6 +4,7 @@ import * as path from 'path';
 // @ts-ignore
 import {version} from './package.json';
 import Accelerator = Electron.Accelerator;
+import {Channels} from './src/app/constants/channels';
 
 // Храните глобальную ссылку на объект окна, если вы этого не сделаете, окно будет
 // автоматически закрываться, когда объект JavaScript собирает мусор.
@@ -12,8 +13,9 @@ let win: BrowserWindow = null;
 const args = process.argv.slice(1);
 const serve = args.some(val => val === '--serve');
 
+
 function registerShortcuts() {
-  ipcMain.on('register-shortcut', (event, accelerator: Accelerator, callback) => {
+  ipcMain.on(Channels.RegisterShortcut, (event, accelerator: Accelerator, callback) => {
     console.log('Accel', event, accelerator);
     // globalShortcut.register(accelerator, callback);
     event.returnValue = true;
@@ -45,6 +47,16 @@ function createWindow() {
 
 let tray: Tray;
 
+let showAdminIcon = false;
+ipcMain.on(Channels.ShowAdminTrayIcon, (event, args1) => {
+  showAdminIcon = args1;
+  console.log('showAdminIcon', showAdminIcon);
+  if (tray) {
+    tray.destroy();
+    createTray();
+  }
+});
+
 function createTray(): Tray {
   console.log('Dirname', __dirname);
   const icon = nativeImage.createFromPath(path.join(__dirname, 'src/favicon.ico'));
@@ -58,19 +70,21 @@ function createTray(): Tray {
       label: 'Open Settings',
       type: 'normal',
       click: () => win.webContents.send('show-user-settings'),
-    },
-    {
-      label: 'Restore Focus',
-      type: 'normal',
-      click: () => win.setIgnoreMouseEvents(true),
     },*/
     {
-      label: 'Exit',
+      label: 'Admin Panel',
       type: 'normal',
-      click: () => app.quit()
+      accelerator: 'CmdOrCtrl+Shift+F9',
+      enabled: showAdminIcon,
+      click: () => {
+        win.webContents.send(Channels.AdminTrayClick);
+      }
     },
     {
-      label: 'OtherExit',
+      type: 'separator'
+    },
+    {
+      label: 'Quit',
       role: 'quit'
     }
   ]);
@@ -86,7 +100,7 @@ app.on('ready', () => {
   createWindow();
   createTray();
   // registerShortcuts();
-  win.webContents.send('ready');
+  win.webContents.send(Channels.Ready);
 });
 
 // Выходим, когда все окна будут закрыты.
@@ -107,9 +121,7 @@ app.on('activate', () => {
 });
 
 app.on('will-quit', () => {
-  // Отменяем регистрацию сочетания клавиш.
-  // globalShortcut.unregister('CommandOrControl+X')
-
+  // remove channel listeners?
   // Отменяем регистрацию всех сочетаний.
   globalShortcut.unregisterAll();
 });

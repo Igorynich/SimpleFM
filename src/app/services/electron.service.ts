@@ -6,15 +6,15 @@ import {Remote, IpcRenderer, remote, ipcRenderer} from 'electron';
 })
 export class ElectronService {
 
-  private readonly electron;
+  // tslint:disable-next-line:variable-name
+  private readonly _electron;
 
   constructor() {
-    this.electron = window.require('electron');
+    this._electron = window.require('electron');
     console.log('Electron', this.electron);
   }
 
   get remote(): Remote {
-    console.log('Get Remote', this.electron, this.electron.remote);
     return this.electron.remote;
   }
 
@@ -22,8 +22,7 @@ export class ElectronService {
     return this.electron.ipcRenderer;
   }
 
-  getRemote(): Remote {
-    console.log('Get Remote func', this.electron, this.electron.remote);
-    return this.electron.remote;
+  get electron() {
+    return this._electron;
   }
 }
