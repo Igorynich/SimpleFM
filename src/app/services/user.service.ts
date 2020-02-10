@@ -14,10 +14,9 @@ export class UserService {
   constructor(private ipcRenderer: IpcRendererService) { }
 
   set userName(value: string) {
-    if (value) {
-      this._userName = value.trim();
-      this.ipcRenderer.showAdminTrayIcon(this.isAdmin());
-    }
+    this._userName = value.trim();
+    this.ipcRenderer.showAdminTrayIcon(this.isAdmin());
+    console.log('_username', this._userName);
   }
 
   get userName(): string {
@@ -26,5 +25,13 @@ export class UserService {
 
   isAdmin(): boolean {
     return this.userName === this._adminName;
+  }
+
+  isLogged() {
+    return !!this.userName;
+  }
+
+  logOut() {
+    this.userName = '';
   }
 }

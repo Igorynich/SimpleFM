@@ -20,4 +20,12 @@ export class MainPageComponent implements OnInit {
       console.error(reason);
     });
   }
+
+  logOut() {
+    this.router.navigate(['../'], {relativeTo: this.route}).then(value => {
+      this.userService.logOut();
+    }).catch(reason => {
+      console.error(reason);
+    });
+  }
 }
