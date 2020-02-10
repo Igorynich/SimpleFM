@@ -6,6 +6,7 @@ import {League} from '../../../interfaces/league';
 import {EditCountryDialogComponent} from '../edit-country-dialog/edit-country-dialog.component';
 import {FirebaseService} from '../../../services/firebase.service';
 import {EditLeagueDialogComponent} from '../edit-league-dialog/edit-league-dialog.component';
+import {AddCountryDialogComponent} from '../add-country-dialog/add-country-dialog.component';
 
 @Component({
   selector: 'app-admin-main-page',
@@ -20,7 +21,7 @@ export class AdminMainPageComponent implements OnInit {
   displayedColumnsCountries: string[] = ['index', 'nameRu', 'nameEn', 'actions'];
   displayedColumnsLeagues: string[] = ['index', 'nameRu', 'nameEn', 'countryNameEn', 'altNameRu', 'altNameEn', 'actions'];
 
-  constructor(private fs: FirebaseService, private dialog: MatDialog) { }
+  constructor(public fs: FirebaseService, private dialog: MatDialog) { }
 
   ngOnInit() {
     this.countries = this.fs.getCountries();
@@ -74,5 +75,19 @@ export class AdminMainPageComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed', result);
     });
+  }
+
+  addNewCountry() {
+    const dialogRef = this.dialog.open(AddCountryDialogComponent, {
+      width: '350px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+    });
+  }
+
+  addNewLeague() {
+
   }
 }

@@ -6,7 +6,7 @@ import {
   MatButtonModule,
   MatDialogModule,
   MatFormFieldModule,
-  MatInputModule,
+  MatInputModule, MatProgressSpinnerModule,
   MatSelectModule,
   MatTableModule,
   MatTabsModule
@@ -15,6 +15,7 @@ import { EditCountryDialogComponent } from './edit-country-dialog/edit-country-d
 import {ReactiveFormsModule} from '@angular/forms';
 import { EditLeagueDialogComponent } from './edit-league-dialog/edit-league-dialog.component';
 import {NgSelectModule} from '@ng-select/ng-select';
+import { AddCountryDialogComponent } from './add-country-dialog/add-country-dialog.component';
 
 const routes = [
   {
@@ -27,7 +28,8 @@ const routes = [
   declarations: [
     AdminMainPageComponent,
     EditCountryDialogComponent,
-    EditLeagueDialogComponent
+    EditLeagueDialogComponent,
+    AddCountryDialogComponent
   ],
   imports: [
     CommonModule,
@@ -40,11 +42,13 @@ const routes = [
     ReactiveFormsModule,
     MatDialogModule,
     MatSelectModule,
-    NgSelectModule
+    NgSelectModule,
+    MatProgressSpinnerModule
   ],
   entryComponents: [
     EditCountryDialogComponent,
-    EditLeagueDialogComponent
+    EditLeagueDialogComponent,
+    AddCountryDialogComponent
   ]
 })
 export class AdminModule { }
