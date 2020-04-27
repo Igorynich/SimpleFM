@@ -23,7 +23,7 @@
       <button mat-raised-button color="warn" mat-dialog-close="false" class="float-right ml-3">
         Отмена
       </button>
-      <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="countryForm.invalid || this.countryForm.pristine" class="float-right">
+      <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="countryForm.invalid || countryForm.pristine" class="float-right">
         Применить
       </button>
     </div>

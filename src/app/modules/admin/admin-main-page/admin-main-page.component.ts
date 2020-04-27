@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit, TemplateRef, ViewContainerRef} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {MatDialog, MatTabChangeEvent} from '@angular/material';
 import {Country} from '../../../interfaces/country';
@@ -7,6 +7,8 @@ import {EditCountryDialogComponent} from '../edit-country-dialog/edit-country-di
 import {FirebaseService} from '../../../services/firebase.service';
 import {EditLeagueDialogComponent} from '../edit-league-dialog/edit-league-dialog.component';
 import {AddCountryDialogComponent} from '../add-country-dialog/add-country-dialog.component';
+import {ConfirmationDialogComponent} from '../../../shared/confirmation-dialog/confirmation-dialog.component';
+import {switchMap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-admin-main-page',
@@ -20,6 +22,10 @@ export class AdminMainPageComponent implements OnInit {
 
   displayedColumnsCountries: string[] = ['index', 'nameRu', 'nameEn', 'actions'];
   displayedColumnsLeagues: string[] = ['index', 'nameRu', 'nameEn', 'countryNameEn', 'altNameRu', 'altNameEn', 'actions'];
+
+  cr: ViewContainerRef;
+  er: ElementRef;
+  tr: TemplateRef<any>;
 
   constructor(public fs: FirebaseService, private dialog: MatDialog) { }
 
@@ -89,5 +95,19 @@ export class AdminMainPageComponent implements OnInit {
 
   addNewLeague() {
 
+  }
+
+  deleteCountry(country: any) {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '350px'
+    });
+
+    dialogRef.afterClosed().pipe(switchMap(result => {
+      console.log('The dialog was closed', result);
+      if (result) {
+        return this.fs.deleteCountry(country.id);
+      }
+      return of(null);
+    }));
   }
 }

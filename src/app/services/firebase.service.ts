@@ -17,6 +17,32 @@ export class FirebaseService {
 
   constructor(private afs: AngularFirestore) { }
 
+  addCountry(country: Country): Observable<any> {
+    const countryCollection = this.afs.collection<Country>('countries');
+    return of(countryCollection.add(country)).pipe(map(value => {
+      console.log(value);
+      return value;
+    }));
+  }
+
+  addLeague(league: League): Observable<any> {
+    const leagueCollection = this.afs.collection<League>('league');
+    return of(leagueCollection.add(league)).pipe(map(value => {
+      console.log(value);
+      return value;
+    }));
+  }
+
+  deleteCountry(id: string) {
+    const countryDoc = this.afs.doc<Country>(`countries/${id}`);
+    return of(countryDoc.delete());
+  }
+
+  deleteLeague(id: string) {
+    const leagueDoc = this.afs.doc<League>(`leagues/${id}`);
+    return of(leagueDoc.delete());
+  }
+
   getCountry(id: string): Observable<Country> {
     return this.afs.doc<Country>(`countries/${id}`).valueChanges();
   }

@@ -8,7 +8,7 @@ import {AngularFirestoreModule} from '@angular/fire/firestore';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AppRoutingModule} from './app-routing.module';
 import { NgxAuthFirebaseUIModule } from 'ngx-auth-firebaseui';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {SharedModule} from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -16,6 +16,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
   ],
   imports: [
     BrowserModule,
+    SharedModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),

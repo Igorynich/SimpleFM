@@ -1,1 +1,42 @@
-<p>add-country-dialog works!</p>
+<div class="row">
+  <div class="col">
+    <h3>
+      Добавление новой страны
+    </h3>
+  </div>
+</div>
+<form [formGroup]="newCountryForm" (ngSubmit)="onSubmit()">
+  <div class="row">
+    <div class="col">
+      <mat-form-field class="w-100">
+        <input matInput placeholder="nameEn" formControlName="nameEn" required>
+        <!--<mat-error *ngIf="nameEn.invalid">{{getErrorMessage()}}</mat-error>-->
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <mat-form-field class="w-100">
+        <input matInput placeholder="nameRu" formControlName="nameRu" required>
+        <!--<mat-error *ngIf="nameEn.invalid">{{getErrorMessage()}}</mat-error>-->
+      </mat-form-field>
+    </div>
+  </div>
+</form>
+<div class="row">
+  <div class="col">
+    <p style="color: red">
+      {{errorMessage}}
+    </p>
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    <button mat-raised-button color="warn" mat-dialog-close="false" class="float-right ml-3">
+      Отмена
+    </button>
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="newCountryForm.invalid || newCountryForm.pristine" class="float-right">
+      Добавить
+    </button>
+  </div>
+</div>
