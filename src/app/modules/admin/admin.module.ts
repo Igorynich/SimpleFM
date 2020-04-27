@@ -2,15 +2,14 @@ import { NgModule } from '@angular/core';
 import {AsyncPipe, CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import { AdminMainPageComponent } from './admin-main-page/admin-main-page.component';
-import {
-  MatButtonModule,
-  MatDialogModule,
-  MatFormFieldModule,
-  MatInputModule, MatProgressSpinnerModule,
-  MatSelectModule,
-  MatTableModule,
-  MatTabsModule
-} from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
 import { EditCountryDialogComponent } from './edit-country-dialog/edit-country-dialog.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import { EditLeagueDialogComponent } from './edit-league-dialog/edit-league-dialog.component';
