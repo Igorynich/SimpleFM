@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "simplefm-a235c": {
+      "hosting": {
+        "SimpleFM": [
+          "simplefm-a235c"
+        ]
+      }
+    }
+  }
+}
