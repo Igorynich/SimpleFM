@@ -21,6 +21,7 @@ import {SharedModule} from './shared/shared.module';
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
+    // MatPasswordStrengthModule,
     // NgxAuthFirebaseUIModule.forRoot(environment.firebaseConfig)  // auth ui module
   ],
   providers: [],
