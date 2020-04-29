@@ -15,6 +15,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import { EditLeagueDialogComponent } from './edit-league-dialog/edit-league-dialog.component';
 import {NgSelectModule} from '@ng-select/ng-select';
 import { AddCountryDialogComponent } from './add-country-dialog/add-country-dialog.component';
+import { AddLeagueDialogComponent } from './add-league-dialog/add-league-dialog.component';
 
 const routes = [
   {
@@ -28,7 +29,8 @@ const routes = [
     AdminMainPageComponent,
     EditCountryDialogComponent,
     EditLeagueDialogComponent,
-    AddCountryDialogComponent
+    AddCountryDialogComponent,
+    AddLeagueDialogComponent
   ],
   imports: [
     CommonModule,

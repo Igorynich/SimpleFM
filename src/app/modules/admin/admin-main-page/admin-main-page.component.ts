@@ -11,6 +11,7 @@ import {AddCountryDialogComponent} from '../add-country-dialog/add-country-dialo
 import {ConfirmationDialogComponent} from '../../../shared/confirmation-dialog/confirmation-dialog.component';
 import {switchMap} from 'rxjs/operators';
 import {CleanSubscriptions, clearSubscription} from '../../../utils/clean-subscriptions';
+import {AddLeagueDialogComponent} from '../add-league-dialog/add-league-dialog.component';
 
 @CleanSubscriptions()
 @Component({
@@ -26,6 +27,7 @@ export class AdminMainPageComponent implements OnInit, OnDestroy {
   displayedColumnsCountries: string[] = ['index', 'nameRu', 'nameEn', 'actions'];
   displayedColumnsLeagues: string[] = ['index', 'nameRu', 'nameEn', 'countryNameEn', 'altNameRu', 'altNameEn', 'actions'];
 
+  private _addDialog: Subscription;
   private _delDialog: Subscription;
   private _editDialog: Subscription;
 
@@ -78,13 +80,22 @@ export class AdminMainPageComponent implements OnInit, OnDestroy {
       width: '350px'
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    clearSubscription(this._addDialog);
+    this._addDialog = dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed', result);
     });
   }
 
   addNewLeague() {
+    const dialogRef = this.dialog.open(AddLeagueDialogComponent, {
+      width: '450px',
+      height: '400px'
+    });
 
+    clearSubscription(this._addDialog);
+    this._addDialog = dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+    });
   }
 
   deleteCountry(country: Country) {

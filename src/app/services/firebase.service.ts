@@ -26,7 +26,7 @@ export class FirebaseService {
   }
 
   addLeague(league: League): Observable<any> {
-    const leagueCollection = this.afs.collection<League>('league');
+    const leagueCollection = this.afs.collection<League>('leagues');
     return of(leagueCollection.add(league)).pipe(map(value => {
       console.log(value);
       return value;
@@ -62,12 +62,15 @@ export class FirebaseService {
     return of(leagueDoc.update(data));
   }
 
-  getCountries(): Observable<Country[]> {
-    this.progress.next({
-      loading: true,
-      loaded: false
-    });
-    console.log('Progress', this.progress);
+  getCountries(checkProgress = true): Observable<Country[]> {
+    if (checkProgress) {
+      this.progress.next({
+        loading: true,
+        loaded: false
+      });
+      console.log('Progress', this.progress);
+    }
+
     return this.afs.collection<Country>('countries').snapshotChanges().pipe(map(value => {
       console.log('countries', value);
       const countriesArray = [];
@@ -77,20 +80,25 @@ export class FirebaseService {
           ...item.payload.doc.data()
         });
       });
-      this.progress.next({
-        loading: false,
-        loaded: true
-      });
+      if (checkProgress) {
+        this.progress.next({
+          loading: false,
+          loaded: true
+        });
+      }
       console.log('countries with id', countriesArray);
       return countriesArray;
     }));
   }
 
-  getLeagues(): Observable<League[]> {
-    this.progress.next({
-      loading: true,
-      loaded: false
-    });
+  getLeagues(checkProgress = true): Observable<League[]> {
+    if (checkProgress) {
+      this.progress.next({
+        loading: true,
+        loaded: false
+      });
+    }
+
     return this.afs.collection<Country>('leagues').snapshotChanges().pipe(map(value => {
       const leaguesArray = [];
       value.map(item => {
@@ -99,10 +107,12 @@ export class FirebaseService {
           ...item.payload.doc.data()
         });
       });
-      this.progress.next({
-        loading: false,
-        loaded: true
-      });
+      if (checkProgress) {
+        this.progress.next({
+          loading: false,
+          loaded: true
+        });
+      }
       console.log('leagues with id', leaguesArray);
       return leaguesArray;
     }));
