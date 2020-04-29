@@ -71,7 +71,7 @@ export class FirebaseService {
       console.log('Progress', this.progress);
     }
 
-    return this.afs.collection<Country>('countries').snapshotChanges().pipe(map(value => {
+    return this.afs.collection<Country>('countries', ref => ref.orderBy('nameEn')).snapshotChanges().pipe(map(value => {
       console.log('countries', value);
       const countriesArray = [];
       value.map(item => {
@@ -99,7 +99,7 @@ export class FirebaseService {
       });
     }
 
-    return this.afs.collection<Country>('leagues').snapshotChanges().pipe(map(value => {
+    return this.afs.collection<League>('leagues', ref => ref.orderBy('altNameEn')).snapshotChanges().pipe(map(value => {
       const leaguesArray = [];
       value.map(item => {
         leaguesArray.push({
