@@ -1,1 +1,13 @@
-<p>confirmation-dialog works!</p>
+<h3 class="text-center">{{data?.header || defaultHeader}}</h3>
+<div class="row justify-content-between">
+  <div class="col-3">
+    <button mat-raised-button color="warn" [mat-dialog-close]="data?.yes?.value || yes?.value">
+      {{data?.yes?.txt || yes?.txt}}
+    </button>
+  </div>
+  <div class="col-3">
+    <button mat-raised-button color="accent" [mat-dialog-close]="data?.no?.value || no?.value">
+      {{data?.no?.txt || no?.txt}}
+    </button>
+  </div>
+</div>

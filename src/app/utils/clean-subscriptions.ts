@@ -18,9 +18,9 @@ export function CleanSubscriptions(): (constructor) => void {
           const item: SubscriptionLike | any = this[prop];
           if (item) {
             if (Array.isArray(item) && item.length > 0 && item[0] instanceof Subscription) {
-              item.forEach(sub => cleanSubscription(sub));
+              item.forEach(sub => clearSubscription(sub));
             } else {
-              cleanSubscription(item);
+              clearSubscription(item);
             }
           }
         }
@@ -34,7 +34,7 @@ export function CleanSubscriptions(): (constructor) => void {
  * Unsubscribe from observable if not completed
  * @param sub
  */
-export function cleanSubscription(sub: any): void {
+export function clearSubscription(sub: any): void {
   if (sub instanceof Subscription && !sub.closed) {
     sub.unsubscribe();
   }

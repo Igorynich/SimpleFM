@@ -1,4 +1,4 @@
-<h2>Редактирование лиги</h2>
+<h2 class="text-center">Редактирование лиги</h2>
 <div *ngIf="loaded">
   <form [formGroup]="leagueForm" (ngSubmit)="onSubmit()">
     <div class="row">
@@ -41,7 +41,7 @@
       </div>
     </div>
   </form>
-  <div class="row">
+  <div class="row align-items-end" style="height: 100px">
     <div class="col">
       <button mat-raised-button color="warn" mat-dialog-close="false" class="float-right ml-3">
         Отмена

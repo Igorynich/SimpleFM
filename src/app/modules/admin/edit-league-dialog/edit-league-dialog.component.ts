@@ -3,8 +3,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {FirebaseService} from '../../../services/firebase.service';
 import {League} from '../../../interfaces/league';
-import {combineLatest, forkJoin} from 'rxjs';
 import {Country} from '../../../interfaces/country';
+import {combineLatest} from 'rxjs';
 
 @Component({
   selector: 'app-edit-league-dialog',
@@ -23,7 +23,7 @@ export class EditLeagueDialogComponent implements OnInit {
               private fs: FirebaseService) { }
 
   ngOnInit() {
-    combineLatest(this.fs.getCountries(), this.fs.getLeague(this.data)).subscribe(([countries, league]) => {
+    combineLatest([this.fs.getCountries(), this.fs.getLeague(this.data)]).subscribe(([countries, league]) => {
       console.log('-----', countries, league);
       this.countryList = countries;
       const countryValue = countries.find(value => value.nameEn === league.countryNameEn && value.nameRu === league.countryNameRu);
@@ -38,17 +38,6 @@ export class EditLeagueDialogComponent implements OnInit {
     }, error => {
       console.error(error);
     });
-    // this.fs.getCountries().pipe(mergeMap(value => ))
-    /*this.fs.getLeague(this.data).subscribe((value: League) => {
-      this.leagueForm = this.fb.group({
-        altNameEn: [value.altNameEn],
-        altNameRu: [value.altNameRu],
-        country: [''],
-        nameEn: [value.nameEn, Validators.required],
-        nameRu: [value.nameRu, Validators.required]
-      });
-      this.loaded = true;
-    });*/
   }
 
   onSubmit() {
@@ -57,7 +46,7 @@ export class EditLeagueDialogComponent implements OnInit {
       const leagueData = {
         altNameEn: this.leagueForm.value.altNameEn,
         altNameRu: this.leagueForm.value.altNameRu,
-        // country: `/countries/${this.leagueForm.value.country.id}`,
+        country: `/countries/${this.leagueForm.value.country.id}`,
         countryNameEn: this.leagueForm.value.country.nameEn,
         countryNameRu: this.leagueForm.value.country.nameRu,
         nameEn: this.leagueForm.value.nameEn,
