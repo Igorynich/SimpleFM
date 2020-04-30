@@ -4,6 +4,7 @@ import {Country} from '../interfaces/country';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {League} from '../interfaces/league';
+import {Club} from '../interfaces/club';
 
 @Injectable({
   providedIn: 'root'
@@ -115,6 +116,33 @@ export class FirebaseService {
       }
       console.log('leagues with id', leaguesArray);
       return leaguesArray;
+    }));
+  }
+
+  getClubs(checkProgress = true): Observable<Club[]> {
+    if (checkProgress) {
+      this.progress.next({
+        loading: true,
+        loaded: false
+      });
+    }
+
+    return this.afs.collection<League>('clubs', ref => ref.orderBy('nameEn')).snapshotChanges().pipe(map(value => {
+      const clubsArray = [];
+      value.map(item => {
+        clubsArray.push({
+          id: item.payload.doc.id,
+          ...item.payload.doc.data()
+        });
+      });
+      if (checkProgress) {
+        this.progress.next({
+          loading: false,
+          loaded: true
+        });
+      }
+      console.log('clubs with id', clubsArray);
+      return clubsArray;
     }));
   }
 }

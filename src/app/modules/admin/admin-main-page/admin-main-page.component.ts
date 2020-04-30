@@ -12,6 +12,7 @@ import {ConfirmationDialogComponent} from '../../../shared/confirmation-dialog/c
 import {switchMap} from 'rxjs/operators';
 import {CleanSubscriptions, clearSubscription} from '../../../utils/clean-subscriptions';
 import {AddLeagueDialogComponent} from '../add-league-dialog/add-league-dialog.component';
+import {Club} from '../../../interfaces/club';
 
 @CleanSubscriptions()
 @Component({
@@ -21,9 +22,11 @@ import {AddLeagueDialogComponent} from '../add-league-dialog/add-league-dialog.c
 })
 export class AdminMainPageComponent implements OnInit, OnDestroy {
 
+  clubs: Observable<Club[]>;
   countries: Observable<Country[]>;
   leagues: Observable<League[]>;
 
+  displayedColumnsClubs: string[] = ['index', 'nameRu', 'nameEn', 'countryNameEn', 'altNameRu', 'altNameEn', 'budget', 'stadium', 'actions'];
   displayedColumnsCountries: string[] = ['index', 'nameRu', 'nameEn', 'actions'];
   displayedColumnsLeagues: string[] = ['index', 'nameRu', 'nameEn', 'countryNameEn', 'altNameRu', 'altNameEn', 'actions'];
 
@@ -45,6 +48,9 @@ export class AdminMainPageComponent implements OnInit, OnDestroy {
     console.log(ev.index);
     if (ev.index === 1) {
       this.leagues = this.fs.getLeagues();
+    }
+    if (ev.index === 2) {
+      this.clubs = this.fs.getClubs();
     }
   }
 
@@ -126,5 +132,17 @@ export class AdminMainPageComponent implements OnInit, OnDestroy {
       }
       return of(null);
     })).subscribe();
+  }
+
+  editClubDialog(club: Club) {
+
+  }
+
+  deleteClub(club: Club) {
+
+  }
+
+  addNewClub() {
+
   }
 }
