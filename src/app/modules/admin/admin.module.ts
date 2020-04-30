@@ -16,6 +16,8 @@ import { EditLeagueDialogComponent } from './edit-league-dialog/edit-league-dial
 import {NgSelectModule} from '@ng-select/ng-select';
 import { AddCountryDialogComponent } from './add-country-dialog/add-country-dialog.component';
 import { AddLeagueDialogComponent } from './add-league-dialog/add-league-dialog.component';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 const routes = [
   {
@@ -44,7 +46,9 @@ const routes = [
     MatDialogModule,
     MatSelectModule,
     NgSelectModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatPaginatorModule,
+    NgxPaginationModule
   ],
   entryComponents: [
     EditCountryDialogComponent,

@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewContainerRef} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
 import {Observable, of, Subscription} from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent } from '@angular/material/tabs';
@@ -13,6 +13,9 @@ import {switchMap} from 'rxjs/operators';
 import {CleanSubscriptions, clearSubscription} from '../../../utils/clean-subscriptions';
 import {AddLeagueDialogComponent} from '../add-league-dialog/add-league-dialog.component';
 import {Club} from '../../../interfaces/club';
+import {Player} from '../../../interfaces/player';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatTableDataSource} from '@angular/material/table';
 
 @CleanSubscriptions()
 @Component({
@@ -25,10 +28,15 @@ export class AdminMainPageComponent implements OnInit, OnDestroy {
   clubs: Observable<Club[]>;
   countries: Observable<Country[]>;
   leagues: Observable<League[]>;
+  players: Observable<Player[]>;
 
-  displayedColumnsClubs: string[] = ['index', 'nameRu', 'nameEn', 'countryNameEn', 'altNameRu', 'altNameEn', 'budget', 'stadium', 'actions'];
+  displayedColumnsClubs: string[] = ['index', 'nameRu', 'nameEn', 'leagueNameEn', 'altNameRu', 'altNameEn', 'budget', 'stadium', 'actions'];
   displayedColumnsCountries: string[] = ['index', 'nameRu', 'nameEn', 'actions'];
   displayedColumnsLeagues: string[] = ['index', 'nameRu', 'nameEn', 'countryNameEn', 'altNameRu', 'altNameEn', 'actions'];
+  displayedColumnsPlayers: string[] = ['index', 'nameRu', 'nameEn', 'clubNameEn', 'altNameRu', 'altNameEn', 'position', 'power', 'actions'];
+
+  pageClubs = 0;
+  pagePlayers = 0;
 
   private _addDialog: Subscription;
   private _delDialog: Subscription;
@@ -51,6 +59,9 @@ export class AdminMainPageComponent implements OnInit, OnDestroy {
     }
     if (ev.index === 2) {
       this.clubs = this.fs.getClubs();
+    }
+    if (ev.index === 3) {
+      this.players = this.fs.getPlayers();
     }
   }
 
@@ -143,6 +154,18 @@ export class AdminMainPageComponent implements OnInit, OnDestroy {
   }
 
   addNewClub() {
+
+  }
+
+  editPlayerDialog(player: Player) {
+
+  }
+
+  deletePlayer(player: Player) {
+
+  }
+
+  addNewPlayer() {
 
   }
 }

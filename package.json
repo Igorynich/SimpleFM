@@ -37,6 +37,7 @@
     "electron-reload": "^1.5.0",
     "firebase": "^7.6.2",
     "ngx-auth-firebaseui": "^4.2.1",
+    "ngx-pagination": "^5.0.0",
     "primeicons": "^2.0.0",
     "primeng": "^9.0.6",
     "rxjs": "~6.5.5",
