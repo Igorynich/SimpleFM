@@ -4,8 +4,9 @@
   "main": "main.js",
   "scripts": {
     "ng": "ng",
-    "ng:serve": "ng serve",
-    "start": "npm-run-all -p ng:serve electron:serve",
+    "ng:serve": "ng serve -o",
+    "ng:serve:electron": "ng serve -c=electron",
+    "electron:start": "npm-run-all -p ng:serve:electron electron:serve",
     "build": "ng build --prod=true --base-href ./ --stats-json",
     "test": "ng test",
     "lint": "ng lint",
@@ -35,7 +36,7 @@
     "@ng-select/ng-select": "^3.7.1",
     "bootstrap": "^4.4.1",
     "electron-reload": "^1.5.0",
-    "firebase": "^7.6.2",
+    "firebase": "^7.14.3",
     "ngx-auth-firebaseui": "^4.2.1",
     "ngx-pagination": "^5.0.0",
     "primeicons": "^2.0.0",
@@ -45,6 +46,7 @@
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
+    "@angular-devkit/architect": "~0.900",
     "@angular-devkit/build-angular": "~0.901.3",
     "@angular/cli": "~9.1.3",
     "@angular/compiler-cli": "~9.1.3",
@@ -54,8 +56,12 @@
     "@types/node": "^12.11.1",
     "codelyzer": "^5.1.2",
     "copy-webpack-plugin": "^5.1.1",
-    "electron": "^7.1.11",
+    "electron": "^8.2.5",
     "electron-builder": "^22.3.2",
+    "firebase-tools": "^7.12.1",
+    "fuzzy": "^0.1.3",
+    "inquirer": "^6.2.2",
+    "inquirer-autocomplete-prompt": "^1.0.1",
     "jasmine-core": "~3.4.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~4.1.0",
@@ -70,11 +76,6 @@
     "tslint": "~5.15.0",
     "typescript": "~3.8.3",
     "wait-on": "^4.0.0",
-    "webpack-bundle-analyzer": "^3.6.0",
-    "@angular-devkit/architect": "~0.900",
-    "firebase-tools": "^7.12.1",
-    "fuzzy": "^0.1.3",
-    "inquirer": "^6.2.2",
-    "inquirer-autocomplete-prompt": "^1.0.1"
+    "webpack-bundle-analyzer": "^3.6.0"
   }
 }

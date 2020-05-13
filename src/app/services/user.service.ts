@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import {Injectable, Injector} from '@angular/core';
 import {IpcRendererService} from './ipc-renderer.service';
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -10,12 +11,20 @@ export class UserService {
   private _adminName = '111';
   // tslint:disable-next-line:variable-name
   private _userName = '';
+  env = environment;
+  private ipcRenderer = null;
 
-  constructor(private ipcRenderer: IpcRendererService) { }
+  constructor(private injector: Injector) {
+    if (this.env.electron) {
+      this.ipcRenderer = this.injector.get(IpcRendererService) as IpcRendererService;
+    }
+  }
 
   set userName(value: string) {
     this._userName = value.trim();
-    this.ipcRenderer.showAdminTrayIcon(this.isAdmin());
+    if (this.ipcRenderer) {
+      this.ipcRenderer.showAdminTrayIcon(this.isAdmin());
+    }
     console.log('_username', this._userName);
   }
 

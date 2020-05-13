@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  electron: false,
+  electron: true,
   firebaseConfig:  {
     apiKey: 'AIzaSyDVMdg4OoIwsAUOsj-h5ZqQOr7pomSH7xI',
     authDomain: 'simplefm-a235c.firebaseapp.com',
