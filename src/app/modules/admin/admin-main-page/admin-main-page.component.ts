@@ -14,8 +14,6 @@ import {CleanSubscriptions, clearSubscription} from '../../../utils/clean-subscr
 import {AddLeagueDialogComponent} from '../add-league-dialog/add-league-dialog.component';
 import {Club} from '../../../interfaces/club';
 import {Player} from '../../../interfaces/player';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatTableDataSource} from '@angular/material/table';
 
 @CleanSubscriptions()
 @Component({
