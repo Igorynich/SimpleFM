@@ -1,15 +1,15 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing';
 
 import {AdminMainPageComponent} from './admin-main-page.component';
 import {AdminModule} from '../admin.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {BehaviorSubject, of} from 'rxjs';
 import {FirebaseService} from '../../../services/firebase.service';
 import {MatDialog} from '@angular/material/dialog';
 import {Country} from '../../../interfaces/country';
 import {League} from '../../../interfaces/league';
 import {Club} from '../../../interfaces/club';
 import {Player} from '../../../interfaces/player';
+import {FirebaseStubService} from '../../../services/stubs/firebase-stub.service';
 
 describe('AdminMainPageComponent', () => {
   let component: AdminMainPageComponent;
@@ -63,24 +63,10 @@ describe('AdminMainPageComponent', () => {
   ];
 
   beforeEach(async(() => {
-
-    // СДЕЛАТЬ СТАБ FirebaseService!!!
-    const fbSpy = jasmine.createSpyObj('fb',
-      ['getCountries', 'getLeagues', 'getClubs', 'getPlayers', 'deleteCountry', 'deleteLeague', 'progress']);
-    fbSpy.getCountries.and.returnValue(of(countries));
-    fbSpy.getLeagues.and.returnValue(of(leagues));
-    fbSpy.getClubs.and.returnValue(of(clubs));
-    fbSpy.getPlayers.and.returnValue(of(players));
-    fbSpy.deleteCountry.and.returnValue(of(true));
-    fbSpy.deleteLeague.and.returnValue(of(true));
-    fbSpy.progress.and.returnValue(new BehaviorSubject({
-      loading: false,
-      loaded: false
-    }));
     TestBed.configureTestingModule({
       imports: [AdminModule, BrowserAnimationsModule],
       providers: [
-        {provide: FirebaseService, useValue: fbSpy},
+        {provide: FirebaseService, useClass: FirebaseStubService},
         MatDialog
       ]
     })
@@ -96,4 +82,11 @@ describe('AdminMainPageComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should return 1 country with id=country123', fakeAsync(() => {
+    component.countries.subscribe(value => {
+      expect(value.length).toBe(1);
+      expect(value[0].id).toMatch('country123');
+    });
+  }));
 });
