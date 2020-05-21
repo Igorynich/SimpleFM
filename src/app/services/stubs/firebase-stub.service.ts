@@ -6,6 +6,7 @@ import {League} from '../../interfaces/league';
 import {Club} from '../../interfaces/club';
 import {Player} from '../../interfaces/player';
 import {asyncData} from '../../utils/helpers';
+import {TEST_CLUBS, TEST_COUNTRIES, TEST_LEAGUES, TEST_PLAYERS} from '../../constants/test-data';
 
 @Injectable({
   providedIn: 'root'
@@ -16,54 +17,6 @@ export class FirebaseStubService {
     loading: false,
     loaded: false
   });
-
-  countries: Country[] = [
-    {
-      id: 'country123',
-      nameEn: 'England',
-      nameRu: 'Англия'
-    }
-  ];
-  leagues: League[] = [
-    {
-      altNameEn: 'Division 1',
-      altNameRu: 'Division 1',
-      country: '/countries/kOlF6fOXxzRdnvfkAu4M',
-      countryNameEn: 'England',
-      countryNameRu: 'Англия',
-      id: 'league123',
-      nameEn: 'Premier League',
-      nameRu: 'Премьер Лига'
-    }
-  ];
-  clubs: Club[] = [
-    {
-      altNameEn: 'Red Devils',
-      altNameRu: 'Красные Дьяволы',
-      budget: 100,
-      id: 'club123',
-      league: '/leagues/NIDSxlgrIPnZUoKqiw10',
-      leagueNameEn: 'Premier League',
-      leagueNameRu: 'Премьер Лига',
-      nameEn: 'Manchester United',
-      nameRu: 'Манчестер Юнайтед',
-      stadium: 80000
-    }
-  ];
-  players: Player[] = [
-    {
-      altNameEn: 'David Regea',
-      altNameRu: 'Давид Регея',
-      club: '/clubs/qhv1hyHqHQw7rYgGkYd3',
-      clubNameEn: 'Manchester United',
-      clubNameRu: 'Манчестер Юнайтед',
-      id: 'player123',
-      nameEn: 'David De Gea',
-      nameRu: 'Давид Де Хеа',
-      position: 'GK',
-      power: 8.5
-    }
-  ];
 
   constructor() {
   }
@@ -85,7 +38,7 @@ export class FirebaseStubService {
   }
 
   getCountry(id: string): Observable<Country> {
-    return asyncData(this.countries[0]);
+    return asyncData(TEST_COUNTRIES[0]);
   }
 
   updateCountry(id: string, data: Country): Observable<any> {
@@ -93,7 +46,7 @@ export class FirebaseStubService {
   }
 
   getLeague(id: string): Observable<League> {
-    return asyncData(this.leagues[0]);
+    return asyncData(TEST_LEAGUES[0]);
   }
 
   updateLeague(id: string, data: League): Observable<any> {
@@ -107,7 +60,7 @@ export class FirebaseStubService {
         loaded: false
       });
     }
-    return asyncData(this.countries).pipe(map(value => {
+    return asyncData(TEST_COUNTRIES).pipe(map(value => {
       if (checkProgress) {
         this.progress.next({
           loading: false,
@@ -125,7 +78,7 @@ export class FirebaseStubService {
         loaded: false
       });
     }
-    return asyncData(this.leagues).pipe(map(value => {
+    return asyncData(TEST_LEAGUES).pipe(map(value => {
       if (checkProgress) {
         this.progress.next({
           loading: false,
@@ -143,7 +96,7 @@ export class FirebaseStubService {
         loaded: false
       });
     }
-    return asyncData(this.clubs).pipe(map(value => {
+    return asyncData(TEST_CLUBS).pipe(map(value => {
       if (checkProgress) {
         this.progress.next({
           loading: false,
@@ -161,7 +114,7 @@ export class FirebaseStubService {
         loaded: false
       });
     }
-    return asyncData(this.players).pipe(map(value => {
+    return asyncData(TEST_PLAYERS).pipe(map(value => {
       if (checkProgress) {
         this.progress.next({
           loading: false,

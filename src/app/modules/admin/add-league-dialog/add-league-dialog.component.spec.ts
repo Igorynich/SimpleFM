@@ -1,35 +1,25 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AddLeagueDialogComponent } from './add-league-dialog.component';
-import {FormBuilder, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FormBuilder} from '@angular/forms';
 import {FirebaseService} from '../../../services/firebase.service';
 import {MatDialogRef} from '@angular/material/dialog';
-import {of} from 'rxjs';
-import {Country} from '../../../interfaces/country';
 import {AdminModule} from '../admin.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {FirebaseStubService} from '../../../services/stubs/firebase-stub.service';
 
 describe('AddLeagueDialogComponent', () => {
   let component: AddLeagueDialogComponent;
   let fixture: ComponentFixture<AddLeagueDialogComponent>;
-  const countries: Country[] = [
-    {
-      nameEn: 'England',
-      nameRu: 'Англия'
-    }
-  ];
 
   beforeEach(async(() => {
-    const fbSpy = jasmine.createSpyObj('fb', ['getCountries', 'addLeague']);
-    fbSpy.getCountries.and.returnValue(of(countries));
-    fbSpy.addLeague.and.returnValue(of(true));
     TestBed.configureTestingModule({
       imports: [
         AdminModule,
         BrowserAnimationsModule
       ],
       providers: [
-        {provide: FirebaseService, useValue: fbSpy},
+        {provide: FirebaseService, useClass: FirebaseStubService},
         FormBuilder,
         {provide: MatDialogRef, useValue: {}}
       ]
