@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {MainPageComponent} from './main-page/main-page.component';
 import {RouterModule} from '@angular/router';
+import {ROUTES} from '../../constants/routes';
 
 const officeRoutes = [
   {
@@ -9,7 +10,7 @@ const officeRoutes = [
     component: MainPageComponent,
     children: [
       {
-        path: 'admin',
+        path: ROUTES.ADMIN,
         loadChildren: () => import('../admin/admin.module').then(mod => mod.AdminModule)
       },
     ]

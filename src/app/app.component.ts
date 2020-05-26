@@ -2,6 +2,7 @@ import {Component, Injector, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {IpcRendererService} from './services/ipc-renderer.service';
 import {environment} from '../environments/environment';
+import {ROUTES} from './constants/routes';
 
 @Component({
   selector: 'app-root',
@@ -24,15 +25,11 @@ export class AppComponent implements OnInit, OnDestroy {
     if (this.env.electron) {
       this.ipc = this.injector.get(IpcRendererService) as IpcRendererService;
 
-      this.ipc.onReady(() => {
-        console.log('READY');
-      });
-
       this.ipc.onAdminTrayClick(() => {
-        this.router.navigate(['office', 'admin']);
+        this.router.navigate([ROUTES.OFFICE, ROUTES.ADMIN]);
       });
       this.ipc.registerShortcut('CmdOrCtrl+Shift+F9', () => {
-        this.router.navigate(['office', 'admin']);
+        this.router.navigate([ROUTES.OFFICE, ROUTES.ADMIN]);
       });
     }
     console.log('Ipc', this.ipc);

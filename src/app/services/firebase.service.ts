@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {Country} from '../interfaces/country';
 import {BehaviorSubject, Observable, of} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
 import {League} from '../interfaces/league';
 import {Club} from '../interfaces/club';
 import {Player} from '../interfaces/player';
@@ -90,6 +90,13 @@ export class FirebaseService {
       }
       console.log('countries with id', countriesArray);
       return countriesArray;
+    }), catchError(err => {
+      console.log('Err countries', err);
+      this.progress.next({
+        loading: false,
+        loaded: false
+      });
+      return of([]);
     }));
   }
 
@@ -117,6 +124,13 @@ export class FirebaseService {
       }
       console.log('leagues with id', leaguesArray);
       return leaguesArray;
+    }), catchError(err => {
+      console.log('Err leagues', err);
+      this.progress.next({
+        loading: false,
+        loaded: false
+      });
+      return of([]);
     }));
   }
 
@@ -144,6 +158,13 @@ export class FirebaseService {
       }
       console.log('clubs with id', clubsArray);
       return clubsArray;
+    }), catchError(err => {
+      console.log('Err clubs', err);
+      this.progress.next({
+        loading: false,
+        loaded: false
+      });
+      return of([]);
     }));
   }
 
@@ -171,6 +192,13 @@ export class FirebaseService {
       }
       console.log('players with id', playersArray);
       return playersArray;
+    }), catchError(err => {
+      console.log('Err players', err);
+      this.progress.next({
+        loading: false,
+        loaded: false
+      });
+      return of([]);
     }));
   }
 }

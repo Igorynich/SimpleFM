@@ -2,11 +2,12 @@ import { NgModule } from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {AppComponent} from './app.component';
 import {UserGuard} from './guards/user.guard';
+import {ROUTES} from './constants/routes';
 
 
 const routes = [
   {
-    path: 'office',
+    path: ROUTES.OFFICE,
     loadChildren: () => import('./modules/office/office.module').then(mod => mod.OfficeModule),
     canLoad: [UserGuard],
     data: { preload: true }

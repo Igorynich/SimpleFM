@@ -2,12 +2,9 @@
   <!--          Страны            -->
   <mat-tab label="Страны">
     <ng-template matTabContent>
-      <div class="row w-100" *ngIf="(fs.progress | async).loading">
-        <div class="col">
-          <mat-spinner class="mx-auto my-auto"></mat-spinner>
-        </div>
-      </div>
-      <div class="row w-100">
+      <ng-container *ngTemplateOutlet="error; context: {$implicit: countries}"></ng-container>
+      <ng-container *ngTemplateOutlet="loading"></ng-container>
+      <div class="row w-100" *ngIf="(fs.progress | async).loaded">
         <div class="col">
           <table mat-table [dataSource]="countries | async">
 
@@ -46,12 +43,9 @@
   <!--       Лиги         -->
   <mat-tab label="Лиги" class="w-100">
     <ng-template matTabContent>
-      <div class="row w-100" *ngIf="(fs.progress | async).loading">
-        <div class="col">
-          <mat-spinner class="mx-auto my-auto"></mat-spinner>
-        </div>
-      </div>
-      <div class="row w-100">
+      <ng-container *ngTemplateOutlet="error; context: {$implicit: countries}"></ng-container>
+      <ng-container *ngTemplateOutlet="loading"></ng-container>
+      <div class="row w-100" *ngIf="(fs.progress | async).loaded">
         <div class="col">
           <table mat-table [dataSource]="leagues | async">
 
@@ -105,12 +99,9 @@
   <!--       Клубы         -->
   <mat-tab label="Клубы">
     <ng-template matTabContent>
-      <div class="row w-100" *ngIf="(fs.progress | async).loading">
-        <div class="col">
-          <mat-spinner class="mx-auto my-auto"></mat-spinner>
-        </div>
-      </div>
-      <div class="row w-100">
+      <ng-container *ngTemplateOutlet="error; context: {$implicit: countries}"></ng-container>
+      <ng-container *ngTemplateOutlet="loading"></ng-container>
+      <div class="row w-100" *ngIf="(fs.progress | async).loaded">
         <div class="col">
           <table mat-table [dataSource]="clubs | async | paginate: { itemsPerPage: 10, currentPage: pageClubs }">
 
@@ -180,12 +171,9 @@
   <!--       Игроки         -->
   <mat-tab label="Игроки">
     <ng-template matTabContent>
-      <div class="row w-100" *ngIf="(fs.progress | async).loading">
-        <div class="col">
-          <mat-spinner class="mx-auto my-auto"></mat-spinner>
-        </div>
-      </div>
-      <div class="row w-100">
+      <ng-container *ngTemplateOutlet="error; context: {$implicit: countries}"></ng-container>
+      <ng-container *ngTemplateOutlet="loading"></ng-container>
+      <div class="row w-100" *ngIf="(fs.progress | async).loaded">
         <div class="col">
           <table mat-table [dataSource]="players | async | paginate: { itemsPerPage: 10, currentPage: pagePlayers }">
 
@@ -253,3 +241,19 @@
     </ng-template>
   </mat-tab>
 </mat-tab-group>
+
+<ng-template #error let-val>
+  <div class="row w-100" *ngIf="(val | async) && !(fs.progress | async).loading && !(fs.progress | async).loaded">
+    <div class="col">
+      Ошибка загрузки
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #loading>
+  <div class="row w-100" *ngIf="(fs.progress | async).loading">
+    <div class="col">
+      <mat-spinner class="mx-auto my-auto"></mat-spinner>
+    </div>
+  </div>
+</ng-template>

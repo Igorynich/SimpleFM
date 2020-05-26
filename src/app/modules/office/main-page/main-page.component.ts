@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {UserService} from '../../../services/user.service';
 import {ActivatedRoute, Router} from '@angular/router';
+import {ROUTES} from '../../../constants/routes';
 
 @Component({
   selector: 'app-main-page',
@@ -9,14 +10,17 @@ import {ActivatedRoute, Router} from '@angular/router';
 })
 export class MainPageComponent implements OnInit {
 
-  constructor(public userService: UserService, private router: Router, private route: ActivatedRoute) { }
+  cards = new Array(8);
+  ROUTES = ROUTES;
+
+  constructor(public userService: UserService, public router: Router, private route: ActivatedRoute) { }
 
   ngOnInit() {
   }
 
   // TODO: hide
   navigateToAdmin() {
-    this.router.navigate(['admin'], {relativeTo: this.route}).catch(reason => {
+    this.router.navigate([this.ROUTES.ADMIN], {relativeTo: this.route}).catch(reason => {
       console.error(reason);
     });
   }
