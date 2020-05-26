@@ -4,6 +4,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FirebaseService} from '../../../services/firebase.service';
 import {MatDialogRef} from '@angular/material/dialog';
 import {League} from '../../../interfaces/league';
+import {take} from 'rxjs/operators';
 
 @Component({
   selector: 'app-add-league-dialog',
@@ -27,7 +28,7 @@ export class AddLeagueDialogComponent implements OnInit {
       nameEn: ['', Validators.required],
       nameRu: ['', Validators.required]
     });
-    this.fs.getCountries(false).subscribe(countries => {
+    this.fs.getCountries(false).pipe(take(1)).subscribe(countries => {
       this.countryList = countries;
     });
   }

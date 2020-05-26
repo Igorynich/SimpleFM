@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {Country} from '../interfaces/country';
-import {BehaviorSubject, Observable, of} from 'rxjs';
+import {BehaviorSubject, from, Observable, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {League} from '../interfaces/league';
 import {Club} from '../interfaces/club';
@@ -35,14 +35,27 @@ export class FirebaseService {
     }));
   }
 
+  addClub(club: Club) {
+    const clubCollection = this.afs.collection<Club>('clubs');
+    return of(clubCollection.add(club)).pipe(map(value => {
+      console.log(value);
+      return value;
+    }));
+  }
+
   deleteCountry(id: string) {
     const countryDoc = this.afs.doc<Country>(`countries/${id}`);
-    return of(countryDoc.delete());
+    return from(countryDoc.delete());
   }
 
   deleteLeague(id: string) {
     const leagueDoc = this.afs.doc<League>(`leagues/${id}`);
-    return of(leagueDoc.delete());
+    return from(leagueDoc.delete());
+  }
+
+  deleteClub(id: string) {
+    const clubDoc = this.afs.doc<Club>(`clubs/${id}`);
+    return from(clubDoc.delete());
   }
 
   getCountry(id: string): Observable<Country> {
@@ -51,7 +64,7 @@ export class FirebaseService {
 
   updateCountry(id: string, data: Country): Observable<any> {
     const countryDoc = this.afs.doc<Country>(`countries/${id}`);
-    return of(countryDoc.update(data));
+    return from(countryDoc.update(data));
   }
 
   getLeague(id: string): Observable<League> {
@@ -59,9 +72,19 @@ export class FirebaseService {
     return this.afs.doc<League>(`leagues/${id}`).valueChanges();
   }
 
+  getClub(id: string): Observable<Club> {
+    console.log('getClub ', id);
+    return this.afs.doc<Club>(`clubs/${id}`).valueChanges();
+  }
+
   updateLeague(id: string, data: League): Observable<any> {
     const leagueDoc = this.afs.doc<League>(`leagues/${id}`);
-    return of(leagueDoc.update(data));
+    return from(leagueDoc.update(data));
+  }
+
+  updateClub(id: string, data: Club) {
+    const clubDoc = this.afs.doc<Club>(`clubs/${id}`);
+    return from(clubDoc.update(data));
   }
 
   getCountries(checkProgress = true): Observable<Country[]> {

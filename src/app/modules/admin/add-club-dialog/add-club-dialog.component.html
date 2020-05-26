@@ -1,6 +1,6 @@
-<h2 class="text-center">Добавление новой лиги</h2>
+<h2 class="text-center">Добавление нового клуба</h2>
 <div>
-  <form [formGroup]="leagueForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="clubForm" (ngSubmit)="onSubmit()">
     <div class="row">
       <div class="col-6">
         <mat-form-field class="w-100">
@@ -30,14 +30,32 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-6">
-        <ng-select class="w-100" [items]="countryList"
-                   formControlName="country"
+      <div class="col-12">
+        <ng-select class="w-100" [items]="leagueList"
+                   formControlName="league"
                    bindLabel="nameRu"
                    [virtualScroll]="true"
                    [selectOnTab]="true"
-                   placeholder="Страна">
+                   placeholder="Лига">
+          <ng-template ng-option-tmp let-item="item">
+            <span class="ng-option-label">{{item.nameRu}} ({{item.countryNameRu}})</span>
+          </ng-template>
         </ng-select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <mat-form-field class="w-100">
+          <input matInput placeholder="budget" formControlName="budget" required>
+          <!--<mat-error *ngIf="nameEn.invalid">{{getErrorMessage()}}</mat-error>-->
+          <mat-hint>In Millions</mat-hint>
+        </mat-form-field>
+      </div>
+      <div class="col-6">
+        <mat-form-field class="w-100">
+          <input matInput placeholder="stadium" formControlName="stadium" required>
+          <!--<mat-error *ngIf="nameEn.invalid">{{getErrorMessage()}}</mat-error>-->
+        </mat-form-field>
       </div>
     </div>
   </form>
@@ -47,7 +65,7 @@
         Отмена
       </button>
       <button mat-raised-button color="primary" (click)="onSubmit()"
-              [disabled]="leagueForm.invalid || leagueForm.pristine" class="float-right">
+              [disabled]="clubForm.invalid || clubForm.pristine" class="float-right">
         Применить
       </button>
     </div>

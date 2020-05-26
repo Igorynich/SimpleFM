@@ -18,6 +18,8 @@ import { AddCountryDialogComponent } from './add-country-dialog/add-country-dial
 import { AddLeagueDialogComponent } from './add-league-dialog/add-league-dialog.component';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {NgxPaginationModule} from 'ngx-pagination';
+import { AddClubDialogComponent } from './add-club-dialog/add-club-dialog.component';
+import { EditClubDialogComponent } from './edit-club-dialog/edit-club-dialog.component';
 
 const routes = [
   {
@@ -32,7 +34,9 @@ const routes = [
     EditCountryDialogComponent,
     EditLeagueDialogComponent,
     AddCountryDialogComponent,
-    AddLeagueDialogComponent
+    AddLeagueDialogComponent,
+    AddClubDialogComponent,
+    EditClubDialogComponent
   ],
   imports: [
     CommonModule,

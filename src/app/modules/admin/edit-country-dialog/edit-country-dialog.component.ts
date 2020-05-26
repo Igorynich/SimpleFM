@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {Country} from '../../../interfaces/country';
 import {FirebaseService} from '../../../services/firebase.service';
+import {take} from 'rxjs/operators';
 
 @Component({
   selector: 'app-edit-country-dialog',
@@ -20,7 +21,7 @@ export class EditCountryDialogComponent implements OnInit {
               private fs: FirebaseService) { }
 
   ngOnInit() {
-    this.fs.getCountry(this.data).subscribe((value: Country) => {
+    this.fs.getCountry(this.data).pipe(take(1)).subscribe((value: Country) => {
       this.countryForm = this.fb.group({
         nameEn: [value.nameEn, Validators.required],
         nameRu: [value.nameRu, Validators.required]
