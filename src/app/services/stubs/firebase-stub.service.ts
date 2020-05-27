@@ -33,6 +33,10 @@ export class FirebaseStubService {
     return asyncData(club);
   }
 
+  addPlayer(player: Player): Observable<any> {
+    return asyncData(player);
+  }
+
   deleteCountry(id: string) {
     return asyncData(id);
   }
@@ -42,6 +46,10 @@ export class FirebaseStubService {
   }
 
   deleteClub(id: string) {
+    return asyncData(id);
+  }
+
+  deletePlayer(id: string) {
     return asyncData(id);
   }
 
@@ -61,11 +69,19 @@ export class FirebaseStubService {
     return asyncData(TEST_CLUBS[0]);
   }
 
+  getPlayer(id: string): Observable<Player> {
+    return asyncData(TEST_PLAYERS[0]);
+  }
+
   updateLeague(id: string, data: League): Observable<any> {
     return asyncData(data);
   }
 
   updateClub(id: string, data: Club): Observable<any> {
+    return asyncData(data);
+  }
+
+  updatePlayer(id: string, data: Player): Observable<any> {
     return asyncData(data);
   }
 

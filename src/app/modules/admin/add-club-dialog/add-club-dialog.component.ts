@@ -29,8 +29,8 @@ export class AddClubDialogComponent implements OnInit {
       nameRu: ['', Validators.required],
       stadium: [1000, Validators.required],
     });
-    this.fs.getLeagues(false).pipe(take(1)).subscribe(countries => {
-      this.leagueList = countries;
+    this.fs.getLeagues(false).pipe(take(1)).subscribe(leagues => {
+      this.leagueList = leagues;
     });
   }
 
@@ -40,13 +40,13 @@ export class AddClubDialogComponent implements OnInit {
       const clubData: Club = {
         altNameEn: this.clubForm.value.altNameEn,
         altNameRu: this.clubForm.value.altNameRu,
-        budget: this.clubForm.value.budget,
+        budget: +this.clubForm.value.budget,
         league: `/leagues/${this.clubForm.value.league.id}`,
         leagueNameEn: this.clubForm.value.league.nameEn,
         leagueNameRu: this.clubForm.value.league.nameRu,
         nameEn: this.clubForm.value.nameEn,
         nameRu: this.clubForm.value.nameRu,
-        stadium: this.clubForm.value.stadium
+        stadium: +this.clubForm.value.stadium
       };
       this.fs.addClub(clubData).subscribe(value => {
         console.log(value);

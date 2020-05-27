@@ -21,7 +21,7 @@ export class FirebaseService {
 
   addCountry(country: Country): Observable<any> {
     const countryCollection = this.afs.collection<Country>('countries');
-    return of(countryCollection.add(country)).pipe(map(value => {
+    return from(countryCollection.add(country)).pipe(map(value => {
       console.log(value);
       return value;
     }));
@@ -29,7 +29,7 @@ export class FirebaseService {
 
   addLeague(league: League): Observable<any> {
     const leagueCollection = this.afs.collection<League>('leagues');
-    return of(leagueCollection.add(league)).pipe(map(value => {
+    return from(leagueCollection.add(league)).pipe(map(value => {
       console.log(value);
       return value;
     }));
@@ -37,7 +37,15 @@ export class FirebaseService {
 
   addClub(club: Club) {
     const clubCollection = this.afs.collection<Club>('clubs');
-    return of(clubCollection.add(club)).pipe(map(value => {
+    return from(clubCollection.add(club)).pipe(map(value => {
+      console.log(value);
+      return value;
+    }));
+  }
+
+  addPlayer(player: Player) {
+    const playerCollection = this.afs.collection<Player>('players');
+    return from(playerCollection.add(player)).pipe(map(value => {
       console.log(value);
       return value;
     }));
@@ -56,6 +64,11 @@ export class FirebaseService {
   deleteClub(id: string) {
     const clubDoc = this.afs.doc<Club>(`clubs/${id}`);
     return from(clubDoc.delete());
+  }
+
+  deletePlayer(id: string) {
+    const playerDoc = this.afs.doc<Player>(`players/${id}`);
+    return from(playerDoc.delete());
   }
 
   getCountry(id: string): Observable<Country> {
@@ -77,6 +90,11 @@ export class FirebaseService {
     return this.afs.doc<Club>(`clubs/${id}`).valueChanges();
   }
 
+  getPlayer(id: string): Observable<Player> {
+    console.log('getPlayer ', id);
+    return this.afs.doc<Player>(`players/${id}`).valueChanges();
+  }
+
   updateLeague(id: string, data: League): Observable<any> {
     const leagueDoc = this.afs.doc<League>(`leagues/${id}`);
     return from(leagueDoc.update(data));
@@ -85,6 +103,11 @@ export class FirebaseService {
   updateClub(id: string, data: Club) {
     const clubDoc = this.afs.doc<Club>(`clubs/${id}`);
     return from(clubDoc.update(data));
+  }
+
+  updatePlayer(id: string, data: Player) {
+    const playerDoc = this.afs.doc<Player>(`players/${id}`);
+    return from(playerDoc.update(data));
   }
 
   getCountries(checkProgress = true): Observable<Country[]> {
@@ -165,7 +188,7 @@ export class FirebaseService {
       });
     }
 
-    return this.afs.collection<League>('clubs', ref => ref.orderBy('nameEn')).snapshotChanges().pipe(map(value => {
+    return this.afs.collection<Club>('clubs', ref => ref.orderBy('nameEn')).snapshotChanges().pipe(map(value => {
       const clubsArray = [];
       value.map(item => {
         clubsArray.push({

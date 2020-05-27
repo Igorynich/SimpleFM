@@ -1,0 +1,75 @@
+<h2 class="text-center">Добавление нового игрока</h2>
+<div>
+  <form [formGroup]="playerForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="col-6">
+        <mat-form-field class="w-100">
+          <input matInput placeholder="nameEn" formControlName="nameEn" required>
+          <!--<mat-error *ngIf="nameEn.invalid">{{getErrorMessage()}}</mat-error>-->
+        </mat-form-field>
+      </div>
+      <div class="col-6">
+        <mat-form-field class="w-100">
+          <input matInput placeholder="altNameEn" formControlName="altNameEn" required>
+          <!--<mat-error *ngIf="nameEn.invalid">{{getErrorMessage()}}</mat-error>-->
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <mat-form-field class="w-100">
+          <input matInput placeholder="nameRu" formControlName="nameRu" required>
+          <!--<mat-error *ngIf="nameEn.invalid">{{getErrorMessage()}}</mat-error>-->
+        </mat-form-field>
+      </div>
+      <div class="col-6">
+        <mat-form-field class="w-100">
+          <input matInput placeholder="altNameRu" formControlName="altNameRu" required>
+          <!--<mat-error *ngIf="nameEn.invalid">{{getErrorMessage()}}</mat-error>-->
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <ng-select class="w-100" [items]="clubList"
+                   formControlName="club"
+                   bindLabel="nameRu"
+                   [virtualScroll]="true"
+                   [selectOnTab]="true"
+                   placeholder="Клуб">
+          <ng-template ng-option-tmp let-item="item">
+            <span class="ng-option-label">{{item.nameRu}}</span>
+          </ng-template>
+        </ng-select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <ng-select class="w-100" [items]="positions"
+                   formControlName="position"
+                   [virtualScroll]="true"
+                   [selectOnTab]="true"
+                   placeholder="Позиция">
+        </ng-select>
+      </div>
+      <div class="col-6">
+        <mat-form-field class="w-100">
+          <input matInput placeholder="power" formControlName="power" required>
+          <!--<mat-error *ngIf="nameEn.invalid">{{getErrorMessage()}}</mat-error>-->
+          <mat-hint>0-10(ex: 6.3)</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+  <div class="row align-items-end" style="height: 100px">
+    <div class="col">
+      <button mat-raised-button color="warn" mat-dialog-close="false" class="float-right ml-3">
+        Отмена
+      </button>
+      <button mat-raised-button color="primary" (click)="onSubmit()"
+              [disabled]="playerForm.invalid || playerForm.pristine" class="float-right">
+        Применить
+      </button>
+    </div>
+  </div>
+</div>

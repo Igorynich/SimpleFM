@@ -16,6 +16,8 @@ import {Club} from '../../../interfaces/club';
 import {Player} from '../../../interfaces/player';
 import {AddClubDialogComponent} from '../add-club-dialog/add-club-dialog.component';
 import {EditClubDialogComponent} from '../edit-club-dialog/edit-club-dialog.component';
+import {AddPlayerDialogComponent} from '../add-player-dialog/add-player-dialog.component';
+import {EditPlayerDialogComponent} from '../edit-player-dialog/edit-player-dialog.component';
 
 @CleanSubscriptions()
 @Component({
@@ -187,14 +189,43 @@ export class AdminMainPageComponent implements OnInit, OnDestroy {
   }
 
   editPlayerDialog(player: Player) {
+    console.log('EditPlayerDialog', player);
+    const dialogRef = this.dialog.open(EditPlayerDialogComponent, {
+      width: '450px',
+      height: '520px',
+      data: player.id
+    });
 
+    clearSubscription(this._editDialog);
+    this._editDialog = dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+    });
   }
 
   deletePlayer(player: Player) {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '350px'
+    });
 
+    clearSubscription(this._delDialog);
+    this._delDialog = dialogRef.afterClosed().pipe(switchMap(result => {
+      console.log('The dialog was closed', result);
+      if (result) {
+        return this.fs.deletePlayer(player.id);
+      }
+      return of(null);
+    })).subscribe();
   }
 
   addNewPlayer() {
+    const dialogRef = this.dialog.open(AddPlayerDialogComponent, {
+      width: '450px',
+      height: '520px'
+    });
 
+    clearSubscription(this._addDialog);
+    this._addDialog = dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+    });
   }
 }

@@ -57,13 +57,13 @@ export class EditClubDialogComponent implements OnInit, OnDestroy {
       const clubData: Club = {
         altNameEn: this.clubForm.value.altNameEn,
         altNameRu: this.clubForm.value.altNameRu,
-        budget: this.clubForm.value.budget,
+        budget: +this.clubForm.value.budget,
         league: `/leagues/${this.clubForm.value.league.id}`,
         leagueNameEn: this.clubForm.value.league.nameEn,
         leagueNameRu: this.clubForm.value.league.nameRu,
         nameEn: this.clubForm.value.nameEn,
         nameRu: this.clubForm.value.nameRu,
-        stadium: this.clubForm.value.stadium
+        stadium: +this.clubForm.value.stadium
       };
       this._updSub = this.fs.updateClub(this.data, clubData).subscribe(value => {
         console.log(value);
