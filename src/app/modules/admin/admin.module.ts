@@ -22,6 +22,8 @@ import { AddClubDialogComponent } from './add-club-dialog/add-club-dialog.compon
 import { EditClubDialogComponent } from './edit-club-dialog/edit-club-dialog.component';
 import { AddPlayerDialogComponent } from './add-player-dialog/add-player-dialog.component';
 import { EditPlayerDialogComponent } from './edit-player-dialog/edit-player-dialog.component';
+import {MatSortModule} from '@angular/material/sort';
+import {MatIconModule} from '@angular/material/icon';
 
 const routes = [
   {
@@ -56,7 +58,9 @@ const routes = [
     NgSelectModule,
     MatProgressSpinnerModule,
     MatPaginatorModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    MatSortModule,
+    MatIconModule
   ],
   entryComponents: [
     EditCountryDialogComponent,

@@ -6,6 +6,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {take} from 'rxjs/operators';
 import {Player} from '../../../interfaces/player';
 import {combineLatest} from 'rxjs';
+import {POSITIONS} from '../../../constants/positions';
 
 @Component({
   selector: 'app-edit-player-dialog',
@@ -17,7 +18,7 @@ export class EditPlayerDialogComponent implements OnInit {
   clubList: Club[] = [];
   loaded = false;
   playerForm: FormGroup;
-  positions = ['GK', 'D', 'M', 'F'];
+  positions = POSITIONS;
 
   constructor(private fb: FormBuilder,
               private fs: FirebaseService,

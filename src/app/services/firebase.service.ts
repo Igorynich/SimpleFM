@@ -1,11 +1,17 @@
 import { Injectable } from '@angular/core';
-import {AngularFirestore} from '@angular/fire/firestore';
+import {AngularFirestore, CollectionReference} from '@angular/fire/firestore';
 import {Country} from '../interfaces/country';
 import {BehaviorSubject, from, Observable, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {League} from '../interfaces/league';
 import {Club} from '../interfaces/club';
 import {Player} from '../interfaces/player';
+
+export class PlayerQueryObj {
+  club?: string;
+  name?: string;
+  position?: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -214,15 +220,16 @@ export class FirebaseService {
     }));
   }
 
-  getPlayers(checkProgress = true): Observable<Player[]> {
+  getPlayers(checkProgress = true, query: PlayerQueryObj = {}): Observable<Player[]> {
     if (checkProgress) {
       this.progress.next({
         loading: true,
         loaded: false
       });
     }
-
-    return this.afs.collection<Player>('players', ref => ref.orderBy('nameEn')).snapshotChanges().pipe(map(value => {
+    return this.afs.collection<Player>('players', (ref: CollectionReference) => {
+      return ref.orderBy('nameEn');
+    }).snapshotChanges().pipe(map(value => {
       const playersArray = [];
       value.map(item => {
         playersArray.push({
