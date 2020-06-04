@@ -37,7 +37,7 @@ export class EditPlayerDialogComponent implements OnInit {
         nameEn: [player.nameEn, Validators.required],
         nameRu: [player.nameRu, Validators.required],
         position: [player.position, Validators.required],
-        power: [player.power, [Validators.required]]
+        power: [player.power]
       });
       this.loaded = true;
     }, error => {

@@ -107,7 +107,7 @@
 
             <ng-container matColumnDef="index">
               <th mat-header-cell *matHeaderCellDef class="pl-0 pr-4">#</th>
-              <td mat-cell *matCellDef="let club; let i = index" class="pl-0 pr-4"> {{i + 1}} </td>
+              <td mat-cell *matCellDef="let club; let i = index" class="pl-0 pr-4"> {{(pageClubs - 1)*10 + i + 1}} </td>
             </ng-container>
 
             <ng-container matColumnDef="nameRu">
@@ -194,7 +194,8 @@
                              bindValue="nameEn"
                              [virtualScroll]="true"
                              [selectOnTab]="true"
-                             placeholder="Поиск по клубу">
+                             placeholder="Поиск по клубу"
+                             (clear)="clubSearch.setValue(null)">
                   </ng-select>
                 </div>
                 <div class="col">
@@ -202,7 +203,8 @@
                              [formControl]="positionSearch"
                              [virtualScroll]="true"
                              [selectOnTab]="true"
-                             placeholder="Поиск по позиции">
+                             placeholder="Поиск по позиции"
+                             (clear)="positionSearch.setValue(null)">
                   </ng-select>
                 </div>
               </div>
@@ -269,13 +271,16 @@
               <button mat-raised-button color="warn" (click)="createRandomPlayer()" class="float-left mt-5 ml-5">
                 Создать рандомного игрока
               </button>
+              <button mat-raised-button color="warn" (click)="fillPowers()" class="float-left mt-5 ml-5">
+                Заполнить powers
+              </button>
             </div>
           </div>
         </div>
       </div>
       <div class="row w-100">
         <div class="col text-center">
-          <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" #plPaginator></mat-paginator>
+          <mat-paginator [pageSizeOptions]="[20, 50, 100]" #plPaginator></mat-paginator>
           <!--<pagination-controls (pageChange)="pagePlayers = $event"></pagination-controls>-->
         </div>
       </div>

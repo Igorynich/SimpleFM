@@ -48,7 +48,7 @@ export class AdminMainPageComponent implements OnInit, OnDestroy {
   displayedColumnsLeagues: string[] = ['index', 'nameRu', 'nameEn', 'countryNameEn', 'altNameRu', 'altNameEn', 'actions'];
   displayedColumnsPlayers: string[] = ['index', 'nameRu', 'nameEn', 'clubNameEn', 'altNameRu', 'altNameEn', 'position', 'power', 'actions'];
 
-  pageClubs = 0;
+  pageClubs = 1;
   pagePlayers = 0;
 
   clubSearch: FormControl;
@@ -282,7 +282,7 @@ export class AdminMainPageComponent implements OnInit, OnDestroy {
   addNewPlayer() {
     const dialogRef = this.dialog.open(AddPlayerDialogComponent, {
       width: '450px',
-      height: '520px'
+      height: '550px'
     });
 
     clearSubscription(this._addDialog);
@@ -293,5 +293,16 @@ export class AdminMainPageComponent implements OnInit, OnDestroy {
 
   createRandomPlayer() {
 
+  }
+
+  fillPowers() {
+    console.log('Players', this.players);
+    const unpoweredPlayers = this.players.filter(value => !value.power);
+    unpoweredPlayers.forEach(value => {
+      const randomPower = +(Math.random() * 10).toFixed(1) ;
+      console.log(randomPower);
+      // value.power = randomPower;
+      this.fs.updatePlayer(value.id, {power: randomPower}).subscribe();
+    });
   }
 }

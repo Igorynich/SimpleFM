@@ -23,6 +23,8 @@ export class FirebaseService {
     loaded: false
   });
 
+  lastCreatedPlayer: Player;
+
   constructor(private afs: AngularFirestore) { }
 
   addCountry(country: Country): Observable<any> {
@@ -50,6 +52,7 @@ export class FirebaseService {
   }
 
   addPlayer(player: Player) {
+    this.lastCreatedPlayer = player;
     const playerCollection = this.afs.collection<Player>('players');
     return from(playerCollection.add(player)).pipe(map(value => {
       console.log(value);
@@ -111,7 +114,7 @@ export class FirebaseService {
     return from(clubDoc.update(data));
   }
 
-  updatePlayer(id: string, data: Player) {
+  updatePlayer(id: string, data: Player | {power: number}) {
     const playerDoc = this.afs.doc<Player>(`players/${id}`);
     return from(playerDoc.update(data));
   }
@@ -228,7 +231,7 @@ export class FirebaseService {
       });
     }
     return this.afs.collection<Player>('players', (ref: CollectionReference) => {
-      return ref.orderBy('nameEn');
+      return ref.orderBy('position');
     }).snapshotChanges().pipe(map(value => {
       const playersArray = [];
       value.map(item => {

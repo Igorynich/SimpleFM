@@ -31,6 +31,7 @@ export class AddClubDialogComponent implements OnInit {
     });
     this.fs.getLeagues(false).pipe(take(1)).subscribe(leagues => {
       this.leagueList = leagues;
+      this.clubForm.get('league').setValue(leagues[0]);
     });
   }
 

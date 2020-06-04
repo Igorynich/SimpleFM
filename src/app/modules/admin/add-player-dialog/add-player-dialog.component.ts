@@ -22,16 +22,20 @@ export class AddPlayerDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.playerForm = this.fb.group({
-      altNameEn: ['', Validators.required],
-      altNameRu: ['', Validators.required],
+      altNameEn: [''],
+      altNameRu: [''],
       club: ['', Validators.required],
       nameEn: ['', Validators.required],
       nameRu: ['', Validators.required],
-      position: [null, Validators.required],
-      power: [0, [Validators.required]]
+      position: [this.fs.lastCreatedPlayer?.position, Validators.required],
+      power: [0]
     });
     this.fs.getClubs(false).pipe(take(1)).subscribe(clubs => {
       this.clubList = clubs;
+      if (this.fs.lastCreatedPlayer) {
+        const lastCreatedPlayerClub = this.clubList.find(value => value.nameEn === this.fs.lastCreatedPlayer.clubNameEn)
+        this.playerForm.get('club').setValue(lastCreatedPlayerClub);
+      }
     });
   }
 
