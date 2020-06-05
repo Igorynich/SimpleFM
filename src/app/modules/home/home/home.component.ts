@@ -3,6 +3,7 @@ import {AuthProvider} from 'ngx-auth-firebaseui';
 import {FormControl, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {UserService} from '../../../services/user.service';
+import {ROUTES} from '../../../constants/routes';
 
 @Component({
   selector: 'app-home',
@@ -25,7 +26,7 @@ export class HomeComponent implements OnInit {
     console.log(this.userName.value);
     if (this.userName.valid) {
       this.userService.userName = this.userName.value;
-      this.router.navigate(['office']).catch(reason => {
+      this.router.navigate([ROUTES.OFFICE]).catch(reason => {
         console.error('Navigation fail by ', reason);
       });
     }

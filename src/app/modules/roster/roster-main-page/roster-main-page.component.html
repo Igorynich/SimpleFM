@@ -1,0 +1,44 @@
+<div class="row">
+  <div class="col-5">
+    <div class="row justify-content-between">
+      <div class="col-1 text-center">
+        Позиция
+      </div>
+      <div class="col-6 text-center">
+        Имя
+      </div>
+      <div class="col-1 text-center">
+        Сила
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-6" cdkDropList (cdkDropListDropped)="drop($event)" cdkDropListSortingDisabled>
+    <div class="row" *ngFor="let player of players; let i = index;" cdkDrag>
+      <!--<div class="col drag-placeholder" *cdkDragPlaceholder>dragged</div>-->
+      <div class="col" [ngClass]="getListClass(player, i)" (mouseenter)="mouseEntered(i)">
+        <div class="row justify-content-between">
+          <div class="col-1 text-right">
+            {{player.position}}
+          </div>
+          <div class="col-6">
+            {{player.nameRu}}
+          </div>
+          <div class="col-1">
+            {{player.power}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row justify-content-end">
+  <div class="col-1">
+    <app-navigate-to-office></app-navigate-to-office>
+  </div>
+</div>
+

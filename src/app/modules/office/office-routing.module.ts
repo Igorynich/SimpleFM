@@ -13,6 +13,10 @@ const officeRoutes = [
         path: ROUTES.ADMIN,
         loadChildren: () => import('../admin/admin.module').then(mod => mod.AdminModule)
       },
+      {
+        path: ROUTES.ROSTER,
+        loadChildren: () => import('../roster/roster.module').then(mod => mod.RosterModule)
+      },
     ]
   },
 ];

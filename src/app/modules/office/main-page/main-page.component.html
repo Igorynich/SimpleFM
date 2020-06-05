@@ -1,10 +1,10 @@
-<div class="row justify-content-center h-100">
+<div class="row justify-content-center h-100" *ngIf="!loading">
   <div class="col">
     <mat-card class="office-card--main">
       <div class="row justify-content-center h-25 pb-4">
         <div class="col">
           <mat-card class="office-card--top-panel h-100">
-            <p class="text-right">{{userService.userName}}</p>
+            <p class="text-right">{{userService.userName}} (<span>{{game.currentClub?.nameRu}}</span>)</p>
             <button mat-raised-button color="warning" (click)="logOut()" class="float-right ml-3"
                     *ngIf="userService.isLogged()">
               Выйти
@@ -26,8 +26,8 @@
           <mat-card class="office-card--bot-panel h-100">
             <div class="row h-100">
               <div class="col-3 h-50 py-2" *ngFor="let card of cards; let i = index">
-                <mat-card class="h-100">
-                  Card {{i}}
+                <mat-card class="h-100 hover" (click)="navigateToCard(card)">
+                  {{card.nameRu || ('Card' + i)}}
                 </mat-card>
               </div>
             </div>

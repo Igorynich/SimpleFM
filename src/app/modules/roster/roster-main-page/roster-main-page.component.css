@@ -1,0 +1,23 @@
+.pos-gk {
+  background-color: greenyellow;
+}
+
+.pos-d {
+  background-color: ghostwhite;
+}
+
+.pos-m {
+  background-color: aqua;
+}
+
+.pos-f {
+  background-color: goldenrod;
+}
+
+.list-item {
+  border: black solid thin;
+}
+
+.starting-squad-separator {
+  margin-bottom: 30px;
+}

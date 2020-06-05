@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {AngularFirestore, CollectionReference} from '@angular/fire/firestore';
 import {Country} from '../interfaces/country';
 import {BehaviorSubject, from, Observable, of} from 'rxjs';
@@ -25,7 +25,8 @@ export class FirebaseService {
 
   lastCreatedPlayer: Player;
 
-  constructor(private afs: AngularFirestore) { }
+  constructor(private afs: AngularFirestore) {
+  }
 
   addCountry(country: Country): Observable<any> {
     const countryCollection = this.afs.collection<Country>('countries');
@@ -114,7 +115,7 @@ export class FirebaseService {
     return from(clubDoc.update(data));
   }
 
-  updatePlayer(id: string, data: Player | {power: number}) {
+  updatePlayer(id: string, data: Player | { power: number }) {
     const playerDoc = this.afs.doc<Player>(`players/${id}`);
     return from(playerDoc.update(data));
   }
@@ -247,6 +248,37 @@ export class FirebaseService {
         });
       }
       console.log('players with id', playersArray);
+      return playersArray;
+    }), catchError(err => {
+      console.log('Err players', err);
+      this.progress.next({
+        loading: false,
+        loaded: false
+      });
+      return of([]);
+    }));
+  }
+
+  getPlayersByClub(clubNameEn: string): Observable<Player[]> {
+    this.progress.next({
+      loading: true,
+      loaded: false
+    });
+    return this.afs.collection<Player>('players', (ref: CollectionReference) => {
+      return ref.where('clubNameEn', '==', clubNameEn);
+    }).snapshotChanges().pipe(map(value => {
+      const playersArray = [];
+      value.map(item => {
+        playersArray.push({
+          id: item.payload.doc.id,
+          ...item.payload.doc.data()
+        });
+      });
+      this.progress.next({
+        loading: false,
+        loaded: true
+      });
+      console.log('players by club with id', clubNameEn, playersArray);
       return playersArray;
     }), catchError(err => {
       console.log('Err players', err);
