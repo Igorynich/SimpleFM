@@ -5,6 +5,11 @@ import {ROUTES} from '../../../constants/routes';
 import {CurrentGameService} from '../../../services/current-game.service';
 import {MatDialog} from '@angular/material/dialog';
 import {InfoDialogComponent} from '../../../shared/info-dialog/info-dialog.component';
+import {Store} from '@ngrx/store';
+import {CurrentGameState} from '../../../store/reducers/current-game.reducer';
+import {getClub} from '../../../store/actions/current-game.actions';
+import {AppState, curGameLoading} from '../../../store/selectors/current-game.selectors';
+import {Observable, of} from 'rxjs';
 
 @Component({
   selector: 'app-main-page',
@@ -21,24 +26,27 @@ export class MainPageComponent implements OnInit {
     },
     {}, {}, {}, {}, {}, {}, {}
   ];
-  loading = true;
+  loading: Observable<boolean> = of(true);
   ROUTES = ROUTES;
 
   constructor(public userService: UserService,
               public router: Router,
               private route: ActivatedRoute,
               public game: CurrentGameService,
-              private dialog: MatDialog) { }
+              private dialog: MatDialog,
+              private store: Store<AppState>) { }
 
   ngOnInit() {
-    this.game.getCurrentClub().subscribe(value => {
+    this.store.dispatch(getClub());
+    this.loading = this.store.select(curGameLoading);
+    /*this.game.getCurrentClub().subscribe(value => {
       console.log('CURRENT CLUB', this.game.currentClub);
       this.loading = false;
       const dialogRef = this.dialog.open(InfoDialogComponent, {
         width: '550px',
         data: this.game.currentClub
       });
-    });
+    });*/
   }
 
   // TODO: hide

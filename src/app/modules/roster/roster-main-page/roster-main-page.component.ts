@@ -1,23 +1,38 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FirebaseService} from '../../../services/firebase.service';
 import {CurrentGameService} from '../../../services/current-game.service';
 import {Player} from '../../../interfaces/player';
 import {CdkDragEnter, moveItemInArray} from '@angular/cdk/drag-drop';
+import {Store} from '@ngrx/store';
+import {AppState, selectCurrentPlayers} from '../../../store/selectors/current-game.selectors';
+import {Observable, Subscription} from 'rxjs';
+import {take} from 'rxjs/operators';
+import {updatePlayers} from '../../../store/actions/current-game.actions';
+import {CleanSubscriptions} from '../../../utils/clean-subscriptions';
 
+@CleanSubscriptions()
 @Component({
   selector: 'app-roster-main-page',
   templateUrl: './roster-main-page.component.html',
   styleUrls: ['./roster-main-page.component.css']
 })
-export class RosterMainPageComponent implements OnInit {
+export class RosterMainPageComponent implements OnInit, OnDestroy {
 
   lastPlayerBoxEntered: number;
   players: Player[];
 
-  constructor(private fs: FirebaseService, private game: CurrentGameService) { }
+  private _playersSub: Subscription;
+
+  constructor(private fs: FirebaseService, private game: CurrentGameService, private store: Store<AppState>) { }
 
   ngOnInit(): void {
-    this.players = this.game.currentPlayers;
+    // this.players = this.game.currentPlayers;
+    this._playersSub = this.store.select(selectCurrentPlayers).subscribe((value: Player[]) => {
+      this.players = [...value];
+    });
+  }
+
+  ngOnDestroy(): void {
   }
 
   getListClass(player, index) {
@@ -38,6 +53,7 @@ export class RosterMainPageComponent implements OnInit {
       const draggedOnPlayer = this.players[this.lastPlayerBoxEntered];
       this.players[event.previousIndex] = draggedOnPlayer;
       this.players[this.lastPlayerBoxEntered] = draggedPlayer;
+      this.store.dispatch(updatePlayers({newPlayers: this.players}));
     }
   }
 
