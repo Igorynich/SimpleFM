@@ -7,7 +7,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {InfoDialogComponent} from '../../../shared/info-dialog/info-dialog.component';
 import {Store} from '@ngrx/store';
 import {CurrentGameState} from '../../../store/reducers/current-game.reducer';
-import {getClub} from '../../../store/actions/current-game.actions';
+import {getBaseData, getClub} from '../../../store/actions/current-game.actions';
 import {AppState, curGameLoading} from '../../../store/selectors/current-game.selectors';
 import {Observable, of} from 'rxjs';
 
@@ -37,7 +37,7 @@ export class MainPageComponent implements OnInit {
               private store: Store<AppState>) { }
 
   ngOnInit() {
-    this.store.dispatch(getClub());
+    this.store.dispatch(getBaseData());
     this.loading = this.store.select(curGameLoading);
     /*this.game.getCurrentClub().subscribe(value => {
       console.log('CURRENT CLUB', this.game.currentClub);

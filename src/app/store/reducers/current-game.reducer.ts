@@ -1,21 +1,41 @@
 import {Club} from '../../interfaces/club';
 import {Player} from '../../interfaces/player';
 import {Action, createReducer, on} from '@ngrx/store';
-import {getClub, gotClub, gotPlayers, updatePlayers} from '../actions/current-game.actions';
+import {getClub, gotBaseData, gotClub, gotPlayers, updatePlayers} from '../actions/current-game.actions';
+import {Country} from '../../interfaces/country';
+import {League} from '../../interfaces/league';
 
 export interface CurrentGameState {
   currentClub: Club;
   currentPlayers: Player[];
+  data: {
+    countries: Country[],
+    leagues: League[],
+    clubs: Club[],
+    players: Player[]
+  },
   loading: boolean;
 }
 
 export const currentGameInitState: CurrentGameState = {
   currentClub: null,
   currentPlayers: null,
+  data: null,
   loading: true
 };
 
 const _currentGameReducer = createReducer(currentGameInitState,
+  on(gotBaseData, (state, {countries, leagues, clubs, players}) => {
+    console.log('gotBase Data', {
+      ...state, data: {
+        countries, leagues, clubs, players
+      }});
+    return {
+      ...state, data: {
+        countries, leagues, clubs, players
+      }
+    };
+  }),
   on(gotClub, (state, {club}) => {
     console.log('gotClub', {...state, currentClub: club});
     return {...state, currentClub: club};

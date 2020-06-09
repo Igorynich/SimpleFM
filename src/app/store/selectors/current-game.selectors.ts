@@ -10,6 +10,13 @@ export const selectCurrentGameState = (state: AppState) => {
   return state.currentGame;
 };
 
+
 export const selectCurrentClub = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.currentClub);
 export const selectCurrentPlayers = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.currentPlayers);
 export const curGameLoading = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.loading);
+
+export const getAllClubs = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.data.clubs);
+
+export const selectPlayersByClubsNameEn = createSelector(selectCurrentGameState, (state, {clubsNameEn}) => {
+  return state.data.players.filter(value => value.clubNameEn === clubsNameEn);
+});
