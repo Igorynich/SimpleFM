@@ -24,9 +24,18 @@ export class MainPageComponent implements OnInit {
       nameRu: 'Состав',
       route: ROUTES.ROSTER
     },
-    {}, {}, {}, {}, {}, {}, {}
+    {
+      nameEn: 'Schedule',
+      nameRu: 'Расписание',
+      route: ROUTES.SCHEDULE
+    },
+    {
+      nameEn: 'Tables',
+      nameRu: 'Таблицы',
+      route: ROUTES.TABLES
+    }, {}, {}, {}, {}, {}
   ];
-  loading: Observable<boolean> = of(true);
+  loading$: Observable<boolean> = of(true);
   ROUTES = ROUTES;
 
   constructor(public userService: UserService,
@@ -38,7 +47,7 @@ export class MainPageComponent implements OnInit {
 
   ngOnInit() {
     this.store.dispatch(getBaseData());
-    this.loading = this.store.select(curGameLoading);
+    this.loading$ = this.store.select(curGameLoading);
     /*this.game.getCurrentClub().subscribe(value => {
       console.log('CURRENT CLUB', this.game.currentClub);
       this.loading = false;

@@ -13,3 +13,5 @@ export const gotClub = createAction('[Initial] random club acquired', props<{clu
 export const getPlayers = createAction('[Initial] roster acquisition');
 export const gotPlayers = createAction('[Initial] roster acquired', props<{players: Player[]}>());
 export const updatePlayers = createAction('Roster has been modified', props<{newPlayers: Player[]}>());
+
+export const scheduleGenerated = createAction('Schedule has been generated', props<{schedule: any}>());

@@ -1,9 +1,10 @@
 import {Club} from '../../interfaces/club';
 import {Player} from '../../interfaces/player';
 import {Action, createReducer, on} from '@ngrx/store';
-import {getClub, gotBaseData, gotClub, gotPlayers, updatePlayers} from '../actions/current-game.actions';
+import {getClub, gotBaseData, gotClub, gotPlayers, scheduleGenerated, updatePlayers} from '../actions/current-game.actions';
 import {Country} from '../../interfaces/country';
 import {League} from '../../interfaces/league';
+import {WeekSchedule} from '../../interfaces/league-schedule';
 
 export interface CurrentGameState {
   currentClub: Club;
@@ -13,15 +14,17 @@ export interface CurrentGameState {
     leagues: League[],
     clubs: Club[],
     players: Player[]
-  },
+  };
   loading: boolean;
+  schedule: {[key: string]: WeekSchedule[][]};
 }
 
 export const currentGameInitState: CurrentGameState = {
   currentClub: null,
   currentPlayers: null,
   data: null,
-  loading: true
+  loading: true,
+  schedule: null
 };
 
 const _currentGameReducer = createReducer(currentGameInitState,
@@ -47,6 +50,10 @@ const _currentGameReducer = createReducer(currentGameInitState,
   on(updatePlayers, (state, {newPlayers}) => {
     console.log('updatePlayers', {...state, currentPlayers: newPlayers});
     return {...state, currentPlayers: newPlayers};
+  }),
+  on(scheduleGenerated, (state, {schedule}) => {
+    console.log('scheduleGenerated', {...state, schedule});
+    return {...state, schedule};
   })
 );
 
