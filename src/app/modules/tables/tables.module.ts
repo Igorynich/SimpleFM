@@ -1,24 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {RouterModule} from '@angular/router';
-import { ScheduleMainPageComponent } from './schedule-main-page/schedule-main-page.component';
-import {MatListModule} from '@angular/material/list';
+import { TablesMainPageComponent } from './tables-main-page/tables-main-page.component';
 import {SharedModule} from '../../shared/shared.module';
 
 const routes = [
   {
     path: '',
-    component: ScheduleMainPageComponent
+    component: TablesMainPageComponent
   }
 ];
 
 @NgModule({
-  declarations: [ScheduleMainPageComponent],
+  declarations: [TablesMainPageComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    MatListModule,
     SharedModule,
   ]
 })
-export class ScheduleModule { }
+export class TablesModule { }

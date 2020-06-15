@@ -21,6 +21,10 @@ const officeRoutes = [
         path: ROUTES.SCHEDULE,
         loadChildren: () => import('../schedule/schedule.module').then(mod => mod.ScheduleModule)
       },
+      {
+        path: ROUTES.TABLES,
+        loadChildren: () => import('../tables/tables.module').then(mod => mod.TablesModule)
+      },
     ]
   },
 ];

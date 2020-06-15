@@ -12,4 +12,5 @@
 .office-card--top-panel {
 }
 .office-card--bot-panel {
+  overflow: auto;
 }

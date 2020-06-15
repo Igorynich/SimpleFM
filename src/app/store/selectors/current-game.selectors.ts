@@ -22,3 +22,17 @@ export const getAllCountries = createSelector(selectCurrentGameState, (state: Cu
 export const selectPlayersByClubsNameEn = createSelector(selectCurrentGameState, (state, {clubsNameEn}) => {
   return state.data.players.filter(value => value.clubNameEn === clubsNameEn);
 });
+
+export const selectScheduleByLeaguesNameEn = createSelector(selectCurrentGameState, (state, {leaguesNameEn}) => {
+  const league = state.data.leagues.find(value => value.nameEn === leaguesNameEn);
+  return state.schedule[league.id];
+});
+
+export const selectScheduleByClubsNameEn = createSelector(selectCurrentGameState, (state, {clubsNameEn}) => {
+  const club = state.data.clubs.find(value => value.nameEn === clubsNameEn);
+  const league = state.data.leagues.find(value => value.nameEn === club.leagueNameEn);
+  const leagueSchedule = state.schedule[league.id];
+  return leagueSchedule.map(value => {
+    return value.find(match => match.home.nameEn === club.nameEn || match.away.nameEn === club.nameEn);
+  });
+});

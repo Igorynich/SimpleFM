@@ -16,7 +16,7 @@ export interface CurrentGameState {
     players: Player[]
   };
   loading: boolean;
-  schedule: {[key: string]: WeekSchedule[][]};
+  schedule: {[leagueId: string]: WeekSchedule[][]};
 }
 
 export const currentGameInitState: CurrentGameState = {

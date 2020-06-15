@@ -86,7 +86,17 @@ export class CurrentGameService {
   }
 
   generateCupSchedules(countries: Country[], leagues: League[], clubs: Club[]) {
-
+    const cupsSchedules = {};
+    countries.forEach(country => {
+      const countryLeagues = leagues.filter(league => league.countryNameEn === country.nameEn);
+      if (countryLeagues.length) {
+        const countryLeagueNameEns = countryLeagues.map(league => league.nameEn);
+        const countryClubs = clubs.filter(club => countryLeagueNameEns.includes(club.leagueNameEn));
+        if (countryClubs.length) {
+          console.log(`${country.nameRu} clubs`, countryClubs.length, Math.log2(countryClubs.length), Math.log2(countryClubs.length) % 1 === 0);
+        }
+      }
+    });
   }
 
 

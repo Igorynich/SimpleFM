@@ -1,1 +1,39 @@
-<p>schedule-main-page works!</p>
+<div class="row schedule-header">
+  <div class="col-2">
+    Неделя
+  </div>
+  <div class="col-5">
+    Оппонент
+  </div>
+  <div class="col-1 text-center">
+    Поле
+  </div>
+  <div class="col-2 text-center">
+    Результат
+  </div>
+</div>
+
+<div class="row schedule-body">
+  <div class="col">
+    <div class="row w-100" *ngFor="let match of (curClubsSchedule$ | async); let i = index">
+      <div class="col-2">
+        Неделя {{i + 1}}
+      </div>
+      <div class="col-5">
+        {{getMatchOpponent(match).club.nameRu}}
+      </div>
+      <div class="col-1 text-center">
+        {{getMatchOpponent(match).field}}
+      </div>
+      <div class="col-2 text-center">
+        ---
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row justify-content-end">
+  <div class="col-1">
+    <app-navigate-to-office></app-navigate-to-office>
+  </div>
+</div>

@@ -1,0 +1,28 @@
+<div class="tables-schedule-body">
+  <div class="row">
+    <div class="col text-center hover" *ngFor="let week of (schedule$ | async); let i = index" (click)="setWeekTo(i)">
+      <span [ngClass]="{selected: i === selectedWeek.num}">
+        {{i + 1}}
+      </span>
+    </div>
+  </div>
+  <h3 class="text-center">Неделя {{selectedWeek.num + 1}}</h3>
+  <div class="row" *ngFor="let match of selectedWeek.schedule">
+    <div class="col-5 text-right">
+      {{match.home.nameRu}}
+    </div>
+    <div class="col-1 text-center">
+      -
+    </div>
+    <div class="col-5 text-left">
+       {{match.away.nameRu}}
+    </div>
+  </div>
+
+  <div class="row justify-content-end">
+    <div class="col-1">
+      <app-navigate-to-office></app-navigate-to-office>
+    </div>
+  </div>
+</div>
+

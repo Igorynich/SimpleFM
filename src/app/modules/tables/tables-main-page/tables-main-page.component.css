@@ -1,0 +1,7 @@
+.tables-schedule-body {
+  height: 100px;
+}
+
+.selected {
+  border-bottom: black solid thin;
+}
