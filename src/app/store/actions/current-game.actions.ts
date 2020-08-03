@@ -6,7 +6,7 @@ import {League} from '../../interfaces/league';
 
 export const getBaseData = createAction('[Initial] data read from Firebase(countries, leagues, clubs, players)');
 export const gotBaseData = createAction('[Initial] data read successful', props<{countries: Country[], leagues: League[],
-  clubs: Club[], players: Player[]}>());
+  clubs: Club[], players: Player[], scheduleShells}>());
 
 export const getClub = createAction('[Initial] random club acquisition');
 export const gotClub = createAction('[Initial] random club acquired', props<{club: Club}>());

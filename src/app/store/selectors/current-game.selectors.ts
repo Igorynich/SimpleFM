@@ -23,16 +23,40 @@ export const selectPlayersByClubsNameEn = createSelector(selectCurrentGameState,
   return state.data.players.filter(value => value.clubNameEn === clubsNameEn);
 });
 
-export const selectScheduleByLeaguesNameEn = createSelector(selectCurrentGameState, (state, {leaguesNameEn}) => {
+export const selectLeagueScheduleByLeaguesNameEn = createSelector(selectCurrentGameState, (state, {leaguesNameEn}) => {
   const league = state.data.leagues.find(value => value.nameEn === leaguesNameEn);
   return state.schedule[league.id];
+});
+
+export const selectCupScheduleByLeaguesNameEn = createSelector(selectCurrentGameState, (state, {leaguesNameEn}) => {
+  const league = state.data.leagues.find(value => value.nameEn === leaguesNameEn);
+  const country = state.data.countries.find(value => value.nameEn === league.countryNameEn);
+  return state.schedule[country.id];
 });
 
 export const selectScheduleByClubsNameEn = createSelector(selectCurrentGameState, (state, {clubsNameEn}) => {
   const club = state.data.clubs.find(value => value.nameEn === clubsNameEn);
   const league = state.data.leagues.find(value => value.nameEn === club.leagueNameEn);
+  const country = state.data.countries.find(value => value.nameEn === league.countryNameEn);
   const leagueSchedule = state.schedule[league.id];
-  return leagueSchedule.map(value => {
+  const clubsLeagueSchedule = leagueSchedule.map(value => {
     return value.find(match => match.home.nameEn === club.nameEn || match.away.nameEn === club.nameEn);
   });
+  const cupSchedule = state.schedule[country.id];
+  const clubsCupSchedule = cupSchedule.map(value =>
+    value.find(match => match.home?.nameEn === club.nameEn || match.away?.nameEn === club.nameEn));
+  console.log('clubsCupSchedule', clubsCupSchedule);
+  clubsCupSchedule.forEach((value, index) => {
+    clubsLeagueSchedule.splice(5 * (index + 1), 0, value);
+  });
+  return clubsLeagueSchedule;
+});
+
+export const selectCupScheduleByCountryNameEn = createSelector(selectCurrentGameState, (state, {countryNameEn}) => {
+  const country = state.data.countries.find(value => value.nameEn === countryNameEn);
+  return state.schedule[country.id];
+});
+
+export const selectLeagueScheduleShellByNumberOfClubs = createSelector(selectCurrentGameState, (state, {numOfClubs}) => {
+  return state.data.scheduleShells[`league_${numOfClubs}`];
 });

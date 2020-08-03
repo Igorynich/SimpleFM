@@ -28,14 +28,14 @@ export const currentGameInitState: CurrentGameState = {
 };
 
 const _currentGameReducer = createReducer(currentGameInitState,
-  on(gotBaseData, (state, {countries, leagues, clubs, players}) => {
+  on(gotBaseData, (state, {countries, leagues, clubs, players, scheduleShells}) => {
     console.log('gotBase Data', {
       ...state, data: {
-        countries, leagues, clubs, players
+        countries, leagues, clubs, players, scheduleShells
       }});
     return {
       ...state, data: {
-        countries, leagues, clubs, players
+        countries, leagues, clubs, players, scheduleShells
       }
     };
   }),

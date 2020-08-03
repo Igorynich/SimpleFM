@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {AngularFirestore, CollectionReference} from '@angular/fire/firestore';
 import {Country} from '../interfaces/country';
 import {BehaviorSubject, from, Observable, of} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
+import {catchError, map, tap} from 'rxjs/operators';
 import {League} from '../interfaces/league';
 import {Club} from '../interfaces/club';
 import {Player} from '../interfaces/player';
@@ -26,6 +26,22 @@ export class FirebaseService {
   lastCreatedPlayer: Player;
 
   constructor(private afs: AngularFirestore) {
+  }
+
+  getScheduleShells(): Observable<any> {
+    return this.afs.collection(`schedules`).snapshotChanges().pipe(map(value => {
+      console.log('Schedules Collection', value);
+      const scheduleEntity = {};
+      value.forEach(item => {
+        scheduleEntity[item.payload.doc.id] = item.payload.doc.data();
+      });
+      console.log('scheduleEntity', scheduleEntity);
+      return scheduleEntity;
+    }));
+  }
+
+  getLeagueScheduleShell(numOfTeams: number): Observable<any> {
+    return this.afs.doc(`schedules/league_${numOfTeams}`).valueChanges();
   }
 
   addCountry(country: Country): Observable<any> {

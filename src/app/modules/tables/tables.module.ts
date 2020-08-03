@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import {RouterModule} from '@angular/router';
 import { TablesMainPageComponent } from './tables-main-page/tables-main-page.component';
 import {SharedModule} from '../../shared/shared.module';
+import {OrganizationChartModule} from 'primeng';
+import {MatDividerModule} from '@angular/material/divider';
 
 const routes = [
   {
@@ -17,6 +19,8 @@ const routes = [
     CommonModule,
     RouterModule.forChild(routes),
     SharedModule,
+    OrganizationChartModule,
+    MatDividerModule,
   ]
 })
 export class TablesModule { }

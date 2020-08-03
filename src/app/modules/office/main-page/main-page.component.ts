@@ -8,7 +8,7 @@ import {InfoDialogComponent} from '../../../shared/info-dialog/info-dialog.compo
 import {Store} from '@ngrx/store';
 import {CurrentGameState} from '../../../store/reducers/current-game.reducer';
 import {getBaseData, getClub} from '../../../store/actions/current-game.actions';
-import {AppState, curGameLoading} from '../../../store/selectors/current-game.selectors';
+import {AppState, curGameLoading, selectCurrentClub} from '../../../store/selectors/current-game.selectors';
 import {Observable, of} from 'rxjs';
 
 @Component({
@@ -35,6 +35,7 @@ export class MainPageComponent implements OnInit {
       route: ROUTES.TABLES
     }, {}, {}, {}, {}, {}
   ];
+  currentClub;
   loading$: Observable<boolean> = of(true);
   ROUTES = ROUTES;
 
@@ -48,6 +49,9 @@ export class MainPageComponent implements OnInit {
   ngOnInit() {
     this.store.dispatch(getBaseData());
     this.loading$ = this.store.select(curGameLoading);
+    this.store.select(selectCurrentClub).subscribe(value => {
+      this.currentClub = value;
+    });
     /*this.game.getCurrentClub().subscribe(value => {
       console.log('CURRENT CLUB', this.game.currentClub);
       this.loading = false;

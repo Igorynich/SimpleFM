@@ -30,9 +30,10 @@ export class CurrentGameEffects {
           this.fs.getCountries(),
           this.fs.getLeagues(),
           this.fs.getClubs(),
-          this.fs.getPlayers()
-        ]).pipe(take(1), map(([countries, leagues, clubs, players]) => {
-          return gotBaseData({countries, leagues, clubs, players});
+          this.fs.getPlayers(),
+          this.fs.getScheduleShells()
+        ]).pipe(take(1), map(([countries, leagues, clubs, players, scheduleShells]) => {
+          return gotBaseData({countries, leagues, clubs, players, scheduleShells});
         }));
       })
     );
@@ -93,8 +94,8 @@ export class CurrentGameEffects {
           this.store.pipe(select(getAllLeagues)),
           this.store.pipe(select(getAllClubs))]).pipe(map(([countries, leagues, clubs]) => {
             const leagueSchedules = this.game.generateLeagueSchedules(leagues, clubs);
-            this.game.generateCupSchedules(countries, leagues, clubs);
-            return scheduleGenerated({schedule: leagueSchedules});
+            const cupSchedules = this.game.generateCupSchedules(countries, leagues, clubs);
+            return scheduleGenerated({schedule: {...leagueSchedules, ...cupSchedules}});
         }));
       })
     ));

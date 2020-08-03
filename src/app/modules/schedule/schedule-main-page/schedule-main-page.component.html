@@ -2,6 +2,9 @@
   <div class="col-2">
     Неделя
   </div>
+  <div class="col-2">
+    Турнир
+  </div>
   <div class="col-5">
     Оппонент
   </div>
@@ -16,18 +19,30 @@
 <div class="row schedule-body">
   <div class="col">
     <div class="row w-100" *ngFor="let match of (curClubsSchedule$ | async); let i = index">
-      <div class="col-2">
-        Неделя {{i + 1}}
-      </div>
-      <div class="col-5">
-        {{getMatchOpponent(match).club.nameRu}}
-      </div>
-      <div class="col-1 text-center">
-        {{getMatchOpponent(match).field}}
-      </div>
-      <div class="col-2 text-center">
-        ---
-      </div>
+      <ng-container *ngIf="match">
+        <div class="col-2">
+          Неделя {{i + 1}}
+        </div>
+        <div class="col-2">
+          {{match.isCupMatch ? 'Кубок' : 'Лига'}}
+        </div>
+        <ng-container *ngIf="getMatchOpponent(match)?.club">
+          <div class="col-5">
+            {{getMatchOpponent(match).club?.nameRu}}
+          </div>
+          <div class="col-1 text-center">
+            {{getMatchOpponent(match).field}}
+          </div>
+          <div class="col-2 text-center">
+            ---
+          </div>
+        </ng-container>
+        <ng-container *ngIf="!getMatchOpponent(match)?.club">
+          <div class="col">
+            Прошел в след. раунд
+          </div>
+        </ng-container>
+      </ng-container>
     </div>
   </div>
 </div>
