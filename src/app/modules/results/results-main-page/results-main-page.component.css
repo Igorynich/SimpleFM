@@ -1,0 +1,23 @@
+.results-main-container {
+  /*background-color: black;*/
+  height: 100%;
+}
+
+.result-card--main {
+  margin: 40px;
+  background-color: black;
+  /*position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;*/
+  opacity: 95%;
+}
+
+.main-header {
+  color: lightskyblue;
+}
+
+.white {
+  color: white;
+}

@@ -5,6 +5,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
 import { InfoDialogComponent } from './info-dialog/info-dialog.component';
 import { NavigateToOfficeComponent } from './navigate-to-office/navigate-to-office.component';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 
 
@@ -17,7 +18,8 @@ import { NavigateToOfficeComponent } from './navigate-to-office/navigate-to-offi
   imports: [
     CommonModule,
     MatButtonModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSnackBarModule
   ],
   exports: [
     NavigateToOfficeComponent

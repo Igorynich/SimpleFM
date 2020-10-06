@@ -3,5 +3,6 @@ export const ROUTES = {
   OFFICE: 'office',
   ROSTER: 'roster',
   SCHEDULE: 'schedule',
-  TABLES: 'tables'
+  TABLES: 'tables',
+  RESULTS: 'results'
 };

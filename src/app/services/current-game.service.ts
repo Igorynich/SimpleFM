@@ -1,15 +1,23 @@
 import {Injectable} from '@angular/core';
 import {FirebaseService} from './firebase.service';
-import {map, switchMap, take} from 'rxjs/operators';
+import {delay, map, switchMap, take} from 'rxjs/operators';
 import {Club} from '../interfaces/club';
-import {Observable} from 'rxjs';
+import {combineLatest, Observable} from 'rxjs';
 import {Player} from '../interfaces/player';
 import {League} from '../interfaces/league';
 import {shuffleArray} from '../utils/helpers';
 import {Country} from '../interfaces/country';
 import {WeekSchedule} from '../interfaces/league-schedule';
 import {Store} from '@ngrx/store';
-import {AppState, selectLeagueScheduleShellByNumberOfClubs} from '../store/selectors/current-game.selectors';
+import {
+  AppState,
+  selectClubsByLeagueId,
+  selectLeagueScheduleShellByNumberOfClubs,
+  selectMatchById
+} from '../store/selectors/current-game.selectors';
+import {LeagueTable} from '../interfaces/league-table';
+import {Match} from '../interfaces/match';
+import {addMatch} from '../store/actions/current-game.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -19,38 +27,15 @@ export class CurrentGameService {
   currentClub: Club;
   currentClubId: string;
   currentPlayers: Player[];
+  idCounter = 0;
   scheduleShell = [];
   weekScheduleShell = [];
   rerunsHappened = 0;
 
-  constructor(private fs: FirebaseService, private store: Store<AppState>) {
+  constructor(private store: Store<AppState>) {
   }
 
-  getCurrentClub(): Observable<any> {
-    return this.fs.getClubs().pipe(take(1), map(clubs => {
-      const randomNum = Math.ceil(Math.random() * 19).toFixed(0);
-      console.log(randomNum);
-      this.currentClub = clubs[randomNum];
-      this.currentClubId = this.currentClub.id;
-    }), switchMap(value => this.fs.getPlayersByClub(this.currentClub.nameEn).pipe(map(players => {
-      console.log(`Players of ${this.currentClub.nameRu}`, players);
-      // init sort for 4-4-2
-      const gks = players.filter(pl => pl.position === 'GK').sort((a, b) => b.power - a.power);
-      const defs = players.filter(pl => pl.position === 'D').sort((a, b) => b.power - a.power);
-      const mids = players.filter(pl => pl.position === 'M').sort((a, b) => b.power - a.power);
-      const forwards = players.filter(pl => pl.position === 'F').sort((a, b) => b.power - a.power);
-      this.currentPlayers = [
-        ...gks.splice(0, 1),
-        ...defs.splice(0, 4),
-        ...mids.splice(0, 4),
-        ...forwards.splice(0, 2),
-        ...gks,
-        ...defs,
-        ...mids,
-        ...forwards
-      ];
-    }))));
-  }
+
 
   generateLeagueSchedules(leagues: League[], clubs: Club[]): { [key: string]: WeekSchedule[][] } {
     const leagueSchedules = {};
@@ -63,38 +48,51 @@ export class CurrentGameService {
         shuffleArray(leagueClubs);
         console.log('Shuffled clubs', leagueClubs);
         this.store.select(selectLeagueScheduleShellByNumberOfClubs, {numOfClubs: leagueClubs.length})
-        /*this.fs.getLeagueScheduleShell(leagueClubs.length)*/.subscribe(value => {
-          console.log('League schedule', value);
-          scheduleShell = value.schedule;
-          const leagueSchedule = scheduleShell.map(value2 => {
-            return value2.week.map(value1 => {
-              return {
-                home: leagueClubs[value1.h - 1],
-                away: leagueClubs[value1.a - 1]
-              };
-            });
-          });
-          leagueSchedules[league.id] = leagueSchedule;
-          // TODO check if schedule is full
-          if (leagueSchedule.length === (leagueClubs.length - 1)) {
-            const leagueScheduleReversed = leagueSchedule.map(value2 => {
-              return value2.map(value1 => {
-                const home = value1.home;
-                const away = value1.away;
+          .subscribe(value => {
+            console.log('League schedule', value);
+            scheduleShell = value.schedule;
+            const leagueSchedule = scheduleShell.map(value2 => {
+              return value2.week.map(value1 => {
+                const match = this.createMatch(leagueClubs[value1.h - 1], leagueClubs[value1.a - 1], league);
                 return {
-                  home: away,
-                  away: home
+                  matchId: match.id
                 };
               });
             });
-            leagueSchedules[league.id] = [...leagueSchedule, ...leagueScheduleReversed];
-          }
-        });
+            leagueSchedules[league.id] = leagueSchedule;
+            // TODO check if schedule is full
+            if (leagueSchedule.length === (leagueClubs.length - 1)) {
+              const leagueScheduleReversed = leagueSchedule.map(value2 => {
+                return value2.map(value1 => {
+                  const match = this.createMatch(value1.home, value1.away, league);
+                  return {
+                    matchId: match.id
+                  };
+                });
+              });
+              leagueSchedules[league.id] = [...leagueSchedule, ...leagueScheduleReversed];
+            }
+          });
         console.log(`${league.nameRu} schedule`, leagueSchedules[league.id]);
         // this.generateLeagueScheduleShell(clubs.length);
       }
     });
     return leagueSchedules;
+  }
+
+  private createMatch(homeTeam: Club | null, awayTeam: Club | null, tournament: League | { nameEn: string, nameRu: string },
+                      isCupMatch = false): Match {
+    const match: Match = {
+      id: this.idCounter,
+      isCupMatch,
+      tournament,
+      home: homeTeam,
+      away: awayTeam
+    };
+    this.idCounter++;
+    // console.log('Dispatching addMatch', match.id);
+    this.store.dispatch(addMatch({match: {[match.id]: match}}));
+    return match;
   }
 
   generateCupSchedules(countries: Country[], leagues: League[], clubs: Club[]): { [countryId: string]: WeekSchedule[][] } {
@@ -105,14 +103,14 @@ export class CurrentGameService {
         const countryLeagueNameEns = countryLeagues.map(league => league.nameEn);
         const countryClubs = clubs.filter(club => countryLeagueNameEns.includes(club.leagueNameEn));
         if (countryClubs.length) {
-          cupsSchedules[country.id] = this.generateCupScheduleShell(countryClubs);
+          cupsSchedules[country.id] = this.generateCupScheduleShell(countryClubs, country);
         }
       }
     });
     return cupsSchedules;
   }
 
-  private generateCupScheduleShell(clubs: Club[]): WeekSchedule[][] {
+  private generateCupScheduleShell(clubs: Club[], country: Country): WeekSchedule[][] {
     let numOfClubsToGenSchedule = clubs.length;
     if (Math.log2(clubs.length) % 1 !== 0) {
       numOfClubsToGenSchedule = 2 ** Math.ceil(Math.log2(clubs.length));
@@ -183,26 +181,31 @@ export class CurrentGameService {
       cupSchedule.push(roundSchedule);
     }
     shuffleArray(clubs);
-    const cupScheduleWithRealClubs: WeekSchedule[][] = cupSchedule.map(value => {
+    const tournament = {nameEn: `Cup of ${country.nameEn}`, nameRu: `Кубок ${country.nameRu}`};
+    console.log('cupSchedule', cupSchedule);
+    // use this to generate WeekSchedule[][] in existing forEaches, instead of additional one in the end
+    // const cupScheduleWithRealClubsAsWeekSchedule: WeekSchedule[][] = [];
+    const cupScheduleWithRealClubs: {home: Club | null, away: Club | null}[][] = cupSchedule.map(value => {
       return value.map(value1 => {
+        const home = value1.home ? clubs[value1.home.num - 1] : null;
+        const away = value1.away ? clubs[value1.away.num - 1] : null;
         return {
-          home: value1.home ? clubs[value1.home.num - 1] : null,
-          away: value1.away ? clubs[value1.away.num - 1] : null,
-          isCupMatch: true
+          home,
+          away
         };
       });
     });
-    cupScheduleWithRealClubs.forEach((value, index) => {
+    cupScheduleWithRealClubs.forEach((value: {home: Club | null, away: Club | null}[], index) => {
       // проводим во второй раунд те клубы у которых нет соперников в 1-м - т.о. заполняем 2-й раунд
       if (index === 1) {    // возможно добавить проверку на нынешнюю неделю сезона и генерировать весь оставшийся скедуль исходя из этого
         for (let j = 0; j < cupScheduleWithRealClubs[index - 1].length / 2; j++) {
-          const match1 = cupScheduleWithRealClubs[index - 1][j * 2];
-          const match2 = cupScheduleWithRealClubs[index - 1][j * 2 + 1];
-          value.push({
-            home: (!match1.home || !match1.away) ? (match1.home || match1.away) : null,
-            away: (!match2.home || !match2.away) ? (match2.home || match2.away) : null,
-            isCupMatch: true
-          });
+            const match1 = cupScheduleWithRealClubs[index - 1][j * 2];
+            const match2 = cupScheduleWithRealClubs[index - 1][j * 2 + 1];
+            const home = (!match1.home || !match1.away) ? (match1.home || match1.away) : null;
+            const away = (!match2.home || !match2.away) ? (match2.home || match2.away) : null;
+            value.push({
+              home, away
+            });
         }
       }
       // заполняем оставшиеся раунды пустыми матчами
@@ -210,18 +213,26 @@ export class CurrentGameService {
         for (let j = 0; j < cupScheduleWithRealClubs[index - 1].length / 2; j++) {
           value.push({
             home: null,
-            away: null,
-            isCupMatch: true
+            away: null
           });
         }
       }
     });
-    console.log('cupScheduleWithRealClubs', cupScheduleWithRealClubs);
-    return cupScheduleWithRealClubs;
+
+    // that's an additional one
+    const cupMatches: WeekSchedule[][] = cupScheduleWithRealClubs.map((value: {home: Club | null, away: Club | null}[], index) => {
+      return value.map(value1 => {
+        const match = this.createMatch(value1.home, value1.away, tournament, true);
+        return {matchId: match.id};
+      });
+    });
+
+    console.log(`cupScheduleWithRealClubs of ${tournament}`, cupScheduleWithRealClubs);
+    return cupMatches;
   }
 
 
-  generateLeagueScheduleShell(numOfTeams: number) {
+  /*generateLeagueScheduleShell(numOfTeams: number) {
     const teams: Team[] = [];
     for (let i = 0; i < numOfTeams; i++) {
       teams.push({
@@ -247,9 +258,9 @@ export class CurrentGameService {
     }
 
     console.log('Resulting schedule', this.scheduleShell.map(value => value.map(value1 => `${value1.home.num} - ${value1.away.num}`)));
-  }
+  }*/
 
-  generateWeeklySchedule(teams: Team[]) {
+  /*generateWeeklySchedule(teams: Team[]) {
     for (let i = 0; i < teams.length / 2; i++) {
       const leftoverTeams = teams.filter(value => this.teamIsNotInWeekSchedule(value));
       const randomIndex = Math.floor(Math.random() * (leftoverTeams.length - 1));
@@ -283,9 +294,9 @@ export class CurrentGameService {
       }
       this.pushTeamsToWeekly(homeTeam, awayTeam);
     }
-  }
+  }*/
 
-  getTeamPlayed(team: Team, scheduleShell = this.scheduleShell): number[] {
+  /*getTeamPlayed(team: Team, scheduleShell = this.scheduleShell): number[] {
     const played: number[] = [];
     scheduleShell.forEach((value, index) => {
       const teamsMatch = value.find(value1 => value1.home.num === team.num || value1.away.num === team.num);
@@ -315,6 +326,33 @@ export class CurrentGameService {
     return !this.weekScheduleShell.find(value => {
       return value.home.num === team.num || value.away.num === team.num;
     });
+  }*/
+
+  generateTables(leagues: League[]): { [leagueId: string]: LeagueTable[] } {
+    const tables = {};
+    leagues.forEach(value => {
+      const table = [];
+      this.store.select(selectClubsByLeagueId, {leagueId: value.id}).pipe(take(1)).subscribe(clubs => {
+        if (!!clubs.length) {
+          clubs.sort((a, b) => a.nameRu > b.nameRu ? 1 : -1);
+          clubs.forEach((club: Club, i) => {
+            table.push({
+              clubName: club.nameRu,
+              games: 0,
+              wins: 0,
+              draws: 0,
+              loses: 0,
+              gf: 0,
+              ga: 0,
+              gd: 0,
+              points: 0
+            });
+          });
+          tables[value.id] = table;
+        }
+      });
+    });
+    return tables;
   }
 }
 

@@ -4,12 +4,12 @@ import {
   AppState,
   selectCupScheduleByLeaguesNameEn,
   selectCurrentClub,
-  selectLeagueScheduleByLeaguesNameEn
+  selectLeagueScheduleByLeaguesNameEn, selectLeagueTableByLeaguesNameEn
 } from '../../../store/selectors/current-game.selectors';
 import {map, switchMap, tap} from 'rxjs/operators';
 import {WeekSchedule} from '../../../interfaces/league-schedule';
 import {Observable} from 'rxjs';
-import {TreeNode} from 'primeng';
+import {LeagueTable} from '../../../interfaces/league-table';
 
 @Component({
   selector: 'app-tables-main-page',
@@ -26,6 +26,10 @@ export class TablesMainPageComponent implements OnInit {
     schedule: null
   };
   isLeague = true;
+  leagueOrCupTab = 0;
+  table$: Observable<LeagueTable[]>;
+  table: LeagueTable[];
+  displayedColumns: string[] = ['position', 'clubName', 'games', 'wins', 'draws', 'loses', 'gf', 'ga', 'gd', 'points'];
 
   constructor(private store: Store<AppState>) { }
 
@@ -45,6 +49,8 @@ export class TablesMainPageComponent implements OnInit {
           console.log('Cup Schedule', x);
           return x;
         }))));
+    this.table$ = this.store.select(selectCurrentClub).pipe(switchMap(curClub =>
+      this.store.select(selectLeagueTableByLeaguesNameEn, {leaguesNameEn: curClub.leagueNameEn})));
   }
 
   setWeekTo(i: number) {

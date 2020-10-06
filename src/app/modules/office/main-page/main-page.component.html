@@ -4,7 +4,8 @@
       <div class="row justify-content-center h-25 pb-4">
         <div class="col">
           <mat-card class="office-card--top-panel h-100">
-            <p class="text-right">{{userService.userName}} (<span>{{currentClub?.nameRu}}</span>)</p>
+            <app-header></app-header>
+            <!--<p class="text-right">{{userService.userName}} (<span>{{currentClub?.nameRu}}</span>)</p>
             <button mat-raised-button color="warning" (click)="logOut()" class="float-right ml-3"
                     *ngIf="userService.isLogged()">
               Выйти
@@ -12,7 +13,7 @@
             <button mat-raised-button color="accent" (click)="navigateToAdmin()" class="float-right"
                     *ngIf="userService.isAdmin()">
               Админка
-            </button>
+            </button>-->
           </mat-card>
         </div>
       </div>

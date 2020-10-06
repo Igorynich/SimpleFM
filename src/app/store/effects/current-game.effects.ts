@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {FirebaseService} from '../../services/firebase.service';
-import {getBaseData, getClub, gotBaseData, gotClub, gotPlayers, scheduleGenerated} from '../actions/current-game.actions';
+import {getBaseData, getClub, gotBaseData, gotClub, gotPlayers, scheduleGenerated, tablesGenerated} from '../actions/current-game.actions';
 import {concatMap, map, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {select, Store} from '@ngrx/store';
 import {CurrentGameState} from '../reducers/current-game.reducer';
@@ -18,6 +18,7 @@ import {
 import {MatDialog} from '@angular/material/dialog';
 import {InfoDialogComponent} from '../../shared/info-dialog/info-dialog.component';
 import {CurrentGameService} from '../../services/current-game.service';
+import {sortClubsRoster} from '../../utils/sort-roster';
 
 @Injectable()
 export class CurrentGameEffects {
@@ -42,7 +43,6 @@ export class CurrentGameEffects {
   getClub$ = createEffect(() =>
     this.actions$.pipe(
       ofType(gotBaseData),
-      tap(x => console.log('IN getCLUB$')),
       switchMap(action => this.store.pipe(select(getAllClubs)).pipe(take(1), map(clubs => {
         const randomNum = Math.ceil(Math.random() * 19).toFixed(0);
         console.log(randomNum);
@@ -57,31 +57,15 @@ export class CurrentGameEffects {
   getPlayers$ = createEffect(() =>
     this.actions$.pipe(
       ofType(gotClub),
-      tap(x => console.log('IN getPlayers$')),
       concatMap(action => of(action).pipe(
         withLatestFrom(this.store.pipe(select(selectCurrentClub)))
       )),
-      tap(x => console.log('tap', x)),
       switchMap(([action, curClub]) => this.store.pipe(select(selectPlayersByClubsNameEn, {clubsNameEn: curClub.nameEn}))
         .pipe(take(1), map(players => {
           // TODO: move to currentGameService
           console.log(`Players of ${curClub.nameRu}`, players);
-          // init sort for 4-4-2
-          const gks = players.filter(pl => pl.position === 'GK').sort((a, b) => b.power - a.power);
-          const defs = players.filter(pl => pl.position === 'D').sort((a, b) => b.power - a.power);
-          const mids = players.filter(pl => pl.position === 'M').sort((a, b) => b.power - a.power);
-          const forwards = players.filter(pl => pl.position === 'F').sort((a, b) => b.power - a.power);
-          const currentPlayers = [
-            ...gks.splice(0, 1),
-            ...defs.splice(0, 4),
-            ...mids.splice(0, 4),
-            ...forwards.splice(0, 2),
-            ...gks,
-            ...defs,
-            ...mids,
-            ...forwards
-          ];
-          return gotPlayers({players: currentPlayers});
+          // sort not really needed since it happened in select
+          return gotPlayers({players: sortClubsRoster(players)});
         })))
     ));
 
@@ -96,6 +80,17 @@ export class CurrentGameEffects {
             const leagueSchedules = this.game.generateLeagueSchedules(leagues, clubs);
             const cupSchedules = this.game.generateCupSchedules(countries, leagues, clubs);
             return scheduleGenerated({schedule: {...leagueSchedules, ...cupSchedules}});
+        }));
+      })
+    ));
+
+  generateTables$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(scheduleGenerated),
+      switchMap(actions => {
+        return this.store.pipe(select(getAllLeagues)).pipe(map(leagues => {
+          const leagueTables = this.game.generateTables(leagues);
+          return tablesGenerated({tables: {...leagueTables}});
         }));
       })
     ));

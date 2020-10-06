@@ -14,6 +14,13 @@ const routes = [
     // canActivate: [UserGuard]
   },
   {
+    path: ROUTES.RESULTS,
+    loadChildren: () => import('./modules/results/results.module').then(mod => mod.ResultsModule),
+    canLoad: [UserGuard],
+    // data: { preload: true }
+    // canActivate: [UserGuard]
+  },
+  {
     path: '',
     loadChildren: () => import('./modules/home/home.module').then(mod => mod.HomeModule),
   },

@@ -6,6 +6,7 @@ import {catchError, map, tap} from 'rxjs/operators';
 import {League} from '../interfaces/league';
 import {Club} from '../interfaces/club';
 import {Player} from '../interfaces/player';
+import {CurrentGameService} from './current-game.service';
 
 export class PlayerQueryObj {
   club?: string;
@@ -250,12 +251,11 @@ export class FirebaseService {
     return this.afs.collection<Player>('players', (ref: CollectionReference) => {
       return ref.orderBy('position');
     }).snapshotChanges().pipe(map(value => {
-      const playersArray = [];
-      value.map(item => {
-        playersArray.push({
+      const playersArray: Player[] = value.map(item => {
+        return {
           id: item.payload.doc.id,
           ...item.payload.doc.data()
-        });
+        };
       });
       if (checkProgress) {
         this.progress.next({

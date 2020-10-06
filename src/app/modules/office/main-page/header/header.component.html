@@ -1,0 +1,45 @@
+<div class="row h-100 align-content-between">
+  <div class="col-12">
+    <div class="row justify-content-end">
+      <div class="col-8 text-center">
+        <span class="current-week" >{{!(currentWeek$ | async) ? 'Межсезонье' : 'Неделя ' + (currentWeek$ | async)}}</span>
+      </div>
+      <div class="col-2">
+        <div class="row">
+          <div class="col">
+            <p class="text-right">{{userService.userName}} (<span>{{(currentClub$ | async)?.nameRu}}</span>)</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <span>Следующий матч:</span>
+          </div>
+          <div class="col-12">
+            <span>vs {{(nextOpponent$ | async)?.opponent.nameRu}}({{(nextOpponent$ | async)?.field}})</span>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+  <div class="col-12">
+    <div class="row justify-content-end">
+      <div class="col-8 d-flex justify-content-center">
+        <button mat-raised-button color="accent" (click)="goToNextWeek()" class="">
+          След. неделя
+        </button>
+      </div>
+      <div class="col-2">
+        <button mat-raised-button color="warning" (click)="logOut()" class="float-right ml-3"
+                *ngIf="userService.isLogged()">
+          Выйти
+        </button>
+        <button mat-raised-button color="accent" (click)="navigateToAdmin()" class="float-right"
+                *ngIf="userService.isAdmin()">
+          Админка
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

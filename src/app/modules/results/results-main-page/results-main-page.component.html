@@ -1,0 +1,43 @@
+<div class="row results-main-container">
+  <div class="col">
+        <mat-card class="result-card--main">
+          <!--<div class="row justify-content-center">
+            <div class="col-2">
+              <h3 class="main-header text-center">Неделя {{currentWeek$ | async}}</h3>
+            </div>
+          </div>
+          <div class="row justify-content-center white" *ngFor="let league of (curWeekResults$ | async)">
+            <div class="col">
+              <div class="row justify-content-center">
+                <div class="col-2 text-center">
+                  {{league.tournament.nameRu}}
+                </div>
+              </div>
+              <div class="row justify-content-center" *ngFor="let match of league.matches">
+                <div class="col-8">
+                  <div class="row">
+                    <div class="col text-center">
+                      {{match.home.nameRu}} - {{match.away.nameRu}}
+                    </div>
+                  </div>
+                  <div class="row" *ngIf="match.result">
+                    <div class="col text-center">
+                      {{match.result || '(0 - 0)'}}
+                    </div>
+                  </div>
+                  <div class="row" *ngIf="!match.result">
+                    <div class="col">
+                      <mat-spinner></mat-spinner>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>-->
+          <app-results-card [curWeekResults]="curWeekResults" [currentWeek]="currentWeek$ | async"
+                            (continue)="advanceThroughWeek()">
+          </app-results-card>
+        </mat-card>
+  </div>
+</div>
+

@@ -5,6 +5,8 @@ import { TablesMainPageComponent } from './tables-main-page/tables-main-page.com
 import {SharedModule} from '../../shared/shared.module';
 import {OrganizationChartModule} from 'primeng';
 import {MatDividerModule} from '@angular/material/divider';
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatTableModule} from '@angular/material/table';
 
 const routes = [
   {
@@ -21,6 +23,8 @@ const routes = [
     SharedModule,
     OrganizationChartModule,
     MatDividerModule,
+    MatTabsModule,
+    MatTableModule,
   ]
 })
 export class TablesModule { }

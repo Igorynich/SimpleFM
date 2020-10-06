@@ -8,8 +8,10 @@ import {InfoDialogComponent} from '../../../shared/info-dialog/info-dialog.compo
 import {Store} from '@ngrx/store';
 import {CurrentGameState} from '../../../store/reducers/current-game.reducer';
 import {getBaseData, getClub} from '../../../store/actions/current-game.actions';
-import {AppState, curGameLoading, selectCurrentClub} from '../../../store/selectors/current-game.selectors';
+import {AppState, curGameLoading, selectCurrentClub, selectCurrentWeek} from '../../../store/selectors/current-game.selectors';
 import {Observable, of} from 'rxjs';
+import {Club} from '../../../interfaces/club';
+import {switchMap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-main-page',
@@ -35,7 +37,7 @@ export class MainPageComponent implements OnInit {
       route: ROUTES.TABLES
     }, {}, {}, {}, {}, {}
   ];
-  currentClub;
+  currentClub: Club;
   loading$: Observable<boolean> = of(true);
   ROUTES = ROUTES;
 
@@ -47,7 +49,12 @@ export class MainPageComponent implements OnInit {
               private store: Store<AppState>) { }
 
   ngOnInit() {
-    this.store.dispatch(getBaseData());
+    this.store.select(selectCurrentWeek).subscribe(currentWeek => {
+      if (currentWeek === 1) {
+        this.store.dispatch(getBaseData());
+      }
+    });
+
     this.loading$ = this.store.select(curGameLoading);
     this.store.select(selectCurrentClub).subscribe(value => {
       this.currentClub = value;
@@ -62,7 +69,7 @@ export class MainPageComponent implements OnInit {
     });*/
   }
 
-  // TODO: hide
+  /*// TODO: hide
   navigateToAdmin() {
     this.router.navigate([this.ROUTES.ADMIN], {relativeTo: this.route}).catch(reason => {
       console.error(reason);
@@ -75,7 +82,7 @@ export class MainPageComponent implements OnInit {
     }).catch(reason => {
       console.error(reason);
     });
-  }
+  }*/
 
   navigateToCard(card: { nameRu: string; route: string; nameEn: string }) {
     this.router.navigate([card.route], {relativeTo: this.route}).then(value => {

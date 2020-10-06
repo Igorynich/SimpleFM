@@ -2,6 +2,18 @@
   height: 100px;
 }
 
+::ng-deep .mat-tab-body-content {
+  overflow: hidden !important;
+}
+
+::ng-deep .mat-cell {
+  flex: auto;   /*none is option*/
+}
+
+::ng-deep .mat-header-cell {
+  flex: auto;   /*none is option*/
+}
+
 .selected {
   border-bottom: black solid thin;
 }

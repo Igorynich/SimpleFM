@@ -1,5 +1,122 @@
 <div class="tables-schedule-body">
-  <div class="row">
+
+  <mat-tab-group mat-align-tabs="start" [(selectedIndex)]="leagueOrCupTab">
+    <mat-tab label="Лига">
+      <mat-tab-group mat-align-tabs="center">
+        <mat-tab label="Таблица">
+          <mat-table [dataSource]="table$ | async" class="w-100">
+            <!-- Position Column -->
+            <ng-container matColumnDef="position">
+              <mat-header-cell *matHeaderCellDef class="w-5"> Поз </mat-header-cell>
+              <mat-cell *matCellDef="let element; let i = index" class="w-5"> {{i + 1}} </mat-cell>
+            </ng-container>
+
+            <!-- ClubName Column -->
+            <ng-container matColumnDef="clubName">
+              <mat-header-cell *matHeaderCellDef class="w-25"> Клуб </mat-header-cell>
+              <mat-cell *matCellDef="let element" class="w-25"> {{element.clubName}} </mat-cell>
+            </ng-container>
+
+            <!-- games Column -->
+            <ng-container matColumnDef="games">
+              <mat-header-cell *matHeaderCellDef class="w-5"> И </mat-header-cell>
+              <mat-cell *matCellDef="let element" class="w-5"> {{element.games}} </mat-cell>
+            </ng-container>
+
+            <!-- wins Column -->
+            <ng-container matColumnDef="wins">
+              <mat-header-cell *matHeaderCellDef class="w-5"> В </mat-header-cell>
+              <mat-cell *matCellDef="let element" class="w-5"> {{element.wins}} </mat-cell>
+            </ng-container>
+
+            <!-- draws Column -->
+            <ng-container matColumnDef="draws">
+              <mat-header-cell *matHeaderCellDef class="w-5"> Н </mat-header-cell>
+              <mat-cell *matCellDef="let element" class="w-5"> {{element.draws}} </mat-cell>
+            </ng-container>
+
+            <!-- loses Column -->
+            <ng-container matColumnDef="loses">
+              <mat-header-cell *matHeaderCellDef class="w-5"> П </mat-header-cell>
+              <mat-cell *matCellDef="let element" class="w-5"> {{element.loses}} </mat-cell>
+            </ng-container>
+
+            <!-- gf Column -->
+            <ng-container matColumnDef="gf">
+              <mat-header-cell *matHeaderCellDef class="w-5"> ЗМ </mat-header-cell>
+              <mat-cell *matCellDef="let element" class="w-5"> {{element.gf}} </mat-cell>
+            </ng-container>
+
+            <!-- ga Column -->
+            <ng-container matColumnDef="ga">
+              <mat-header-cell *matHeaderCellDef class="w-5"> ПМ </mat-header-cell>
+              <mat-cell *matCellDef="let element" class="w-5"> {{element.ga}} </mat-cell>
+            </ng-container>
+
+            <!-- gd Column -->
+            <ng-container matColumnDef="gd">
+              <mat-header-cell *matHeaderCellDef class="w-5"> РМ </mat-header-cell>
+              <mat-cell *matCellDef="let element" class="w-5"> {{element.gd}} </mat-cell>
+            </ng-container>
+
+            <!-- points Column -->
+            <ng-container matColumnDef="points">
+              <mat-header-cell *matHeaderCellDef class="w-5"> О </mat-header-cell>
+              <mat-cell *matCellDef="let element" class="w-5"> {{element.points}} </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+          </mat-table>
+        </mat-tab>
+        <mat-tab label="Расписание">
+          <div class="row">
+            <div class="col text-center hover" *ngFor="let week of (schedule$ | async); let i = index"
+                 (click)="setWeekTo(i)">
+      <span [ngClass]="{selected: i === selectedWeek.num}">
+        {{i + 1}}
+      </span>
+            </div>
+          </div>
+          <h3 class="text-center">Неделя {{selectedWeek.num + 1}}</h3>
+          <div class="row" *ngFor="let match of selectedWeek.schedule">
+            <div class="col-5 text-right">
+              {{match.home.nameRu}}
+            </div>
+            <div class="col-1 text-center">
+              -
+            </div>
+            <div class="col-5 text-left">
+              {{match.away.nameRu}}
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-tab>
+
+    <mat-tab label="Кубок">
+      <div class="row align-items-center">
+        <div class="col" *ngFor="let round of (cupSchedule$ | async); let i = index">
+          <!--<p>Раунд {{i + 1}}</p>-->
+          <div class="row my-3 mx-3" *ngFor="let match of round"
+               [ngStyle]="{'height.px': 100 * (i + 1), 'border': '2px dashed black'}">
+            <div class="col-12 text-center">
+              <span [ngStyle]="{'line-height.px': 25 * (i + 1)}">{{match.home?.nameRu || '---'}}</span>
+            </div>
+            <div class="col-12 text-center align-middle">
+              <span [ngStyle]="{'line-height.px': 25 * (i + 1)}">vs</span>
+            </div>
+            <div class="col-12 text-center">
+              <span [ngStyle]="{'line-height.px': 25 * (i + 1)}">{{match.away?.nameRu || '---'}}</span>
+            </div>
+            <!--<mat-divider></mat-divider>-->
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+
+  <!--<div class="row">
     <div class="col-6 text-center hover" (click)="isLeague = true;">
       Лига
     </div>
@@ -33,22 +150,23 @@
   <div *ngIf="!isLeague">
     <div class="row align-items-center">
       <div class="col" *ngFor="let round of (cupSchedule$ | async); let i = index">
-        <!--<p>Раунд {{i + 1}}</p>-->
-        <div class="row my-3 mr-3" *ngFor="let match of round" [ngStyle]="{'height.px': 100 * (i + 1), 'border': '2px dashed black'}">
+        &lt;!&ndash;<p>Раунд {{i + 1}}</p>&ndash;&gt;
+        <div class="row my-3 mr-3" *ngFor="let match of round"
+             [ngStyle]="{'height.px': 100 * (i + 1), 'border': '2px dashed black'}">
           <div class="col-12 text-center">
-            <span [ngStyle]="{'line-height.px': 25 * (i + 1)}">{{match.home?.nameRu || '---'}}</span>
+            <span [ngStyle]="{'line-height.px': 25 * (i + 1)}">{{match.home?.nameRu || '-&#45;&#45;'}}</span>
           </div>
           <div class="col-12 text-center align-middle">
             <span [ngStyle]="{'line-height.px': 25 * (i + 1)}">vs</span>
           </div>
           <div class="col-12 text-center">
-            <span [ngStyle]="{'line-height.px': 25 * (i + 1)}">{{match.away?.nameRu || '---'}}</span>
+            <span [ngStyle]="{'line-height.px': 25 * (i + 1)}">{{match.away?.nameRu || '-&#45;&#45;'}}</span>
           </div>
-          <!--<mat-divider></mat-divider>-->
+          &lt;!&ndash;<mat-divider></mat-divider>&ndash;&gt;
         </div>
       </div>
     </div>
-  </div>
+  </div>-->
 
 
   <div class="row justify-content-end">
