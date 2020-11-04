@@ -4,6 +4,8 @@ import {AppState, selectCurrentClub, selectCurrentWeek} from '../../../store/sel
 import {Store} from '@ngrx/store';
 import {Observable, Subject} from 'rxjs';
 import {Club} from '../../../interfaces/club';
+import {Match} from '../../../interfaces/match';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-results-card',
@@ -30,7 +32,14 @@ export class ResultsCardComponent implements OnInit {
     this.continue.emit();
   }
 
-  private keys(obj): string[] {
+  isMyClub$(match: Match): {home: Observable<boolean>, away: Observable<boolean>} {
+    return {
+      home: this.curClub$.pipe(map(value => value.nameEn === match.home.nameEn)),
+      away: this.curClub$.pipe(map(value => value.nameEn === match.away.nameEn))
+    };
+  }
+
+  keys(obj): string[] {
     return Object.keys(obj);
   }
 }

@@ -3,8 +3,11 @@ import {createSelector} from '@ngrx/store';
 import {WeekSchedule} from '../../interfaces/league-schedule';
 import {CUP_INTERVAL} from '../../constants/general';
 import {Match} from '../../interfaces/match';
-import {sortClubsRoster} from '../../utils/sort-roster';
+import {sortClubsRoster, sortTable} from '../../utils/sort-roster';
 import {Player} from '../../interfaces/player';
+import {LeagueTable} from '../../interfaces/league-table';
+import {PlayerStats} from '../../interfaces/player-stats';
+import {MatchStats} from '../../interfaces/match-stats';
 
 export interface AppState {
   currentGame: CurrentGameState;
@@ -21,11 +24,14 @@ export const selectCurrentPlayers = createSelector(selectCurrentGameState, (stat
 export const selectCurrentWeek = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.currentWeek + 1);
 export const curGameLoading = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.loading);
 
-export const getAllClubs = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.data.clubs);
-export const getAllLeagues = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.data.leagues);
-export const getAllCountries = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.data.countries);
+export const getAllClubs = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.data?.clubs);
+export const getAllLeagues = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.data?.leagues);
+export const getAllCountries = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.data?.countries);
 
 export const selectPlayersByClubsNameEn = createSelector(selectCurrentGameState, (state, {clubsNameEn}) => {
+  if (clubsNameEn === state.currentClub.nameEn) {
+    return state.currentPlayers || state.data.players.filter(value => value.clubNameEn === clubsNameEn);
+  }
   const teamRoster: Player[] = state.data.players.filter(value => value.clubNameEn === clubsNameEn);
   return sortClubsRoster(teamRoster);
 });
@@ -43,7 +49,7 @@ export const selectCupScheduleByLeaguesNameEn = createSelector(selectCurrentGame
 
 export const selectLeagueTableByLeaguesNameEn = createSelector(selectCurrentGameState, (state, {leaguesNameEn}) => {
   const league = state.data.leagues.find(value => value.nameEn === leaguesNameEn);
-  return state.tables[league.id];
+  return [...state.tables[league.id]].sort(sortTable);
 });
 
 export const selectCurrentWeekSchedule = createSelector(selectCurrentGameState, state => {
@@ -54,14 +60,17 @@ export const selectCurrentWeekSchedule = createSelector(selectCurrentGameState, 
   const countryLeagues = state.data.leagues.filter(value => value.countryNameEn === country.nameEn);
   const schedule = [];      // {matches: null, tournament: null};
   if (!!curWeek && curWeek % CUP_INTERVAL === 0) {
+    const allCupMatches: Match[] = state.schedule[country.id][(curWeek / CUP_INTERVAL) - 1].map(value => state.matches[value.matchId]);
+    const onlyRealMatches: Match[] = allCupMatches.filter(value => !!value.home && !!value.away);
     schedule.push({
       tournament: {nameRu: `Кубок ${country.nameRu}`, nameEn: `Cup of ${country.nameEn}`},
-      matches: state.schedule[country.id][(curWeek / CUP_INTERVAL) - 1].map(value => state.matches[value.matchId]),  // TODO check this shit
-      stats: state.schedule[country.id][(curWeek / CUP_INTERVAL) - 1].map(value => state.stats[value.matchId])
+      matches: onlyRealMatches,  // TODO check this shit
+      stats: onlyRealMatches.map(value => state.stats[value.id])
     });
   } else {
+    const index = curWeek - Math.floor(curWeek / CUP_INTERVAL);     // index учитывает кубковые недели
     countryLeagues.forEach(value => {
-      const leagueSchedule = state.schedule[value.id] ? state.schedule[value.id][curWeek] : null;
+      const leagueSchedule = state.schedule[value.id] ? state.schedule[value.id][index] : null;
       if (leagueSchedule) {
         schedule.push({
           tournament: value,
@@ -117,16 +126,75 @@ export const selectLeagueScheduleShellByNumberOfClubs = createSelector(selectCur
 
 export const selectNextOpponent = createSelector(selectCurrentGameState, selectScheduleByClubsNameEn,
   (state, clubsSchedule: Match[], {clubsNameEn}) => {
-  const curWeek = state.currentWeek;
-  const curClub = state.currentClub;
-  const nextWeeksMatch = clubsSchedule[curWeek];
-  const nextOpp = nextWeeksMatch.home.nameEn === curClub.nameEn ? nextWeeksMatch.away : nextWeeksMatch.home;
-  const field = nextWeeksMatch.home.nameEn === curClub.nameEn ? 'H' : 'A';
-  console.log('selectNextOpponent schedule', clubsSchedule);
-  return {opponent: nextOpp, field};
-});
+    const curWeek = state.currentWeek;
+    const curClub = state.currentClub;
+    let nextWeeksMatch = clubsSchedule[curWeek];
+    if (!nextWeeksMatch) {
+      nextWeeksMatch = clubsSchedule[curWeek + 1];
+    }
+    const nextOpp = nextWeeksMatch.home.nameEn === curClub.nameEn ? nextWeeksMatch.away : nextWeeksMatch.home;
+    const field = nextWeeksMatch.home.nameEn === curClub.nameEn ? 'H' : 'A';
+    console.log('selectNextOpponent schedule', clubsSchedule);
+    return {opponent: nextOpp, field};
+  });
 
 export const selectMatchById = createSelector(selectCurrentGameState, (state, {matchId}) => {
   // console.log('selectMatchById', matchId, state.matches);
   return state.matches[matchId];
 });
+
+export const selectMatchStatsByMatchId = createSelector(selectCurrentGameState, (state, {matchId}) => {
+  // console.log('selectMatchById', matchId, state.matches);
+  return state.stats[matchId];
+});
+
+export const selectClubsRosterStats = createSelector(selectCurrentGameState, selectScheduleByClubsNameEn,
+  (state, clubsSchedule: Match[], {clubsNameEn}) => {
+    const map = new Map<string, PlayerStats>();
+    const clubsRoster: Player[] = state.data.players.filter((value: Player) => value.clubNameEn === clubsNameEn);
+    const matchStats: MatchStats[] = clubsSchedule.map(value => state.stats[value?.id]);
+    clubsRoster.forEach((player: Player) => {
+      const games = matchStats.reduce((sum, curMatchStats) => {
+        // console.log('curMatchStats', curMatchStats, );
+        return (!!curMatchStats?.homeRoster.find(pl => pl.nameEn === player.nameEn) ||
+          !!curMatchStats?.awayRoster.find(pl => pl.nameEn === player.nameEn)) ? sum + 1 : sum;
+      }, 0);
+      const assists = matchStats.reduce((sum, curMatchStats) => {
+          const homeAssists = !!curMatchStats?.homeAssists ?
+            Object.values(curMatchStats.homeAssists).filter((pl: Player | null) => pl?.nameEn === player.nameEn).length : 0;
+          const awayAssists = !!curMatchStats?.awayAssists ?
+            Object.values(curMatchStats.awayAssists).filter((pl: Player | null) => pl?.nameEn === player.nameEn).length : 0;
+          return sum + homeAssists + awayAssists;
+        },
+        0);
+      const goals = matchStats.reduce((sum, curMatchStats) => {
+          const homeGoals = !!curMatchStats?.homeGoals ?
+            Object.values(curMatchStats.homeGoals).filter((pl: Player | null) => pl?.nameEn === player.nameEn).length : 0;
+          const awayGoals = !!curMatchStats?.awayGoals ?
+            Object.values(curMatchStats.awayGoals).filter((pl: Player | null) => pl?.nameEn === player.nameEn).length : 0;
+          return sum + homeGoals + awayGoals;
+        },
+        0);
+      const playerStats: PlayerStats = {
+        assists,
+        games,
+        goals
+      };
+      if (player.position === 'GK') {
+        const conceded =  clubsSchedule.reduce((sum, curMatch) => {
+          const havePlayedInMatch = !!state.stats[curMatch?.id]?.homeRoster.find(pl => pl.nameEn === player.nameEn) ||
+            !!state.stats[curMatch?.id]?.awayRoster.find(pl => pl.nameEn === player.nameEn);
+          if (!!curMatch && havePlayedInMatch) {
+            const isHome = !!state.stats[curMatch.id]?.homeRoster.find(pl => pl.nameEn === player.nameEn);
+            const [homeGoals, awayGoals] = curMatch.result ? curMatch.result.split(' - ') : [0, 0];
+            const conc = isHome ? +awayGoals : +homeGoals;
+            return sum - conc;
+          }
+          return sum;
+        }, 0);
+        playerStats.conceded = conceded;
+      }
+      map.set(player.nameEn, playerStats);
+    });
+    return map;
+  });

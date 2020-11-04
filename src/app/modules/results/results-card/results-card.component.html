@@ -1,11 +1,11 @@
-<div class="row h-100" *ngFor="let league of curWeekResults">
+<div class="row h-100 min-vh-88" *ngFor="let league of curWeekResults">
   <div class="col h-100">
     <div class="row justify-content-center h-5">
       <div class="col-2">
         <h3 class="main-header text-center">Неделя {{currentWeek}}</h3>
       </div>
     </div>
-    <div class="row justify-content-center white h-70">
+    <div class="row justify-content-center white h-70 results-list">
       <div class="col">
         <div class="row justify-content-center league-name mb-3">
           <div class="col-2 text-center">
@@ -16,28 +16,30 @@
           <div class="col-8">
             <div class="row">
               <div class="col text-center">
-                <span [ngClass]="{'my-club': (curClub$ | async).nameEn === match.home.nameEn}">
+                <span [ngClass]="{'my-club': (isMyClub$(match).home | async)}">
                   {{match.home.nameRu}}
-                </span> - <span [ngClass]="{'my-club': (curClub$ | async).nameEn === match.away.nameEn}">
+                </span> - <span [ngClass]="{'my-club': (isMyClub$(match).away | async)}">
                 {{match.away.nameRu}}
               </span>
               </div>
             </div>
             <div class="row" *ngIf="match.result">
-              <div class="col text-center" [ngClass]="{'my-club': (curClub$ | async).nameEn === match.home.nameEn ||
-               (curClub$ | async).nameEn === match.away.nameEn}">
+              <div class="col text-center" [ngClass]="{'my-club': (isMyClub$(match).home | async) ||
+               (isMyClub$(match).away | async)}">
                 {{match.result}}
               </div>
             </div>
             <div class="row justify-content-around">
-              <div class="col-4 scorers" [ngClass]="{'my-club': (curClub$ | async).nameEn === match.home.nameEn}">
+              <div class="col-5 scorers" [ngClass]="{'my-club': (isMyClub$(match).home | async)}">
                 <div *ngFor="let minute of keys(league.stats[i].homeGoals)">
                   <span>{{minute}}' </span> <span>{{league.stats[i].homeGoals[minute].nameRu}}</span>
+                  <span *ngIf="league.stats[i].homeAssists[minute]"> ({{league.stats[i].homeAssists[minute].nameRu}})</span>
                 </div>
               </div>
-              <div class="col-4 scorers" [ngClass]="{'my-club': (curClub$ | async).nameEn === match.away.nameEn}">
+              <div class="col-5 scorers" [ngClass]="{'my-club': (isMyClub$(match).away | async)}">
                 <div *ngFor="let minute of keys(league.stats[i].awayGoals)" class="text-right">
                   <span>{{minute}}' </span> <span>{{league.stats[i].awayGoals[minute].nameRu}}</span>
+                  <span *ngIf="league.stats[i].awayAssists[minute]"> ({{league.stats[i].awayAssists[minute].nameRu}})</span>
                 </div>
               </div>
             </div>
@@ -45,7 +47,7 @@
         </div>
       </div>
     </div>
-    <div class="row justify-content-center align-items-end h-25 mt-5">
+    <div class="row justify-content-center align-items-end h-25 pt-5 continue-button">
       <div class="col-3">
         <button class="w-100" mat-raised-button color="primary" (click)="onContinueClick()">Продолжить</button>
       </div>

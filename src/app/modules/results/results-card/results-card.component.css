@@ -15,10 +15,18 @@
   font-size: larger;
 }
 
-.my-club {
+/*.my-club {
   color: lightskyblue;
-}
+}*/
 
 .scorers {
   font-size: small;
+}
+
+.results-list {
+  min-height: 70vh;
+}
+
+.continue-button {
+  min-height: 13vh;
 }

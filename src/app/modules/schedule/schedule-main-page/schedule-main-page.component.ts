@@ -7,7 +7,8 @@ import {
 } from '../../../store/selectors/current-game.selectors';
 import {map, switchMap, tap} from 'rxjs/operators';
 import {Club} from '../../../interfaces/club';
-import {combineLatest} from 'rxjs';
+import {combineLatest, Observable} from 'rxjs';
+import {Match} from '../../../interfaces/match';
 
 @Component({
   selector: 'app-schedule-main-page',
@@ -17,7 +18,7 @@ import {combineLatest} from 'rxjs';
 export class ScheduleMainPageComponent implements OnInit {
 
   currentClub: Club;
-  curClubsSchedule$;
+  curClubsSchedule$: Observable<Match[]>;
 
   constructor(private store: Store<AppState>) { }
 
@@ -28,7 +29,7 @@ export class ScheduleMainPageComponent implements OnInit {
     }));
     this.curClubsSchedule$.subscribe(value => {
       console.log('Cur club schedule', value);
-    })
+    });
   }
 
   getMatchOpponent(match: {home: Club | null, away: Club | null} | null): {club: Club, field: 'H' | 'A'} {
@@ -40,9 +41,25 @@ export class ScheduleMainPageComponent implements OnInit {
       };
     }
     return {
-      club: match.home.nameEn === this.currentClub?.nameEn ? match.away : match.home,
-      field: match.home.nameEn === this.currentClub?.nameEn ? 'H' : 'A'
+      club: match.home?.nameEn === this.currentClub?.nameEn ? match.away : match.home,
+      field: match.home?.nameEn === this.currentClub?.nameEn ? 'H' : 'A'
     };
   }
 
+  getMatchResultClass(match: Match) {
+    const isHomeMatch = match.home?.nameEn === this.currentClub?.nameEn;
+    const resClass = {};
+    if (match.result) {
+      const [homeG, awayG] = match.result.split(' - ').map(value => +value);
+      if (homeG > awayG) {
+        resClass['match-won'] = isHomeMatch;
+      } else if (homeG < awayG) {
+        resClass['match-won'] = !isHomeMatch;
+      } else if (homeG === awayG) {
+        resClass['match-draw'] = true;
+      }
+    }
+    resClass['match-lost'] = !resClass['match-won'] && !resClass['match-draw'];
+    return resClass;
+  }
 }

@@ -1,5 +1,6 @@
 import {Player} from '../interfaces/player';
 import {Starters} from '../services/base-result-gen.service';
+import {LeagueTable} from '../interfaces/league-table';
 
 export function sortClubsRoster(roster: Player[]): Player[] {
   const gks = roster.filter(pl => pl.position === 'GK').sort((a, b) => b.power - a.power);
@@ -37,4 +38,23 @@ export function getStarters(roster: Player[]): Starters {
 
 export function getReserves(roster: Player[]): Player[] {
   return roster.filter((value, index) => index >= 11).sort((a, b) => b.power - a.power);
+}
+
+export function sortTable(a: LeagueTable, b: LeagueTable) {
+  if (a.points === b.points) {                          // очки
+    if (b.gd === a.gd) {                                // разница мячей
+      if (b.gf === a.gf) {                              // забитые мячи
+        if (b.wins === a.wins) {                        // победы
+          if (b.draws === a.draws) {                    // ничьи
+            return b.clubName > a.clubName ? -1 : 1;    // алфавит
+          }
+          return b.draws - a.draws;
+        }
+        return b.wins - a.wins;
+      }
+      return b.gf - a.gf;
+    }
+    return b.gd - a.gd;
+  }
+  return b.points - a.points;
 }

@@ -1,6 +1,9 @@
 import {Injectable, Injector} from '@angular/core';
 import {IpcRendererService} from './ipc-renderer.service';
 import {environment} from '../../environments/environment';
+import {Store} from '@ngrx/store';
+import {AppState} from '../store/selectors/current-game.selectors';
+import { logOut } from '../store/actions/current-game.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +17,7 @@ export class UserService {
   env = environment;
   private ipcRenderer = null;
 
-  constructor(private injector: Injector) {
+  constructor(private injector: Injector, private store: Store<AppState>) {
     if (this.env.electron) {
       this.ipcRenderer = this.injector.get(IpcRendererService) as IpcRendererService;
     }
@@ -42,5 +45,6 @@ export class UserService {
 
   logOut() {
     this.userName = '';
+    this.store.dispatch(logOut());
   }
 }

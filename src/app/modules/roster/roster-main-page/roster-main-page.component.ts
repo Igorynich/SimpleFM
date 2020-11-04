@@ -4,13 +4,20 @@ import {CurrentGameService} from '../../../services/current-game.service';
 import {Player} from '../../../interfaces/player';
 import {CdkDragEnter, moveItemInArray} from '@angular/cdk/drag-drop';
 import {Store} from '@ngrx/store';
-import {AppState, selectCurrentPlayers} from '../../../store/selectors/current-game.selectors';
+import {
+  AppState,
+  selectClubsRosterStats,
+  selectCurrentClub,
+  selectCurrentPlayers,
+  selectNextOpponent
+} from '../../../store/selectors/current-game.selectors';
 import {Observable, Subscription} from 'rxjs';
-import {take} from 'rxjs/operators';
+import {switchMap, take, tap} from 'rxjs/operators';
 import {updatePlayers} from '../../../store/actions/current-game.actions';
 import {CleanSubscriptions} from '../../../utils/clean-subscriptions';
 import {getStarters, sortStarters} from '../../../utils/sort-roster';
 import {SnackBarService} from '../../../services/snack-bar.service';
+import {PlayerStats} from '../../../interfaces/player-stats';
 
 @CleanSubscriptions()
 @Component({
@@ -22,17 +29,26 @@ export class RosterMainPageComponent implements OnInit, OnDestroy {
 
   lastPlayerBoxEntered: number;
   players: Player[];
+  stats: Map<string, PlayerStats>;
 
   private _playersSub: Subscription;
+  private _statsSub: Subscription;
 
   constructor(private fs: FirebaseService, private game: CurrentGameService, private store: Store<AppState>,
-              private snack: SnackBarService) { }
+              private snack: SnackBarService) {
+  }
 
   ngOnInit(): void {
     // this.players = this.game.currentPlayers;
     this._playersSub = this.store.select(selectCurrentPlayers).subscribe((value: Player[]) => {
       this.players = [...value];
     });
+    this._statsSub = this.store.select(selectCurrentClub).pipe(switchMap(curClub =>
+      this.store.select(selectClubsRosterStats, {clubsNameEn: curClub.nameEn})))
+      .subscribe((value: Map<string, PlayerStats>) => {
+        this.stats = value;
+        console.log('Players Stats', value);
+      });
   }
 
   ngOnDestroy(): void {

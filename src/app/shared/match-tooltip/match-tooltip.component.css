@@ -1,0 +1,7 @@
+:host {
+  border: 2px solid #d8ad00;
+  background-color: #686868;
+  color: white;
+  /*width: 50%;*/
+  width: 500px;
+}

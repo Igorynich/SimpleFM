@@ -5,3 +5,15 @@
 .schedule-body {
   height: 100px;
 }
+
+.match-won {
+  color: deepskyblue;
+}
+
+.match-lost {
+  color: crimson;
+}
+
+.match-draw {
+  color: goldenrod;
+}

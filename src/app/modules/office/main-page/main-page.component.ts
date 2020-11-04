@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UserService} from '../../../services/user.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ROUTES} from '../../../constants/routes';
@@ -9,16 +9,18 @@ import {Store} from '@ngrx/store';
 import {CurrentGameState} from '../../../store/reducers/current-game.reducer';
 import {getBaseData, getClub} from '../../../store/actions/current-game.actions';
 import {AppState, curGameLoading, selectCurrentClub, selectCurrentWeek} from '../../../store/selectors/current-game.selectors';
-import {Observable, of} from 'rxjs';
+import {Observable, of, Subscription} from 'rxjs';
 import {Club} from '../../../interfaces/club';
 import {switchMap} from 'rxjs/operators';
+import {CleanSubscriptions} from '../../../utils/clean-subscriptions';
 
+@CleanSubscriptions()
 @Component({
   selector: 'app-main-page',
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.css']
 })
-export class MainPageComponent implements OnInit {
+export class MainPageComponent implements OnInit, OnDestroy {
 
   cards = [
     {
@@ -41,6 +43,9 @@ export class MainPageComponent implements OnInit {
   loading$: Observable<boolean> = of(true);
   ROUTES = ROUTES;
 
+  private _initStoreSub: Subscription;
+  private _curClubSub: Subscription;
+
   constructor(public userService: UserService,
               public router: Router,
               private route: ActivatedRoute,
@@ -49,14 +54,16 @@ export class MainPageComponent implements OnInit {
               private store: Store<AppState>) { }
 
   ngOnInit() {
-    this.store.select(selectCurrentWeek).subscribe(currentWeek => {
+    console.log('OFFICE COMPONENTN');
+    this._initStoreSub = this.store.select(selectCurrentWeek).subscribe(currentWeek => {
+      console.log('Cur week', currentWeek);
       if (currentWeek === 1) {
         this.store.dispatch(getBaseData());
       }
     });
 
     this.loading$ = this.store.select(curGameLoading);
-    this.store.select(selectCurrentClub).subscribe(value => {
+    this._curClubSub = this.store.select(selectCurrentClub).subscribe(value => {
       this.currentClub = value;
     });
     /*this.game.getCurrentClub().subscribe(value => {
@@ -67,6 +74,9 @@ export class MainPageComponent implements OnInit {
         data: this.game.currentClub
       });
     });*/
+  }
+
+  ngOnDestroy(): void {
   }
 
   /*// TODO: hide

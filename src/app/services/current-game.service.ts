@@ -37,7 +37,7 @@ export class CurrentGameService {
 
 
 
-  generateLeagueSchedules(leagues: League[], clubs: Club[]): { [key: string]: WeekSchedule[][] } {
+  generateLeagueSchedules(leagues: League[] = [], clubs: Club[] = []): { [key: string]: WeekSchedule[][] } {
     const leagueSchedules = {};
     leagues.forEach(league => {
       this.scheduleShell = [];
@@ -47,7 +47,7 @@ export class CurrentGameService {
         let scheduleShell;
         shuffleArray(leagueClubs);
         console.log('Shuffled clubs', leagueClubs);
-        this.store.select(selectLeagueScheduleShellByNumberOfClubs, {numOfClubs: leagueClubs.length})
+        this.store.select(selectLeagueScheduleShellByNumberOfClubs, {numOfClubs: leagueClubs.length}).pipe(take(1))
           .subscribe(value => {
             console.log('League schedule', value);
             scheduleShell = value.schedule;
@@ -95,7 +95,7 @@ export class CurrentGameService {
     return match;
   }
 
-  generateCupSchedules(countries: Country[], leagues: League[], clubs: Club[]): { [countryId: string]: WeekSchedule[][] } {
+  generateCupSchedules(countries: Country[] = [], leagues: League[] = [], clubs: Club[] = []): { [countryId: string]: WeekSchedule[][] } {
     const cupsSchedules = {};
     countries.forEach(country => {
       const countryLeagues = leagues.filter(league => league.countryNameEn === country.nameEn);

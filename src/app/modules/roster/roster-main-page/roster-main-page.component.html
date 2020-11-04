@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-5">
+  <div class="col-6">
     <div class="row justify-content-between">
       <div class="col-1 text-center">
         Позиция
@@ -9,6 +9,12 @@
       </div>
       <div class="col-1 text-center">
         Сила
+      </div>
+      <div class="col-1 text-center">
+        Игр
+      </div>
+      <div class="col-1 text-center">
+        Г+П
       </div>
     </div>
   </div>
@@ -28,6 +34,13 @@
           </div>
           <div class="col-1">
             {{player.power}}
+          </div>
+          <div class="col-1">
+            {{stats.get(player.nameEn).games}}
+          </div>
+          <div class="col-1">
+            <span *ngIf="player.position !== 'GK'">{{stats.get(player.nameEn).goals}}+{{stats.get(player.nameEn).assists}}</span>
+            <span *ngIf="player.position === 'GK'">{{stats.get(player.nameEn).conceded}}</span>
           </div>
         </div>
       </div>

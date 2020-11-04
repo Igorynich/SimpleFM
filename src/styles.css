@@ -59,3 +59,15 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .h-5{
   height:5% !important
 }
+
+.min-vh-90 {
+  min-height: 90vh !important;
+}
+
+.min-vh-88 {
+  min-height: 88vh !important;
+}
+
+.my-club {
+  color: lightskyblue;
+}

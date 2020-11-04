@@ -1,11 +1,20 @@
 import {Injectable} from '@angular/core';
-import {Actions, createEffect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, EffectNotification, ofType, OnRunEffects} from '@ngrx/effects';
 import {FirebaseService} from '../../services/firebase.service';
-import {getBaseData, getClub, gotBaseData, gotClub, gotPlayers, scheduleGenerated, tablesGenerated} from '../actions/current-game.actions';
-import {concatMap, map, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
+import {
+  getBaseData,
+  getClub,
+  gotBaseData,
+  gotClub,
+  gotPlayers,
+  logOut,
+  scheduleGenerated,
+  tablesGenerated
+} from '../actions/current-game.actions';
+import {concatMap, exhaustMap, filter, map, switchMap, take, takeUntil, tap, withLatestFrom} from 'rxjs/operators';
 import {select, Store} from '@ngrx/store';
 import {CurrentGameState} from '../reducers/current-game.reducer';
-import {combineLatest, of} from 'rxjs';
+import {combineLatest, Observable, of} from 'rxjs';
 import {Club} from '../../interfaces/club';
 import {
   AppState,
@@ -19,13 +28,16 @@ import {MatDialog} from '@angular/material/dialog';
 import {InfoDialogComponent} from '../../shared/info-dialog/info-dialog.component';
 import {CurrentGameService} from '../../services/current-game.service';
 import {sortClubsRoster} from '../../utils/sort-roster';
+import {UserService} from '../../services/user.service';
 
 @Injectable()
 export class CurrentGameEffects {
 
   getBaseData$ = createEffect(() => {
+    console.log('1st effect');
     return this.actions$.pipe(
       ofType(getBaseData),
+      filter(value => !!this.userService.userName),
       switchMap(action => {
         return combineLatest([
           this.fs.getCountries(),
@@ -43,6 +55,7 @@ export class CurrentGameEffects {
   getClub$ = createEffect(() =>
     this.actions$.pipe(
       ofType(gotBaseData),
+      filter(value => !!this.userService.userName),
       switchMap(action => this.store.pipe(select(getAllClubs)).pipe(take(1), map(clubs => {
         const randomNum = Math.ceil(Math.random() * 19).toFixed(0);
         console.log(randomNum);
@@ -57,6 +70,7 @@ export class CurrentGameEffects {
   getPlayers$ = createEffect(() =>
     this.actions$.pipe(
       ofType(gotClub),
+      filter(value => !!this.userService.userName),
       concatMap(action => of(action).pipe(
         withLatestFrom(this.store.pipe(select(selectCurrentClub)))
       )),
@@ -72,26 +86,32 @@ export class CurrentGameEffects {
   generateSchedule$ = createEffect(() =>
     this.actions$.pipe(
       ofType(gotPlayers),
+      filter(value => !!this.userService.userName),
       switchMap(actions => {
         return combineLatest([
           this.store.pipe(select(getAllCountries)),
           this.store.pipe(select(getAllLeagues)),
-          this.store.pipe(select(getAllClubs))]).pipe(map(([countries, leagues, clubs]) => {
+          this.store.pipe(select(getAllClubs))]).pipe(
+          filter(value => !!this.userService.userName),
+          map(([countries, leagues, clubs]) => {
             const leagueSchedules = this.game.generateLeagueSchedules(leagues, clubs);
             const cupSchedules = this.game.generateCupSchedules(countries, leagues, clubs);
             return scheduleGenerated({schedule: {...leagueSchedules, ...cupSchedules}});
-        }));
+          }));
       })
     ));
 
   generateTables$ = createEffect(() =>
     this.actions$.pipe(
       ofType(scheduleGenerated),
+      filter(value => !!this.userService.userName),
       switchMap(actions => {
-        return this.store.pipe(select(getAllLeagues)).pipe(map(leagues => {
-          const leagueTables = this.game.generateTables(leagues);
-          return tablesGenerated({tables: {...leagueTables}});
-        }));
+        return this.store.pipe(select(getAllLeagues)).pipe(
+          filter(value => !!this.userService.userName),
+          map(leagues => {
+            const leagueTables = this.game.generateTables(leagues);
+            return tablesGenerated({tables: {...leagueTables}});
+          }));
       })
     ));
 
@@ -99,6 +119,8 @@ export class CurrentGameEffects {
               private fs: FirebaseService,
               private store: Store<AppState>,
               private dialog: MatDialog,
-              private game: CurrentGameService) {
+              private game: CurrentGameService,
+              private userService: UserService) {
   }
+
 }

@@ -13,6 +13,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import { ROUTES } from 'src/app/constants/routes';
 import {Observable} from 'rxjs';
 import {map, switchMap, tap} from 'rxjs/operators';
+import { logOut } from 'src/app/store/actions/current-game.actions';
 
 @Component({
   selector: 'app-header',
@@ -48,7 +49,7 @@ export class HeaderComponent implements OnInit {
   }
 
   logOut() {
-    this.router.navigate(['../'], {relativeTo: this.route}).then(value => {
+    this.router.navigate(['']).then(value => {
       this.userService.logOut();
     }).catch(reason => {
       console.error(reason);

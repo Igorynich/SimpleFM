@@ -1,0 +1,39 @@
+<div class="row justify-content-center">
+  <div class="col">
+    <h3 class="text-center">
+      <span [ngClass]="{'my-club': (isMyClub$(match).home | async)}">{{match.home?.nameRu}}</span>
+      -
+      <span [ngClass]="{'my-club': (isMyClub$(match).away | async)}">{{match.away?.nameRu}}</span>
+    </h3>
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    {{match.home?.stadium}}
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    <h3 class="text-center">
+      {{match.result}}
+    </h3>
+  </div>
+</div>
+<div class="row justify-content-around">
+  <div class="col-6">
+    <p *ngFor="let min of getObjKeys((matchStats$ | async).homeGoals)"
+       [ngClass]="{'my-club': (isMyClub$(match).home | async)}">
+      {{min}}' {{(matchStats$ | async).homeGoals[min]?.nameRu}}
+      <span *ngIf="(matchStats$ | async).homeAssists[min]">({{(matchStats$ | async).homeAssists[min]?.nameRu}})</span>
+    </p>
+  </div>
+  <div class="col-6">
+    <p *ngFor="let min of getObjKeys((matchStats$ | async).awayGoals)"
+       [ngClass]="{'my-club': (isMyClub$(match).away | async)}">
+      {{min}}' {{(matchStats$ | async).awayGoals[min]?.nameRu}}
+      <span *ngIf="(matchStats$ | async).awayAssists[min]">({{(matchStats$ | async).awayAssists[min]?.nameRu}})</span>
+    </p>
+  </div>
+</div>
+
+

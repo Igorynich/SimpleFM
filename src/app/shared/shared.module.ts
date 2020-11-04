@@ -6,6 +6,8 @@ import {MatDialogModule} from '@angular/material/dialog';
 import { InfoDialogComponent } from './info-dialog/info-dialog.component';
 import { NavigateToOfficeComponent } from './navigate-to-office/navigate-to-office.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { MatchTooltipComponent } from './match-tooltip/match-tooltip.component';
+import {MatchTooltipDirective} from '../directives/match-tooltip.directive';
 
 
 
@@ -13,7 +15,9 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
   declarations: [
     ConfirmationDialogComponent,
     InfoDialogComponent,
-    NavigateToOfficeComponent
+    NavigateToOfficeComponent,
+    MatchTooltipComponent,
+    MatchTooltipDirective
   ],
   imports: [
     CommonModule,
@@ -22,7 +26,8 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     MatSnackBarModule
   ],
   exports: [
-    NavigateToOfficeComponent
+    NavigateToOfficeComponent,
+    MatchTooltipDirective
   ],
   entryComponents: [
     ConfirmationDialogComponent
