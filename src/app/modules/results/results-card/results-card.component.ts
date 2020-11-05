@@ -20,26 +20,15 @@ export class ResultsCardComponent implements OnInit {
 
   @Output() continue = new EventEmitter();
 
-  curClub$: Observable<Club>;
+  // curClub$: Observable<Club>;
 
   constructor(private store: Store<AppState>) { }
 
   ngOnInit(): void {
-    this.curClub$ = this.store.select(selectCurrentClub);
+    // this.curClub$ = this.store.select(selectCurrentClub);
   }
 
   onContinueClick() {
     this.continue.emit();
-  }
-
-  isMyClub$(match: Match): {home: Observable<boolean>, away: Observable<boolean>} {
-    return {
-      home: this.curClub$.pipe(map(value => value.nameEn === match.home.nameEn)),
-      away: this.curClub$.pipe(map(value => value.nameEn === match.away.nameEn))
-    };
-  }
-
-  keys(obj): string[] {
-    return Object.keys(obj);
   }
 }

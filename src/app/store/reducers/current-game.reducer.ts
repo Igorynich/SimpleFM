@@ -20,6 +20,8 @@ import {LeagueTable} from '../../interfaces/league-table';
 import {CUP_INTERVAL} from '../../constants/general';
 import {Match} from '../../interfaces/match';
 import {MatchStats} from '../../interfaces/match-stats';
+import {valueReferenceToExpression} from '@angular/compiler-cli/src/ngtsc/annotations/src/util';
+import {resultSplitter, sortStarters} from '../../utils/sort-roster';
 
 export interface CurrentGameState {
   currentWeek: number;
@@ -34,6 +36,9 @@ export interface CurrentGameState {
   loading: boolean;
   matches: { [id: number]: Match };
   schedule: { [leagueId: string]: WeekSchedule[][] };
+  seasonData: {
+    clubPowers: Map<string, number>       // <clubNameEn, power>    power - sum rank of starters
+  };
   stats: { [matchId: number]: MatchStats };
   tables: { [leagueId: string]: LeagueTable[] };
 }
@@ -46,6 +51,9 @@ export const currentGameInitState: CurrentGameState = {
   loading: true,
   matches: {},
   schedule: null,
+  seasonData: {
+    clubPowers: null
+  },
   stats: {},
   tables: null
 };
@@ -76,8 +84,18 @@ const _currentGameReducer = createReducer(currentGameInitState,
     return {...state, currentPlayers: newPlayers};
   }),
   on(scheduleGenerated, (state, {schedule}) => {
-    console.log('scheduleGenerated', {...state, schedule});
-    return {...state, schedule};
+    // filling clubsPowers
+    let map = new Map<string, number>();
+    state.data.clubs.forEach((club: Club) => {
+      const roster = state.data.players.filter((pl: Player) => pl.clubNameEn === club.nameEn);
+      const starters = sortStarters(roster).filter((value, index) => index < 11);
+      const power = starters.reduce((previousValue, currentValue) => previousValue + currentValue.power, 0);
+      map.set(club.nameEn, power);
+    });
+    map = new Map<string, number>([...map].sort((a, b) => b[1] - a[1]));    // sort power desc
+    //
+    console.log('scheduleGenerated', {...state, schedule, seasonData: {clubPowers: map}});
+    return {...state, schedule, seasonData: {clubPowers: map}};
   }),
   on(tablesGenerated, (state, {tables}) => {
     console.log('tablesGenerated', {...state, tables});
@@ -162,7 +180,7 @@ const _currentGameReducer = createReducer(currentGameInitState,
           let isHomeAWinner = !!match.home;
           if (match.result) {
             const [homeScore, awayScore] = match.result.split(' - ');
-            const [homeGoals, awayGoals] = match.result.split(' - ').map(value1 => parseInt(value1, 10));
+            const [homeGoals, awayGoals] = resultSplitter(match.result);
             isHomeAWinner = homeScore.includes('e') || homeScore.includes('p') || homeGoals > awayGoals;
           }
           const nextId = cupScheduleNext[nextRoundMatchIndex]?.matchId ? cupScheduleNext[nextRoundMatchIndex].matchId : newId;
@@ -210,7 +228,7 @@ const _currentGameReducer = createReducer(currentGameInitState,
             if (homeRecord && awayRecord) {
               const homeRecordCopy = {...homeRecord};
               const awayRecordCopy = {...awayRecord};
-              const [homeGoals, awayGoals] = match.result.split(' - ').map(value1 => parseInt(value1, 10));
+              const [homeGoals, awayGoals] = resultSplitter(match.result);
               if (homeGoals > awayGoals) {
                 homeRecordCopy.wins++;
                 awayRecordCopy.loses++;

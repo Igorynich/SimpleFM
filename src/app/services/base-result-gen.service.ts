@@ -12,7 +12,7 @@ import {round} from 'lodash';
 import {Player} from '../interfaces/player';
 import {Club} from '../interfaces/club';
 import {clearSubscription} from '../utils/clean-subscriptions';
-import {getStarters} from '../utils/sort-roster';
+import {getStarters, resultSplitter} from '../utils/sort-roster';
 
 @Injectable({
   providedIn: 'root'
@@ -176,12 +176,13 @@ export class BaseResultGenService implements ResultGenerator {
   }
 
   private generateMatchStats(homeRoster: Player[], awayRoster: Player[], result: string, match: Match) {
-    const [homeGoals, awayGoals] = result.split(' - ').map(value => parseInt(value, 10));
+    const [homeGoals, awayGoals] = resultSplitter(result);
     const cupDecider = result.includes('e') ? 'e' : '';
     const homeScorers: { goals: { [minute: number]: Player }, assists: { [minute: number]: Player | null } } =
       this.generateGoalScorers(homeGoals, homeRoster, homeGoals > awayGoals ? cupDecider : '');
     const awayScorers: { goals: { [minute: number]: Player }, assists: { [minute: number]: Player | null } } =
       this.generateGoalScorers(awayGoals, awayRoster, homeGoals < awayGoals ? cupDecider : '');
+    const gains: Player[] = this.generateGains(homeRoster, awayRoster, result, match, homeScorers, awayScorers);
     this.store.dispatch(addGoalScorersForMatch({
       matchId: match.id,
       goals: {
@@ -271,6 +272,22 @@ export class BaseResultGenService implements ResultGenerator {
     };
     // map removes goal scorer from assist chances
     return [...weights.gk, ...weights.d, ...weights.m, ...weights.f].map((value, index) => index === scorerIndex ? 0 : value);
+  }
+
+  private generateGains(homeRoster: Player[], awayRoster: Player[], result: string, match: Match,
+                        homeScorers: { goals: { [minute: number]: Player }, assists: { [minute: number]: Player | null } },
+                        awayScorers: { goals: { [minute: number]: Player }, assists: { [minute: number]: Player | null } }): Player[] {
+    const homePower: RosterPower = this.calculateRosterPower(homeRoster);      // home advantage bonus already included
+    const awayPower: RosterPower = this.calculateRosterPower(awayRoster);
+    const homeSumPower = homePower.gk + homePower.d + homePower.m + homePower.f;
+    const awaySumPower = awayPower.gk + awayPower.d + awayPower.m + awayPower.f;
+    const sumPowerDif = homeSumPower - awaySumPower;
+    const [homeGoals, awayGoals] = resultSplitter(result);
+    const resultDif = homeGoals - awayGoals;
+    /*if () {
+
+    }*/
+    return [];
   }
 }
 

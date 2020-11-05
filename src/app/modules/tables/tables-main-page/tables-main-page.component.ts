@@ -13,6 +13,8 @@ import {LeagueTable} from '../../../interfaces/league-table';
 import {CleanSubscriptions} from '../../../utils/clean-subscriptions';
 import {Match} from '../../../interfaces/match';
 import {Club} from '../../../interfaces/club';
+import {CUP_INTERVAL} from '../../../constants/general';
+import {getLeagueWeek} from '../../../utils/sort-roster';
 
 @CleanSubscriptions()
 @Component({
@@ -42,7 +44,7 @@ export class TablesMainPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this._curWeekSub = this.store.select(selectCurrentWeek).subscribe(value => {
-      this.selectedWeek.num = value - 1;
+      this.selectedWeek.num = getLeagueWeek(value) - 1;
     });
     this.curClub$ = this.store.select(selectCurrentClub);
     this.schedule$ = this.store.select(selectCurrentClub).pipe(switchMap(curClub =>

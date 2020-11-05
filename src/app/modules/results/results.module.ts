@@ -6,6 +6,7 @@ import {MatCardModule} from '@angular/material/card';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { ResultsCardComponent } from './results-card/results-card.component';
 import {MatButtonModule} from '@angular/material/button';
+import {SharedModule} from '../../shared/shared.module';
 
 const routes = [
   {
@@ -21,7 +22,8 @@ const routes = [
     RouterModule.forChild(routes),
     MatCardModule,
     MatProgressSpinnerModule,
-    MatButtonModule
+    MatButtonModule,
+    SharedModule
   ]
 })
 export class ResultsModule { }

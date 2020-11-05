@@ -8,6 +8,7 @@ import { NavigateToOfficeComponent } from './navigate-to-office/navigate-to-offi
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { MatchTooltipComponent } from './match-tooltip/match-tooltip.component';
 import {MatchTooltipDirective} from '../directives/match-tooltip.directive';
+import { MatchResultComponent } from './match-result/match-result.component';
 
 
 
@@ -17,7 +18,8 @@ import {MatchTooltipDirective} from '../directives/match-tooltip.directive';
     InfoDialogComponent,
     NavigateToOfficeComponent,
     MatchTooltipComponent,
-    MatchTooltipDirective
+    MatchTooltipDirective,
+    MatchResultComponent
   ],
   imports: [
     CommonModule,
@@ -27,7 +29,8 @@ import {MatchTooltipDirective} from '../directives/match-tooltip.directive';
   ],
   exports: [
     NavigateToOfficeComponent,
-    MatchTooltipDirective
+    MatchTooltipDirective,
+    MatchResultComponent
   ],
   entryComponents: [
     ConfirmationDialogComponent

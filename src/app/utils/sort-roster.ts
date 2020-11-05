@@ -1,6 +1,7 @@
 import {Player} from '../interfaces/player';
 import {Starters} from '../services/base-result-gen.service';
 import {LeagueTable} from '../interfaces/league-table';
+import {CUP_INTERVAL} from '../constants/general';
 
 export function sortClubsRoster(roster: Player[]): Player[] {
   const gks = roster.filter(pl => pl.position === 'GK').sort((a, b) => b.power - a.power);
@@ -57,4 +58,12 @@ export function sortTable(a: LeagueTable, b: LeagueTable) {
     return b.gd - a.gd;
   }
   return b.points - a.points;
+}
+
+export function resultSplitter(result: string): number[] {
+  return result ? result.split(' - ').map(value => parseInt(value, 10)) : [0, 0];
+}
+
+export function getLeagueWeek(curWeek: number): number {
+  return curWeek - Math.floor(curWeek / CUP_INTERVAL);
 }

@@ -88,13 +88,13 @@
       </span>
             </div>
           </div>
-          <h3 class="text-center">Неделя {{selectedWeek.num + 1}}</h3>
+          <h3 class="text-center">{{selectedWeek.num + 1}} тур</h3>
           <div class="row" *ngFor="let match of selectedWeek.schedule">
             <div class="col-5 text-right" [ngClass]="{'my-club': (isMyClub$(match).home | async)}">
               {{match.home.nameRu}}
             </div>
             <div class="col-1 text-center">
-              <span *ngIf="match.result">{{match.result}}</span>
+              <span *ngIf="match.result" [appMatchTooltip]="match">{{match.result}}</span>
               <span *ngIf="!match.result">-</span>
             </div>
             <div class="col-5 text-left" [ngClass]="{'my-club': (isMyClub$(match).away | async)}">
@@ -117,7 +117,7 @@
               </span>
             </div>
             <div class="col-12 text-center align-middle">
-              <span [ngStyle]="{'line-height.px': 25 * (i + 1)}" *ngIf="match.result">{{match.result}}</span>
+              <span [ngStyle]="{'line-height.px': 25 * (i + 1)}" *ngIf="match.result" [appMatchTooltip]="match">{{match.result}}</span>
               <span [ngStyle]="{'line-height.px': 25 * (i + 1)}" *ngIf="!match.result">vs</span>
             </div>
             <div class="col-12 text-center">

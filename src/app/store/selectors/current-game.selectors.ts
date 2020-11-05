@@ -3,7 +3,7 @@ import {createSelector} from '@ngrx/store';
 import {WeekSchedule} from '../../interfaces/league-schedule';
 import {CUP_INTERVAL} from '../../constants/general';
 import {Match} from '../../interfaces/match';
-import {sortClubsRoster, sortTable} from '../../utils/sort-roster';
+import {getLeagueWeek, resultSplitter, sortClubsRoster, sortTable} from '../../utils/sort-roster';
 import {Player} from '../../interfaces/player';
 import {LeagueTable} from '../../interfaces/league-table';
 import {PlayerStats} from '../../interfaces/player-stats';
@@ -68,7 +68,7 @@ export const selectCurrentWeekSchedule = createSelector(selectCurrentGameState, 
       stats: onlyRealMatches.map(value => state.stats[value.id])
     });
   } else {
-    const index = curWeek - Math.floor(curWeek / CUP_INTERVAL);     // index учитывает кубковые недели
+    const index = getLeagueWeek(curWeek);     // index учитывает кубковые недели
     countryLeagues.forEach(value => {
       const leagueSchedule = state.schedule[value.id] ? state.schedule[value.id][index] : null;
       if (leagueSchedule) {
@@ -186,8 +186,8 @@ export const selectClubsRosterStats = createSelector(selectCurrentGameState, sel
             !!state.stats[curMatch?.id]?.awayRoster.find(pl => pl.nameEn === player.nameEn);
           if (!!curMatch && havePlayedInMatch) {
             const isHome = !!state.stats[curMatch.id]?.homeRoster.find(pl => pl.nameEn === player.nameEn);
-            const [homeGoals, awayGoals] = curMatch.result ? curMatch.result.split(' - ') : [0, 0];
-            const conc = isHome ? +awayGoals : +homeGoals;
+            const [homeGoals, awayGoals] = resultSplitter(curMatch.result);
+            const conc = isHome ? awayGoals : homeGoals;
             return sum - conc;
           }
           return sum;

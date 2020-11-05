@@ -9,6 +9,7 @@ import {map, switchMap, tap} from 'rxjs/operators';
 import {Club} from '../../../interfaces/club';
 import {combineLatest, Observable} from 'rxjs';
 import {Match} from '../../../interfaces/match';
+import {resultSplitter} from '../../../utils/sort-roster';
 
 @Component({
   selector: 'app-schedule-main-page',
@@ -50,7 +51,7 @@ export class ScheduleMainPageComponent implements OnInit {
     const isHomeMatch = match.home?.nameEn === this.currentClub?.nameEn;
     const resClass = {};
     if (match.result) {
-      const [homeG, awayG] = match.result.split(' - ').map(value => +value);
+      const [homeG, awayG] = resultSplitter(match.result);
       if (homeG > awayG) {
         resClass['match-won'] = isHomeMatch;
       } else if (homeG < awayG) {
