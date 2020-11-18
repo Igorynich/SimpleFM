@@ -39,8 +39,14 @@ export const addGoalScorersForMatch = createAction('Adds goal scorers to match s
     homeGoals: { [minute: number]: Player },
     homeAssists: {[minute: number]: Player},
     awayGoals: { [minute: number]: Player },
-    awayAssists: {[minute: number]: Player};
+    awayAssists: {[minute: number]: Player}
   }
+}>());
+
+export const addGainsAndLossesForMatch = createAction('Adds gainers and losers to match stats', props<{
+  matchId: number,
+  gains: Player[],
+  losses: Player[]
 }>());
 
 export const updateTables = createAction('Updates tables with newly generated results');

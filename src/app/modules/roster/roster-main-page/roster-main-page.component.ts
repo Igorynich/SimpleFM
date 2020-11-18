@@ -5,7 +5,7 @@ import {Player} from '../../../interfaces/player';
 import {CdkDragEnter, moveItemInArray} from '@angular/cdk/drag-drop';
 import {Store} from '@ngrx/store';
 import {
-  AppState,
+  AppState, selectClubsRosterLastMatchStats,
   selectClubsRosterStats,
   selectCurrentClub,
   selectCurrentPlayers,
@@ -30,9 +30,11 @@ export class RosterMainPageComponent implements OnInit, OnDestroy {
   lastPlayerBoxEntered: number;
   players: Player[];
   stats: Map<string, PlayerStats>;
+  statsLastGame: Map<string, PlayerStats>;
 
   private _playersSub: Subscription;
   private _statsSub: Subscription;
+  private _statsLGSub: Subscription;
 
   constructor(private fs: FirebaseService, private game: CurrentGameService, private store: Store<AppState>,
               private snack: SnackBarService) {
@@ -41,6 +43,7 @@ export class RosterMainPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // this.players = this.game.currentPlayers;
     this._playersSub = this.store.select(selectCurrentPlayers).subscribe((value: Player[]) => {
+      console.log('Players', value);
       this.players = [...value];
     });
     this._statsSub = this.store.select(selectCurrentClub).pipe(switchMap(curClub =>
@@ -48,6 +51,12 @@ export class RosterMainPageComponent implements OnInit, OnDestroy {
       .subscribe((value: Map<string, PlayerStats>) => {
         this.stats = value;
         console.log('Players Stats', value);
+      });
+    this._statsLGSub = this.store.select(selectCurrentClub).pipe(switchMap(curClub =>
+      this.store.select(selectClubsRosterLastMatchStats, {clubsNameEn: curClub.nameEn})))
+      .subscribe((value: Map<string, PlayerStats>) => {
+        this.statsLastGame = value;
+        console.log('Players Stats Last Game', value);
       });
   }
 

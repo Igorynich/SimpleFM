@@ -1,11 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {CurrentWeekSchedule} from '../../../interfaces/current-week-schedule';
-import {AppState, selectCurrentClub, selectCurrentWeek} from '../../../store/selectors/current-game.selectors';
+import {AppState} from '../../../store/selectors/current-game.selectors';
 import {Store} from '@ngrx/store';
-import {Observable, Subject} from 'rxjs';
-import {Club} from '../../../interfaces/club';
-import {Match} from '../../../interfaces/match';
-import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-results-card',

@@ -17,3 +17,7 @@ export function randomInteger(min, max) {
   const rand = min + Math.random() * (max + 1 - min);
   return Math.floor(rand);
 }
+
+export function values<T>(obj: T | null | undefined): any[] {
+  return obj ? Object.values(obj) : [];
+}

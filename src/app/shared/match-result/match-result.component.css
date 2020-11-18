@@ -1,3 +1,17 @@
 .scorers {
   font-size: small;
 }
+
+.gains {
+  font-size: x-small;
+  color: green;
+}
+
+.losses {
+  font-size: x-small;
+  color: red;
+}
+
+.my-club {
+  /*color: #2b4bfa;*/
+}

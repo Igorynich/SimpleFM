@@ -2,6 +2,7 @@ import {Club} from '../../interfaces/club';
 import {Player} from '../../interfaces/player';
 import {Action, createReducer, on} from '@ngrx/store';
 import {
+  addGainsAndLossesForMatch,
   addGoalScorersForMatch,
   addMatch,
   advanceAWeek,
@@ -20,8 +21,8 @@ import {LeagueTable} from '../../interfaces/league-table';
 import {CUP_INTERVAL} from '../../constants/general';
 import {Match} from '../../interfaces/match';
 import {MatchStats} from '../../interfaces/match-stats';
-import {valueReferenceToExpression} from '@angular/compiler-cli/src/ngtsc/annotations/src/util';
 import {resultSplitter, sortStarters} from '../../utils/sort-roster';
+import {round} from 'lodash';
 
 export interface CurrentGameState {
   currentWeek: number;
@@ -33,6 +34,7 @@ export interface CurrentGameState {
     clubs: Club[],
     players: Player[]
   };
+  gainsAndLosses: {[matchId: number]: {gains: Player[], losses: Player[]}};
   loading: boolean;
   matches: { [id: number]: Match };
   schedule: { [leagueId: string]: WeekSchedule[][] };
@@ -48,6 +50,7 @@ export const currentGameInitState: CurrentGameState = {
   currentClub: null,
   currentPlayers: null,
   data: null,
+  gainsAndLosses: null,
   loading: true,
   matches: {},
   schedule: null,
@@ -144,6 +147,80 @@ const _currentGameReducer = createReducer(currentGameInitState,
   on(addGoalScorersForMatch, (state, {matchId, goals}) => {
     console.log('addGoalScorersForMatch', {...state, stats: {...state.stats, [matchId]: {...state.stats[matchId], ...goals}}});
     return {...state, stats: {...state.stats, [matchId]: {...state.stats[matchId], ...goals}}};
+  }),
+  on(addGainsAndLossesForMatch, (state, {matchId, gains, losses}) => {
+    const changedPlayers = [];
+    // TODO think of better solution - maybe use immer
+    state.data.players.forEach(pl => {
+      changedPlayers.push({...pl});
+    });
+    //
+    const currentPlayers = [];
+    state.currentPlayers.forEach(pl => {
+      currentPlayers.push({...pl});
+    });
+    losses.forEach((pl: Player) => {
+      const dataPlayer = changedPlayers.find(value => value.nameEn === pl.nameEn);
+      console.log('Losses Player', pl, dataPlayer);
+      if (dataPlayer) {
+        if (dataPlayer.power > 0.1) {     // cant be less than 0.1
+          dataPlayer.power = round(dataPlayer.power - 0.1, 1);
+          if (!dataPlayer.gain) {
+            dataPlayer.gain = 0;
+          }
+          dataPlayer.gain = round(dataPlayer.gain - 0.1, 1);
+          console.log('Losses Player -0.1', dataPlayer);
+        }
+      }
+      // TODO updating current players - think of another solution - like updateCurrentPlayers action
+      const curPlayer = currentPlayers.find(value => value.nameEn === pl.nameEn);
+      console.log('Losses cur Player', pl, curPlayer);
+      if (curPlayer) {
+        if (curPlayer.power > 0.1) {
+          curPlayer.power = round(curPlayer.power - 0.1, 1);
+          if (!curPlayer.gain) {
+            curPlayer.gain = 0;
+          }
+          curPlayer.gain = round(curPlayer.gain - 0.1, 1);
+          console.log('Losses Player -0.1', curPlayer);
+        }
+      }
+    });
+    gains.forEach((pl: Player) => {
+      const dataPlayer = changedPlayers.find(value => value.nameEn === pl.nameEn);
+      if (dataPlayer) {
+        if (dataPlayer.power < 10) {
+          dataPlayer.power = round(dataPlayer.power + 0.1, 1);
+          if (!dataPlayer.gain) {
+            dataPlayer.gain = 0;
+          }
+          dataPlayer.gain = round(dataPlayer.gain + 0.1, 1);
+        }
+      }
+      // TODO updating current players - think of another solution - like updateCurrentPlayers action
+      const curPlayer = currentPlayers.find(value => value.nameEn === pl.nameEn);
+      if (curPlayer) {
+        if (curPlayer.power < 10) {
+          curPlayer.power = round(curPlayer.power + 0.1, 1);
+          if (!curPlayer.gain) {
+            curPlayer.gain = 0;
+          }
+          curPlayer.gain = round(curPlayer.gain + 0.1, 1);
+        }
+      }
+    });
+    console.warn('addGainsAndLossesForMatch', {
+      ...state,
+      currentPlayers,
+      gainsAndLosses: {...state.gainsAndLosses, [matchId]: {gains, losses}},
+      data: {...state.data, players: changedPlayers}
+    });
+    return {
+      ...state,
+      currentPlayers,
+      gainsAndLosses: {...state.gainsAndLosses, [matchId]: {gains, losses}},
+      data: {...state.data, players: changedPlayers}
+    };
   }),
   on(logOut, state => {
     console.warn('logOut', state);

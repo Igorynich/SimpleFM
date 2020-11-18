@@ -1,7 +1,8 @@
 import {Player} from '../interfaces/player';
-import {Starters} from '../services/base-result-gen.service';
+import {RosterPower, Starters} from '../services/base-result-gen.service';
 import {LeagueTable} from '../interfaces/league-table';
 import {CUP_INTERVAL} from '../constants/general';
+import {round} from 'lodash';
 
 export function sortClubsRoster(roster: Player[]): Player[] {
   const gks = roster.filter(pl => pl.position === 'GK').sort((a, b) => b.power - a.power);
@@ -38,7 +39,8 @@ export function getStarters(roster: Player[]): Starters {
 }
 
 export function getReserves(roster: Player[]): Player[] {
-  return roster.filter((value, index) => index >= 11).sort((a, b) => b.power - a.power);
+  // return roster.filter((value, index) => index >= 11).sort((a, b) => b.power - a.power);
+  return roster.filter((value, index) => index >= 11);
 }
 
 export function sortTable(a: LeagueTable, b: LeagueTable) {
@@ -66,4 +68,15 @@ export function resultSplitter(result: string): number[] {
 
 export function getLeagueWeek(curWeek: number): number {
   return curWeek - Math.floor(curWeek / CUP_INTERVAL);
+}
+
+export function calculateRosterPower(roster: Player[], isHomeTeam = false): RosterPower {
+  const homeAdvMulti = isHomeTeam ? (1 + this.HOME_TEAM_POWER_ADVANTAGE_PCT / 100) : 1;
+  const {gk, d, m, f} = getStarters(roster);
+  return {
+    gk: gk[0].power * homeAdvMulti,
+    d: round(d.reduce((previousValue, currentValue) => previousValue + currentValue.power, 0) * homeAdvMulti, 2),
+    m: round(m.reduce((previousValue, currentValue) => previousValue + currentValue.power, 0) * homeAdvMulti, 2),
+    f: round(f.reduce((previousValue, currentValue) => previousValue + currentValue.power, 0) * homeAdvMulti, 2)
+  };
 }

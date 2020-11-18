@@ -10,6 +10,7 @@ import {Match} from '../interfaces/match';
 export class MatchTooltipDirective implements OnInit {
 
   @Input('appMatchTooltip') match: Match;
+  @Input() showGains: boolean;
   overlayRef: OverlayRef;
 
   constructor(private overlayPositionBuilder: OverlayPositionBuilder,
@@ -41,6 +42,7 @@ export class MatchTooltipDirective implements OnInit {
     const tooltipPortal = new ComponentPortal(MatchTooltipComponent);
     const tooltipRef: ComponentRef<MatchTooltipComponent> = this.overlayRef.attach(tooltipPortal);
     tooltipRef.instance.match = this.match;
+    tooltipRef.instance.showGains = this.showGains;
   }
 
   @HostListener('mouseleave')

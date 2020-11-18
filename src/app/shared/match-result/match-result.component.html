@@ -31,5 +31,29 @@
         </div>
       </div>
     </div>
+    <div class="row justify-content-around">
+      <div class="col-5 gains">
+        <div *ngFor="let player of (matchGaines$ | async).gains">
+          <span *ngIf="player.clubNameEn === match.home.nameEn">{{player.nameRu}}</span>
+        </div>
+      </div>
+      <div class="col-5 gains">
+        <div *ngFor="let player of (matchGaines$ | async).gains">
+          <span *ngIf="player.clubNameEn === match.away.nameEn">{{player.nameRu}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-around">
+      <div class="col-5 losses">
+        <div *ngFor="let player of (matchGaines$ | async).losses">
+          <span *ngIf="player.clubNameEn === match.home.nameEn">{{player.nameRu}}</span>
+        </div>
+      </div>
+      <div class="col-5 losses">
+        <div *ngFor="let player of (matchGaines$ | async).losses">
+          <span *ngIf="player.clubNameEn === match.away.nameEn">{{player.nameRu}}</span>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

@@ -7,7 +7,7 @@
       <div class="col-6 text-center">
         Имя
       </div>
-      <div class="col-1 text-center">
+      <div class="col-2 text-center">
         Сила
       </div>
       <div class="col-1 text-center">
@@ -15,6 +15,9 @@
       </div>
       <div class="col-1 text-center">
         Г+П
+      </div>
+      <div class="col-1 text-center">
+        Посл. игра
       </div>
     </div>
   </div>
@@ -32,8 +35,11 @@
           <div class="col-6">
             {{player.nameRu}}
           </div>
-          <div class="col-1">
+          <div class="col-2">
             {{player.power}}
+            <span [ngClass]="{red: player?.gain < 0, green: player?.gain > 0}" class="text-right" *ngIf="!!player.gain">
+              ({{player.gain}})
+            </span>
           </div>
           <div class="col-1">
             {{stats.get(player.nameEn).games}}
@@ -41,6 +47,12 @@
           <div class="col-1">
             <span *ngIf="player.position !== 'GK'">{{stats.get(player.nameEn).goals}}+{{stats.get(player.nameEn).assists}}</span>
             <span *ngIf="player.position === 'GK'">{{stats.get(player.nameEn).conceded}}</span>
+          </div>
+          <div class="col-1">
+            <span [ngClass]="{red: statsLastGame.get(player.nameEn)?.gainsLastGame < 0,
+             green: statsLastGame.get(player.nameEn)?.gainsLastGame > 0}">
+              {{statsLastGame.get(player.nameEn)?.gainsLastGame}}
+            </span>
           </div>
         </div>
       </div>

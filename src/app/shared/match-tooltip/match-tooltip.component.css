@@ -1,7 +1,11 @@
 :host {
-  border: 2px solid #d8ad00;
-  background-color: #686868;
-  color: white;
+  border: 2px solid #144114;
+  background-color: #ecf08f;
+  color: #1e1e1e;
   /*width: 50%;*/
   width: 500px;
+}
+
+::ng-deep .my-club {
+  color: #6e8fb2;
 }

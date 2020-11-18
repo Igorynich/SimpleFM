@@ -7,12 +7,20 @@ import {filter, map, take, withLatestFrom} from 'rxjs/operators';
 import {BehaviorSubject, Observable, Subject, Subscription} from 'rxjs';
 import {randomInteger} from '../utils/helpers';
 import {Match} from '../interfaces/match';
-import {addGoalScorersForMatch, setABunchOfResult, setResult, updateTables} from '../store/actions/current-game.actions';
+import {
+  addGainsAndLossesForMatch,
+  addGoalScorersForMatch,
+  setABunchOfResult,
+  setResult,
+  updateTables
+} from '../store/actions/current-game.actions';
 import {round} from 'lodash';
 import {Player} from '../interfaces/player';
 import {Club} from '../interfaces/club';
 import {clearSubscription} from '../utils/clean-subscriptions';
-import {getStarters, resultSplitter} from '../utils/sort-roster';
+import {calculateRosterPower, getStarters, resultSplitter} from '../utils/sort-roster';
+import {BaseGainsGenService} from './base-gains-gen.service';
+import {BaseAttendanceGenService} from './base-attendance-gen.service';
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +50,9 @@ export class BaseResultGenService implements ResultGenerator {
 
   private _selectSub: Subscription;
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<AppState>,
+              private gainsService: BaseGainsGenService,
+              private attendanceService: BaseAttendanceGenService) {
   }
 
   generateWeekResults(): Observable<CurrentWeekSchedule[]> {
@@ -83,25 +93,6 @@ export class BaseResultGenService implements ResultGenerator {
     return a$;
   }
 
-  private generateResult(match: Match): string {
-    console.log('Generating res for ', match);
-    const {home, away} = match;
-    let result;
-    clearSubscription(this._selectSub);
-    this._selectSub = this.store.select(selectPlayersByClubsNameEn, {clubsNameEn: home.nameEn})
-    // take(1) cause it runs result generation twice for LAST match (god knows why)
-      .pipe(withLatestFrom(this.store.select(selectPlayersByClubsNameEn, {clubsNameEn: away.nameEn})), take(1))
-      .subscribe(([homeRoster, awayRoster]) => {
-        const homePower = this.calculateRosterPower(homeRoster);
-        const awayPower = this.calculateRosterPower(awayRoster);
-        console.log(`${home.nameEn} powers`, homePower);
-        console.log(`${away.nameEn} powers`, awayPower);
-        result = this.calculateResult(homePower, awayPower, match);
-        this.generateMatchStats(homeRoster, awayRoster, result, match);
-      });
-    return result;
-  }
-
   private generateResultsForWholeWeek(matches: Match[]) {
     console.log('Generating res for whole week ', matches);
     this.inProgress = true;
@@ -112,15 +103,24 @@ export class BaseResultGenService implements ResultGenerator {
     this.store.dispatch(setABunchOfResult({results, matches}));
   }
 
-  private calculateRosterPower(roster: Player[], isHomeTeam = false): RosterPower {
-    const homeAdvMulti = isHomeTeam ? (1 + this.HOME_TEAM_POWER_ADVANTAGE_PCT / 100) : 1;
-    const {gk, d, m, f} = getStarters(roster);
-    return {
-      gk: gk[0].power * homeAdvMulti,
-      d: round(d.reduce((previousValue, currentValue) => previousValue + currentValue.power, 0) * homeAdvMulti, 2),
-      m: round(m.reduce((previousValue, currentValue) => previousValue + currentValue.power, 0) * homeAdvMulti, 2),
-      f: round(f.reduce((previousValue, currentValue) => previousValue + currentValue.power, 0) * homeAdvMulti, 2)
-    };
+  private generateResult(match: Match): string {
+    console.log('Generating res for ', match);
+    const {home, away} = match;
+    let result;
+    clearSubscription(this._selectSub);
+    this._selectSub = this.store.select(selectPlayersByClubsNameEn, {clubsNameEn: home.nameEn})
+    // take(1) cause it runs result generation twice for LAST match (god knows why)
+      .pipe(withLatestFrom(this.store.select(selectPlayersByClubsNameEn, {clubsNameEn: away.nameEn})), take(1))
+      .subscribe(([homeRoster, awayRoster]) => {
+        const homePower = calculateRosterPower(homeRoster, true);
+        const awayPower = calculateRosterPower(awayRoster);
+        console.log(`${home.nameEn} powers`, homePower);
+        console.log(`${away.nameEn} powers`, awayPower);
+        result = this.calculateResult(homePower, awayPower, match);
+        this.generateMatchStats(homeRoster, awayRoster, result, match);
+        this.generateAttendancesAndIncome(homeRoster, awayRoster, result, match);
+      });
+    return result;
   }
 
   private calculateResult(homePower: RosterPower, awayPower: RosterPower, match: Match): string {
@@ -182,7 +182,6 @@ export class BaseResultGenService implements ResultGenerator {
       this.generateGoalScorers(homeGoals, homeRoster, homeGoals > awayGoals ? cupDecider : '');
     const awayScorers: { goals: { [minute: number]: Player }, assists: { [minute: number]: Player | null } } =
       this.generateGoalScorers(awayGoals, awayRoster, homeGoals < awayGoals ? cupDecider : '');
-    const gains: Player[] = this.generateGains(homeRoster, awayRoster, result, match, homeScorers, awayScorers);
     this.store.dispatch(addGoalScorersForMatch({
       matchId: match.id,
       goals: {
@@ -193,6 +192,12 @@ export class BaseResultGenService implements ResultGenerator {
         awayGoals: awayScorers.goals,
         awayAssists: awayScorers.assists
       }
+    }));
+    const {gains, losses} = this.gainsService.generateGainsAndLosses(homeRoster, awayRoster, result, match, homeScorers, awayScorers);
+    this.store.dispatch(addGainsAndLossesForMatch({
+      matchId: match.id,
+      gains,
+      losses
     }));
   }
 
@@ -251,6 +256,14 @@ export class BaseResultGenService implements ResultGenerator {
     return {goals: {}, assists: null};
   }
 
+  private generateAttendancesAndIncome(homeRoster: Player[], awayRoster: Player[], result: string, match: Match) {
+    const homeSumPower = homeRoster.filter((value, index) => index < 11)
+      .reduce((previousValue, currentValue: Player) => previousValue + currentValue.power, 0);
+    const awaySumPower = awayRoster.filter((value, index) => index < 11)
+      .reduce((previousValue, currentValue: Player) => previousValue + currentValue.power, 0);
+    const attendance = this.attendanceService.generateAttendance(homeSumPower, awaySumPower, result, match);
+  }
+
   private getGoalChanceWeights(roster: Player[]): number[] {
     const starters = getStarters(roster);
     const weights = {
@@ -274,7 +287,7 @@ export class BaseResultGenService implements ResultGenerator {
     return [...weights.gk, ...weights.d, ...weights.m, ...weights.f].map((value, index) => index === scorerIndex ? 0 : value);
   }
 
-  private generateGains(homeRoster: Player[], awayRoster: Player[], result: string, match: Match,
+  /*private generateGains(homeRoster: Player[], awayRoster: Player[], result: string, match: Match,
                         homeScorers: { goals: { [minute: number]: Player }, assists: { [minute: number]: Player | null } },
                         awayScorers: { goals: { [minute: number]: Player }, assists: { [minute: number]: Player | null } }): Player[] {
     const homePower: RosterPower = this.calculateRosterPower(homeRoster);      // home advantage bonus already included
@@ -284,11 +297,11 @@ export class BaseResultGenService implements ResultGenerator {
     const sumPowerDif = homeSumPower - awaySumPower;
     const [homeGoals, awayGoals] = resultSplitter(result);
     const resultDif = homeGoals - awayGoals;
-    /*if () {
+    /!*if () {
 
-    }*/
+    }*!/
     return [];
-  }
+  }*/
 }
 
 export interface RosterPower {

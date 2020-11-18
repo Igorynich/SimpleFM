@@ -9,6 +9,7 @@ import {Match} from '../../interfaces/match';
 export class MatchTooltipComponent implements OnInit {
 
   match: Match;
+  showGains: boolean;
 
   constructor() {
   }
