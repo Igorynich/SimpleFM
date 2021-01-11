@@ -6,7 +6,8 @@ import {catchError, map, tap} from 'rxjs/operators';
 import {League} from '../interfaces/league';
 import {Club} from '../interfaces/club';
 import {Player} from '../interfaces/player';
-import {CurrentGameService} from './current-game.service';
+import {AngularFireAuth} from '@angular/fire/auth';
+import * as firebase from 'firebase';
 
 export class PlayerQueryObj {
   club?: string;
@@ -26,7 +27,16 @@ export class FirebaseService {
 
   lastCreatedPlayer: Player;
 
-  constructor(private afs: AngularFirestore) {
+  constructor(private afs: AngularFirestore, private auth: AngularFireAuth) {
+  }
+
+  login(): Observable<any> {
+    // return from(this.auth.signInWithEmailAndPassword(email, password));
+    // this.auth.signInWithPopup(new this.auth.GoogleAuthProvider());
+    return from(this.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()));
+  }
+  logout(): Observable<any> {
+    return from(this.auth.signOut());
   }
 
   getScheduleShells(): Observable<any> {

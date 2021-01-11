@@ -38,11 +38,29 @@ export class BaseAttendanceGenService {
   constructor(private store: Store<AppState>) { }
 
   generateAttendance(homePower: number, awayPower: number, result: string, match: Match): number {
+    let attendance = match.home.stadium;
     this.store.select(selectLeagueTableByLeaguesNameEn, {leaguesNameEn: match.home.leagueNameEn})
       .pipe(withLatestFrom(this.store.select(selectClubPowersByLeaguesNameEn, {leaguesNameEn: match.home.leagueNameEn})))
       .subscribe(([leagueTable, clubPowersArray]: [LeagueTable[], {club: Club, power: number}[]]) => {
         // use leaguePosition - powerPosition to generate attendance
+        const homeLeaguePos = leagueTable.findIndex((tableLine: LeagueTable) => match.home.nameEn === tableLine.clubName
+          || match.home.nameRu === tableLine.clubName);
+        const awayLeaguePos = leagueTable.findIndex((tableLine: LeagueTable) => match.away.nameEn === tableLine.clubName
+          || match.away.nameRu === tableLine.clubName);
+        const homeStartSeasonPowerObj = clubPowersArray.find((powerObj: {club: Club, power: number}) =>
+          powerObj.club.nameEn === match.home.nameEn);
+        const awayStartSeasonPowerObj = clubPowersArray.find((powerObj: {club: Club, power: number}) =>
+          powerObj.club.nameEn === match.away.nameEn);
+        const homeStartSeasonPowerPos = clubPowersArray.findIndex((powerObj: {club: Club, power: number}) =>
+          powerObj.club.nameEn === match.home.nameEn);
+        const awayStartSeasonPowerPos = clubPowersArray.find((powerObj: {club: Club, power: number}) =>
+          powerObj.club.nameEn === match.away.nameEn);
+        let homeLeaguePosAtt = 0;
+        let awayLeaguePosAtt = 0;
+        let homePowerPosDiscrepAtt = 0;
+        let awayPowerAtt = 0;
+        attendance = homeLeaguePosAtt + awayLeaguePosAtt + homePowerPosDiscrepAtt + awayPowerAtt;
     });
-    return 0;
+    return attendance;
   }
 }

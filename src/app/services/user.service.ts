@@ -11,7 +11,7 @@ import { logOut } from '../store/actions/current-game.actions';
 export class UserService {
 
   // tslint:disable-next-line:variable-name
-  private _adminName = '111';
+  private _adminName = 'Igor Spiridenok';
   // tslint:disable-next-line:variable-name
   private _userName = '';
   env = environment;
