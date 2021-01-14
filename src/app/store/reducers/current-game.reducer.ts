@@ -2,6 +2,7 @@ import {Club} from '../../interfaces/club';
 import {Player} from '../../interfaces/player';
 import {Action, createReducer, on} from '@ngrx/store';
 import {
+  addAttendanceForMatch, addFinanceRecord,
   addGainsAndLossesForMatch,
   addGoalScorersForMatch,
   addMatch,
@@ -18,28 +19,32 @@ import {Country} from '../../interfaces/country';
 import {League} from '../../interfaces/league';
 import {WeekSchedule} from '../../interfaces/league-schedule';
 import {LeagueTable} from '../../interfaces/league-table';
-import {CUP_INTERVAL} from '../../constants/general';
+import {BASE_POWER_TICKET_PRICES_COEF, CUP_INTERVAL} from '../../constants/general';
 import {Match} from '../../interfaces/match';
 import {MatchStats} from '../../interfaces/match-stats';
-import {resultSplitter, sortStarters} from '../../utils/sort-roster';
+import {resultSplitter, sortClubsRoster, sortStarters} from '../../utils/sort-roster';
 import {round} from 'lodash';
+import {closest} from '../../utils/helpers';
+import {FinanceRecord} from '../../interfaces/finance-record';
 
 export interface CurrentGameState {
   currentWeek: number;
   currentClub: Club;
   currentPlayers: Player[];
-  data: {
+  data: {     // loaded from b/e
     countries: Country[],
     leagues: League[],
     clubs: Club[],
     players: Player[]
   };
+  finances: Map<string, {[week: number]: FinanceRecord[]}>;      // {[week: number]: Map<string, FinanceRecord[]>};
   gainsAndLosses: {[matchId: number]: {gains: Player[], losses: Player[]}};
   loading: boolean;
   matches: { [id: number]: Match };
   schedule: { [leagueId: string]: WeekSchedule[][] };
-  seasonData: {
+  seasonData: {       // calculated at season start
     clubPowers: Map<string, number>       // <clubNameEn, power>    power - sum rank of starters
+    ticketPrices: Map<string, number>       // <clubNameEn, ticketPrice>
   };
   stats: { [matchId: number]: MatchStats };
   tables: { [leagueId: string]: LeagueTable[] };
@@ -50,12 +55,14 @@ export const currentGameInitState: CurrentGameState = {
   currentClub: null,
   currentPlayers: null,
   data: null,
+  finances: null,
   gainsAndLosses: null,
   loading: true,
   matches: {},
   schedule: null,
   seasonData: {
-    clubPowers: null
+    clubPowers: null,
+    ticketPrices: null
   },
   stats: {},
   tables: null
@@ -91,14 +98,21 @@ const _currentGameReducer = createReducer(currentGameInitState,
     let map = new Map<string, number>();
     state.data.clubs.forEach((club: Club) => {
       const roster = state.data.players.filter((pl: Player) => pl.clubNameEn === club.nameEn);
-      const starters = sortStarters(roster).filter((value, index) => index < 11);
+      const starters = sortClubsRoster(roster).filter((value, index) => index < 11);
+      // console.log(`Roster and Starters of ${club.nameEn} seasonData`, roster, starters);
       const power = starters.reduce((previousValue, currentValue) => previousValue + currentValue.power, 0);
       map.set(club.nameEn, power);
     });
     map = new Map<string, number>([...map].sort((a, b) => b[1] - a[1]));    // sort power desc
     //
-    console.log('scheduleGenerated', {...state, schedule, seasonData: {clubPowers: map}});
-    return {...state, schedule, seasonData: {clubPowers: map}};
+    // generating ticketPrices
+    const ticketPrices = new Map<string, number>();
+    map.forEach((power, clubNameEn) => {
+      const thresholds = Object.keys(BASE_POWER_TICKET_PRICES_COEF);
+      ticketPrices.set(clubNameEn, BASE_POWER_TICKET_PRICES_COEF[closest(power, thresholds)]);
+    });
+    console.log('scheduleGenerated', {...state, schedule, seasonData: {clubPowers: map, ticketPrices}});
+    return {...state, schedule, seasonData: {clubPowers: map, ticketPrices}};
   }),
   on(tablesGenerated, (state, {tables}) => {
     console.log('tablesGenerated', {...state, tables});
@@ -111,6 +125,19 @@ const _currentGameReducer = createReducer(currentGameInitState,
   on(addMatch, (state, {match}) => {
     // console.log('addMatch', match); // {...state, matches: {...state.matches, ...match}});
     return {...state, matches: {...state.matches, ...match}};
+  }),
+  on(addFinanceRecord, (state, {clubNameEn, description, expense, income}) => {
+    const map = new Map<string, {[week: number]: FinanceRecord[]}>();
+    const week = state.currentWeek;
+    const finances = state.finances ? new Map(state.finances) : map;
+    const clubsRecords: {[week: number]: FinanceRecord[]} = finances && finances.get(clubNameEn);
+    if (!!clubsRecords) {
+      clubsRecords[week] ? clubsRecords[week].push({description, expense, income}) : clubsRecords[week] = [{description, expense, income}];
+      finances.set(clubNameEn, clubsRecords);
+    } else {
+      finances.set(clubNameEn, {[week]: [{description, expense, income}]});
+    }
+    return {...state, finances};
   }),
   on(setResult, (state, {result, match}) => {
     console.log('Setting Result', result, match);
@@ -220,6 +247,16 @@ const _currentGameReducer = createReducer(currentGameInitState,
       currentPlayers,
       gainsAndLosses: {...state.gainsAndLosses, [matchId]: {gains, losses}},
       data: {...state.data, players: changedPlayers}
+    };
+  }),
+  on(addAttendanceForMatch, (state, {matchId, attendance}) => {
+    console.log('addAttendanceForMatch', {
+      ...state,
+      stats: {...state.stats, [matchId]: {...state.stats[matchId], attendance}}
+    });
+    return {
+      ...state,
+      stats: {...state.stats, [matchId]: {...state.stats[matchId], attendance}}
     };
   }),
   on(logOut, state => {

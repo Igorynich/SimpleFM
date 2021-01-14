@@ -20,7 +20,7 @@ export const selectCurrentGameState = (state: AppState) => {
   return state.currentGame;
 };
 
-
+export const selectCurrentState = createSelector(selectCurrentGameState, (state: CurrentGameState) => state);
 export const selectCurrentClub = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.currentClub);
 export const selectCurrentPlayers = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.currentPlayers);
 export const selectCurrentWeek = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.currentWeek + 1);
@@ -66,6 +66,14 @@ export const selectClubPowersByLeaguesNameEn = createSelector(selectCurrentGameS
     }
   });
   return clubPowers;
+});
+
+export const selectTicketPriceByClubsNameEn = createSelector(selectCurrentGameState, (state, {clubsNameEn}) => {
+  return state.seasonData.ticketPrices.get(clubsNameEn);
+});
+
+export const selectFinanceRecordsByClubsNameEn = createSelector(selectCurrentGameState, (state, {clubsNameEn}) => {
+  return state.finances?.get(clubsNameEn);
 });
 
 export const selectCurrentWeekSchedule = createSelector(selectCurrentGameState, state => {

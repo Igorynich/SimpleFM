@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {UserService} from '../../../../services/user.service';
 import {
   AppState,
-  selectCurrentClub,
+  selectCurrentClub, selectCurrentGameState, selectCurrentState,
   selectCurrentWeek,
   selectNextOpponent,
   selectScheduleByClubsNameEn
@@ -12,7 +12,7 @@ import {Club} from '../../../../interfaces/club';
 import {ActivatedRoute, Router} from '@angular/router';
 import { ROUTES } from 'src/app/constants/routes';
 import {Observable} from 'rxjs';
-import {map, switchMap, tap} from 'rxjs/operators';
+import {map, switchMap, take, tap} from 'rxjs/operators';
 import { logOut } from 'src/app/store/actions/current-game.actions';
 
 @Component({
@@ -59,6 +59,12 @@ export class HeaderComponent implements OnInit {
   goToNextWeek() {
     this.router.navigate([this.ROUTES.RESULTS]).catch(reason => {
       console.error(reason);
+    });
+  }
+
+  showState() {
+    this.store.select(selectCurrentState).pipe(take(1)).subscribe(value => {
+      console.warn('STATE: ', value);
     });
   }
 }

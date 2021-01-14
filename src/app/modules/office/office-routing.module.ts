@@ -25,6 +25,10 @@ const officeRoutes = [
         path: ROUTES.TABLES,
         loadChildren: () => import('../tables/tables.module').then(mod => mod.TablesModule)
       },
+      {
+        path: ROUTES.FINANCE,
+        loadChildren: () => import('../finance/finance.module').then(mod => mod.FinanceModule)
+      },
     ]
   },
 ];

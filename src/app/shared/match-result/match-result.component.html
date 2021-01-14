@@ -15,6 +15,11 @@
         {{match.result}}
       </div>
     </div>
+    <div class="row" *ngIf="match.result">
+      <div class="col">
+        Att: {{(matchStats$ | async).attendance}}({{match.home.stadium}})
+      </div>
+    </div>
     <div class="row justify-content-around">
       <div class="col-5 scorers" [ngClass]="{'my-club': (isMyClub$(match).home | async)}">
         <div *ngFor="let min of keys((matchStats$ | async).homeGoals)"

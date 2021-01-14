@@ -6,6 +6,7 @@ import {League} from '../../interfaces/league';
 import {LeagueTable} from '../../interfaces/league-table';
 import {WeekSchedule} from '../../interfaces/league-schedule';
 import {Match} from '../../interfaces/match';
+import {FinanceRecord} from '../../interfaces/finance-record';
 
 export const getBaseData = createAction('[Initial] data read from Firebase(countries, leagues, clubs, players)');
 export const gotBaseData = createAction('[Initial] data read successful', props<{
@@ -50,3 +51,10 @@ export const addGainsAndLossesForMatch = createAction('Adds gainers and losers t
 }>());
 
 export const updateTables = createAction('Updates tables with newly generated results');
+
+export const addAttendanceForMatch = createAction('Adds attendance to match stats', props<{
+  matchId: number,
+  attendance: number
+}>());
+
+export const addFinanceRecord = createAction('Adds finance record', props<{clubNameEn, description, income, expense}>());

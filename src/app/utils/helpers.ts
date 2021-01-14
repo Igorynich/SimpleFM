@@ -1,6 +1,7 @@
 /* Create async observable that emits-once and completes
 after a JS engine turn */
 import {defer, Observable} from 'rxjs';
+import {round} from 'lodash';
 
 export function asyncData<T>(data: T): Observable<T> {
   return defer(() => Promise.resolve(data));
@@ -20,4 +21,22 @@ export function randomInteger(min, max) {
 
 export function values<T>(obj: T | null | undefined): any[] {
   return obj ? Object.values(obj) : [];
+}
+
+export function limitTo(num: number, limit: number, bothSides = true): number {
+  let result = num;
+  if (num > limit) {
+    result = limit;
+  } else if (bothSides && (num < -limit)) {
+    result = -limit;
+  }
+  return result;
+}
+
+export function closest(goal: number, array: string[] | number[]): string | number {
+  // @ts-ignore
+  const res = array.reduce((prev, curr) => {
+    return (Math.abs(round(curr, 1) - goal) < Math.abs(round(prev, 1) - goal) ? curr : prev);
+  });
+  return res;
 }

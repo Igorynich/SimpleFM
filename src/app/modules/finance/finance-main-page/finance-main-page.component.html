@@ -1,0 +1,26 @@
+<div class="row" *ngFor="let week of weeksTo(curWeek$ | async)">
+  <div class="col-2">
+    Неделя {{week}}
+  </div>
+  <div class="col-10" *ngIf="(financeRecords$ | async) && (financeRecords$ | async)[week - 1]">
+    <div class="row" *ngFor="let record of (financeRecords$ | async)[week - 1]">
+      <div class="col">
+        {{record.description}}
+      </div>
+      <div class="col" [ngClass]="{'red': !!record.expense, 'green': !!record.income}">
+        {{record.income || record.expense}}
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col" [ngClass]="{'red': calculateBudget(curClub$ | async, financeRecords$ | async) < 0,
+   'green': calculateBudget(curClub$ | async, financeRecords$ | async) > 0}">
+    Бюджет: {{calculateBudget(curClub$ | async, financeRecords$ | async)}}M
+  </div>
+</div>
+<div class="row justify-content-end">
+  <div class="col-1">
+    <app-navigate-to-office></app-navigate-to-office>
+  </div>
+</div>

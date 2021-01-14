@@ -1,7 +1,7 @@
 import {Player} from '../interfaces/player';
 import {RosterPower, Starters} from '../services/base-result-gen.service';
 import {LeagueTable} from '../interfaces/league-table';
-import {CUP_INTERVAL} from '../constants/general';
+import {CUP_INTERVAL, HOME_TEAM_POWER_ADVANTAGE_PCT} from '../constants/general';
 import {round} from 'lodash';
 
 export function sortClubsRoster(roster: Player[]): Player[] {
@@ -71,7 +71,7 @@ export function getLeagueWeek(curWeek: number): number {
 }
 
 export function calculateRosterPower(roster: Player[], isHomeTeam = false): RosterPower {
-  const homeAdvMulti = isHomeTeam ? (1 + this.HOME_TEAM_POWER_ADVANTAGE_PCT / 100) : 1;
+  const homeAdvMulti = isHomeTeam ? (1 + HOME_TEAM_POWER_ADVANTAGE_PCT / 100) : 1;
   const {gk, d, m, f} = getStarters(roster);
   return {
     gk: gk[0].power * homeAdvMulti,

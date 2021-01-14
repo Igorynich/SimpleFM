@@ -8,6 +8,7 @@ import {BehaviorSubject, Observable, Subject, Subscription} from 'rxjs';
 import {randomInteger} from '../utils/helpers';
 import {Match} from '../interfaces/match';
 import {
+  addAttendanceForMatch, addFinanceRecord,
   addGainsAndLossesForMatch,
   addGoalScorersForMatch,
   setABunchOfResult,
@@ -21,6 +22,7 @@ import {clearSubscription} from '../utils/clean-subscriptions';
 import {calculateRosterPower, getStarters, resultSplitter} from '../utils/sort-roster';
 import {BaseGainsGenService} from './base-gains-gen.service';
 import {BaseAttendanceGenService} from './base-attendance-gen.service';
+import {FinanceService} from './finance.service';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +34,6 @@ export class BaseResultGenService implements ResultGenerator {
 
   readonly BASE_NUMBER_OF_SHOTS = 10;
   readonly BASE_SHOTS_CONVERSION_PCT = 10;
-  readonly HOME_TEAM_POWER_ADVANTAGE_PCT = 10;
   readonly SHOTS_MULTI_POWER = 2;
   readonly GOAL_CHANCE_MODIFIER = {
     GK: 0,
@@ -52,7 +53,8 @@ export class BaseResultGenService implements ResultGenerator {
 
   constructor(private store: Store<AppState>,
               private gainsService: BaseGainsGenService,
-              private attendanceService: BaseAttendanceGenService) {
+              private attendanceService: BaseAttendanceGenService,
+              private financeService: FinanceService) {
   }
 
   generateWeekResults(): Observable<CurrentWeekSchedule[]> {
@@ -262,6 +264,18 @@ export class BaseResultGenService implements ResultGenerator {
     const awaySumPower = awayRoster.filter((value, index) => index < 11)
       .reduce((previousValue, currentValue: Player) => previousValue + currentValue.power, 0);
     const attendance = this.attendanceService.generateAttendance(homeSumPower, awaySumPower, result, match);
+    this.store.dispatch(addAttendanceForMatch({
+      matchId: match.id,
+      attendance
+    }));
+    const income = this.financeService.generateMatchIncome(attendance, match.home);
+    this.store.dispatch(addFinanceRecord({
+      clubNameEn: match.home.nameEn,
+      description: 'match day income',
+      income,
+      expense: null
+    }));
+
   }
 
   private getGoalChanceWeights(roster: Player[]): number[] {
