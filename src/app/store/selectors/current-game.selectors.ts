@@ -79,11 +79,10 @@ export const selectFinanceRecordsByClubsNameEn = createSelector(selectCurrentGam
 export const selectCurrentWeekSchedule = createSelector(selectCurrentGameState, state => {
   const curWeek = state.currentWeek;
   const curClub = state.currentClub;
-  const league = state.data.leagues.find(value => value.nameEn === curClub.leagueNameEn);
-  const country = state.data.countries.find(value => value.nameEn === league.countryNameEn);
-  const countryLeagues = state.data.leagues.filter(value => value.countryNameEn === country.nameEn);
   const schedule = [];      // {matches: null, tournament: null};
   if (!!curWeek && curWeek % CUP_INTERVAL === 0) {
+    const league = state.data.leagues.find(value => value.nameEn === curClub.leagueNameEn);
+    const country = state.data.countries.find(value => value.nameEn === league.countryNameEn);
     const allCupMatches: Match[] = state.schedule[country.id][(curWeek / CUP_INTERVAL) - 1].map(value => state.matches[value.matchId]);
     const onlyRealMatches: Match[] = allCupMatches.filter(value => !!value.home && !!value.away);
     schedule.push({
@@ -92,6 +91,9 @@ export const selectCurrentWeekSchedule = createSelector(selectCurrentGameState, 
       stats: onlyRealMatches.map(value => state.stats[value.id])
     });
   } else {
+    const league = state.data.leagues.find(value => value.nameEn === curClub.leagueNameEn);
+    const country = state.data.countries.find(value => value.nameEn === league.countryNameEn);
+    const countryLeagues = state.data.leagues.filter(value => value.countryNameEn === country.nameEn);
     const index = getLeagueWeek(curWeek);     // index учитывает кубковые недели
     countryLeagues.forEach(value => {
       const leagueSchedule = state.schedule[value.id] ? state.schedule[value.id][index] : null;

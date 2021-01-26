@@ -3,8 +3,8 @@ import {ResultGenerator} from '../interfaces/result-generator';
 import {Store} from '@ngrx/store';
 import {AppState, selectCurrentWeekSchedule, selectPlayersByClubsNameEn} from '../store/selectors/current-game.selectors';
 import {CurrentWeekSchedule} from '../interfaces/current-week-schedule';
-import {filter, map, take, withLatestFrom} from 'rxjs/operators';
-import {BehaviorSubject, Observable, Subject, Subscription} from 'rxjs';
+import {catchError, filter, map, take, withLatestFrom} from 'rxjs/operators';
+import {BehaviorSubject, Observable, of, Subject, Subscription} from 'rxjs';
 import {randomInteger} from '../utils/helpers';
 import {Match} from '../interfaces/match';
 import {
@@ -59,8 +59,10 @@ export class BaseResultGenService implements ResultGenerator {
 
   generateWeekResults(): Observable<CurrentWeekSchedule[]> {
     const a$ = this.store.select(selectCurrentWeekSchedule).pipe(filter((value: CurrentWeekSchedule[]) => {
+        console.error('LUL searching', value);
         const lastSchedule = value[value.length - 1];
         const lastMatchInLastSchedule = lastSchedule.matches[lastSchedule.matches.length - 1];
+        console.error('LUL searching 1', lastSchedule, lastMatchInLastSchedule);
         if (lastMatchInLastSchedule.result) {
           // this.inProgress = false;
           console.log('Lul next', [...value]);
@@ -91,6 +93,9 @@ export class BaseResultGenService implements ResultGenerator {
         }
         this.inProgress = false;
         return value;
+      }), catchError(err => {
+        console.error('Caught this shit', err)
+        return of([]);
       }));
     return a$;
   }

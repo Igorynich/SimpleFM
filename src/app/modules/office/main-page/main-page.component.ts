@@ -37,11 +37,17 @@ export class MainPageComponent implements OnInit, OnDestroy {
       nameEn: 'Tables',
       nameRu: 'Таблицы',
       route: ROUTES.TABLES
-    }, {
+    },
+    {
       nameEn: 'Finance',
       nameRu: 'Финансы',
       route: ROUTES.FINANCE
-    }, {}, {}, {}, {}
+    },
+    {
+      nameEn: 'Stadium',
+      nameRu: 'Стадион',
+      route: ROUTES.STADIUM
+    }, {}, {}, {}
   ];
   currentClub: Club;
   loading$: Observable<boolean> = of(true);

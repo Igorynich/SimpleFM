@@ -5,5 +5,6 @@ export const ROUTES = {
   SCHEDULE: 'schedule',
   TABLES: 'tables',
   RESULTS: 'results',
-  FINANCE: 'finance'
+  FINANCE: 'finance',
+  STADIUM: 'stadium'
 };

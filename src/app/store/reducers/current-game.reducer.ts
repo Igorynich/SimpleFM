@@ -26,6 +26,7 @@ import {resultSplitter, sortClubsRoster, sortStarters} from '../../utils/sort-ro
 import {round} from 'lodash';
 import {closest} from '../../utils/helpers';
 import {FinanceRecord} from '../../interfaces/finance-record';
+import produce, {enableMapSet} from 'immer';
 
 export interface CurrentGameState {
   currentWeek: number;
@@ -67,6 +68,8 @@ export const currentGameInitState: CurrentGameState = {
   stats: {},
   tables: null
 };
+
+enableMapSet();
 
 const _currentGameReducer = createReducer(currentGameInitState,
   on(gotBaseData, (state, {countries, leagues, clubs, players, scheduleShells}) => {
@@ -127,17 +130,26 @@ const _currentGameReducer = createReducer(currentGameInitState,
     return {...state, matches: {...state.matches, ...match}};
   }),
   on(addFinanceRecord, (state, {clubNameEn, description, expense, income}) => {
-    const map = new Map<string, {[week: number]: FinanceRecord[]}>();
-    const week = state.currentWeek;
-    const finances = state.finances ? new Map(state.finances) : map;
-    const clubsRecords: {[week: number]: FinanceRecord[]} = finances && finances.get(clubNameEn);
-    if (!!clubsRecords) {
-      clubsRecords[week] ? clubsRecords[week].push({description, expense, income}) : clubsRecords[week] = [{description, expense, income}];
-      finances.set(clubNameEn, clubsRecords);
-    } else {
-      finances.set(clubNameEn, {[week]: [{description, expense, income}]});
-    }
-    return {...state, finances};
+    const newState = produce(state, draft => {
+      // old
+      const map = new Map<string, {[week: number]: FinanceRecord[]}>();
+      const week = draft.currentWeek;
+      const finances = draft.finances ? new Map(draft.finances) : map;
+      const clubsRecords: {[week: number]: FinanceRecord[]} = finances && finances.get(clubNameEn);
+      if (!!clubsRecords) {
+        clubsRecords[week] ? clubsRecords[week].push({description, expense, income}) : clubsRecords[week]
+          = [{description, expense, income}];
+        finances.set(clubNameEn, clubsRecords);
+      } else {
+        finances.set(clubNameEn, {[week]: [{description, expense, income}]});
+      }
+      //
+      draft.finances = finances;
+      const club = draft.data.clubs.find(value => value.nameEn === clubNameEn);
+      club.budget = club.budget + (income || 0) - (expense || 0);
+    });
+    return newState;
+    // return {...state, finances};
   }),
   on(setResult, (state, {result, match}) => {
     console.log('Setting Result', result, match);
