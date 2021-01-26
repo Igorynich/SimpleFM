@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Store} from '@ngrx/store';
 import {
   AppState,
-  selectCurrentClub,
+  selectCurrentClub, selectMatchStatsByMatchId,
   selectScheduleByClubsNameEn
 } from '../../../store/selectors/current-game.selectors';
 import {map, switchMap, tap} from 'rxjs/operators';
@@ -10,6 +10,7 @@ import {Club} from '../../../interfaces/club';
 import {combineLatest, Observable} from 'rxjs';
 import {Match} from '../../../interfaces/match';
 import {resultSplitter} from '../../../utils/sort-roster';
+import {MatchStats} from '../../../interfaces/match-stats';
 
 @Component({
   selector: 'app-schedule-main-page',
@@ -33,6 +34,10 @@ export class ScheduleMainPageComponent implements OnInit {
     });
   }
 
+  getMatchStats(match: Match): Observable<MatchStats> {
+    return this.store.select(selectMatchStatsByMatchId, {matchId: match.id});
+  }
+
   getMatchOpponent(match: {home: Club | null, away: Club | null} | null): {club: Club, field: 'H' | 'A'} {
     if (!match) { return null; }
     if (!match.away || !match.home) {
@@ -47,11 +52,11 @@ export class ScheduleMainPageComponent implements OnInit {
     };
   }
 
-  getMatchResultClass(match: Match) {
+  getMatchResultClass(match: Match, stats: MatchStats) {
     const isHomeMatch = match.home?.nameEn === this.currentClub?.nameEn;
     const resClass = {};
-    if (match.result) {
-      const [homeG, awayG] = resultSplitter(match.result);
+    if (stats?.result) {
+      const [homeG, awayG] = resultSplitter(stats.result);
       if (homeG > awayG) {
         resClass['match-won'] = isHomeMatch;
       } else if (homeG < awayG) {

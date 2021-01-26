@@ -9,4 +9,5 @@ export interface MatchStats {
   awayGoals: {[minute: number]: Player};
   awayAssists: {[minute: number]: Player | null};
   attendance: number;
+  result?: string;
 }

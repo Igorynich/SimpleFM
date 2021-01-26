@@ -37,11 +37,13 @@ export class ResultsMainPageComponent implements OnInit {
       console.warn('RESULTS111', value);
       this.curWeekResults = [...value];
     });*/
-    this._resultGenSub = this.resultGen.generateWeekResults().subscribe();
-    this._resultGenLulSub = this.resultGen.lul$.subscribe(value => {
+    this._resultGenSub = this.resultGen.generateWeekResults().subscribe(value => {
+      this.curWeekResults = value;
+    });
+    /*this._resultGenLulSub = this.resultGen.lul$.subscribe(value => {
       console.error('RESULTS222', value);
       this.curWeekResults = [...value];
-    });
+    });*/
   }
 
 
@@ -52,7 +54,7 @@ export class ResultsMainPageComponent implements OnInit {
       // unsub to prevent res gen for next week (cause store will emit this.store.select(selectCurrentWeekSchedule) value on curWeek change)
       this._resultGenSub.unsubscribe();
       // just a clean up unsub
-      this._resultGenLulSub.unsubscribe();
+      // this._resultGenLulSub.unsubscribe();
 
       this.store.dispatch(advanceAWeek());
 

@@ -32,12 +32,13 @@ export interface CurrentGameState {
   currentWeek: number;
   currentClub: Club;
   currentPlayers: Player[];
-  data: {     // loaded from b/e
-    countries: Country[],
-    leagues: League[],
-    clubs: Club[],
-    players: Player[]
-  };
+  // data: {     // loaded from b/e
+    countries: Country[];
+    leagues: League[];
+    clubs: Club[];
+    players: Player[];
+  scheduleShells: {[league_NumOfClubs: string]: any};
+  // };
   finances: Map<string, {[week: number]: FinanceRecord[]}>;      // {[week: number]: Map<string, FinanceRecord[]>};
   gainsAndLosses: {[matchId: number]: {gains: Player[], losses: Player[]}};
   loading: boolean;
@@ -55,7 +56,12 @@ export const currentGameInitState: CurrentGameState = {
   currentWeek: 0,
   currentClub: null,
   currentPlayers: null,
-  data: null,
+  // data: null,
+  countries: null,
+  leagues: null,
+  clubs: null,
+  players: null,
+  scheduleShells: null,
   finances: null,
   gainsAndLosses: null,
   loading: true,
@@ -74,14 +80,10 @@ enableMapSet();
 const _currentGameReducer = createReducer(currentGameInitState,
   on(gotBaseData, (state, {countries, leagues, clubs, players, scheduleShells}) => {
     console.log('gotBase Data', {
-      ...state, data: {
-        countries, leagues, clubs, players, scheduleShells
-      }
+      ...state, countries, leagues, clubs, players, scheduleShells
     });
     return {
-      ...state, data: {
-        countries, leagues, clubs, players, scheduleShells
-      }
+      ...state, countries, leagues, clubs, players, scheduleShells
     };
   }),
   on(gotClub, (state, {club}) => {
@@ -99,8 +101,8 @@ const _currentGameReducer = createReducer(currentGameInitState,
   on(scheduleGenerated, (state, {schedule}) => {
     // filling clubsPowers
     let map = new Map<string, number>();
-    state.data.clubs.forEach((club: Club) => {
-      const roster = state.data.players.filter((pl: Player) => pl.clubNameEn === club.nameEn);
+    state.clubs.forEach((club: Club) => {
+      const roster = state.players.filter((pl: Player) => pl.clubNameEn === club.nameEn);
       const starters = sortClubsRoster(roster).filter((value, index) => index < 11);
       // console.log(`Roster and Starters of ${club.nameEn} seasonData`, roster, starters);
       const power = starters.reduce((previousValue, currentValue) => previousValue + currentValue.power, 0);
@@ -145,8 +147,11 @@ const _currentGameReducer = createReducer(currentGameInitState,
       }
       //
       draft.finances = finances;
-      const club = draft.data.clubs.find(value => value.nameEn === clubNameEn);
-      club.budget = club.budget + (income || 0) - (expense || 0);
+      const club = draft.clubs.find(value => value.nameEn === clubNameEn);
+      club.budget = club.budget + (income / 1000000 || 0) - (expense / 1000000 || 0);
+      if (clubNameEn === draft.currentClub.nameEn) {
+        draft.currentClub.budget = draft.currentClub.budget + (income / 1000000 || 0) - (expense / 1000000 || 0);
+      }
     });
     return newState;
     // return {...state, finances};
@@ -183,14 +188,14 @@ const _currentGameReducer = createReducer(currentGameInitState,
     return {...state, matches: {...state.matches, ...matchesWithAddedResults}};
     // return {...state};
   }),
-  on(addGoalScorersForMatch, (state, {matchId, goals}) => {
-    console.log('addGoalScorersForMatch', {...state, stats: {...state.stats, [matchId]: {...state.stats[matchId], ...goals}}});
-    return {...state, stats: {...state.stats, [matchId]: {...state.stats[matchId], ...goals}}};
+  on(addGoalScorersForMatch, (state, {matchId, goals, result}) => {
+    console.log('addGoalScorersForMatch', {...state, stats: {...state.stats, [matchId]: {...state.stats[matchId], ...goals, result}}});
+    return {...state, stats: {...state.stats, [matchId]: {...state.stats[matchId], ...goals, result}}};
   }),
   on(addGainsAndLossesForMatch, (state, {matchId, gains, losses}) => {
     const changedPlayers = [];
     // TODO think of better solution - maybe use immer
-    state.data.players.forEach(pl => {
+    state.players.forEach(pl => {
       changedPlayers.push({...pl});
     });
     //
@@ -252,13 +257,13 @@ const _currentGameReducer = createReducer(currentGameInitState,
       ...state,
       currentPlayers,
       gainsAndLosses: {...state.gainsAndLosses, [matchId]: {gains, losses}},
-      data: {...state.data, players: changedPlayers}
+      players: changedPlayers
     });
     return {
       ...state,
       currentPlayers,
       gainsAndLosses: {...state.gainsAndLosses, [matchId]: {gains, losses}},
-      data: {...state.data, players: changedPlayers}
+      players: changedPlayers
     };
   }),
   on(addAttendanceForMatch, (state, {matchId, attendance}) => {
@@ -281,8 +286,8 @@ const _currentGameReducer = createReducer(currentGameInitState,
     if (!!curWeek && curWeek % CUP_INTERVAL === 0) {     // cup
       console.warn('UpdateTables for CUP', curWeek);
       const curClub = state.currentClub;
-      const league = state.data.leagues.find(value => value.nameEn === curClub.leagueNameEn);
-      const country = state.data.countries.find(value => value.nameEn === league.countryNameEn);
+      const league = state.leagues.find(value => value.nameEn === curClub.leagueNameEn);
+      const country = state.countries.find(value => value.nameEn === league.countryNameEn);
       const cupRound = (curWeek / CUP_INTERVAL) - 1;
       const cupSchedule: WeekSchedule[] = state.schedule[country.id][cupRound];
       const cupScheduleNext: WeekSchedule[] = state.schedule[country.id][cupRound + 1];
@@ -300,13 +305,14 @@ const _currentGameReducer = createReducer(currentGameInitState,
       };
       cupMatches.forEach((match: Match, index) => {
         console.log(`Match ${index}`, match);
+        const matchStats = state.stats[match.id];
         if (1) {
           const newId = (+Object.keys(newState.matches)[Object.keys(newState.matches).length - 1]) + 1;
           const nextRoundMatchIndex = Math.floor(index / 2);
           let isHomeAWinner = !!match.home;
-          if (match.result) {
-            const [homeScore, awayScore] = match.result.split(' - ');
-            const [homeGoals, awayGoals] = resultSplitter(match.result);
+          if (matchStats.result) {
+            const [homeScore, awayScore] = matchStats.result.split(' - ');
+            const [homeGoals, awayGoals] = resultSplitter(matchStats.result);
             isHomeAWinner = homeScore.includes('e') || homeScore.includes('p') || homeGoals > awayGoals;
           }
           const nextId = cupScheduleNext[nextRoundMatchIndex]?.matchId ? cupScheduleNext[nextRoundMatchIndex].matchId : newId;
@@ -334,7 +340,7 @@ const _currentGameReducer = createReducer(currentGameInitState,
       });
 
     } else {                                // league
-      const leagues: League[] = state.data.leagues;
+      const leagues: League[] = state.leagues;
       const newTables = {...state.tables};
       leagues.forEach((league: League) => {
         console.warn('League', league);
@@ -344,8 +350,9 @@ const _currentGameReducer = createReducer(currentGameInitState,
         console.warn('MatchES', matches);
         let newTableRecords = [];
         matches.forEach((match: Match) => {
+          const matchStats = state.stats[match.id];
           console.warn('Match', match);
-          if (match.result && !match.isCupMatch) {      // если есть result и матч не кубковый
+          if (matchStats?.result && !match.isCupMatch) {      // если есть result и матч не кубковый
             const homeRecord: LeagueTable = tableRecords.find(record =>
               match.home.nameEn === record.clubName || match.home.nameRu === record.clubName);
             const awayRecord: LeagueTable = tableRecords.find(record =>
@@ -354,7 +361,7 @@ const _currentGameReducer = createReducer(currentGameInitState,
             if (homeRecord && awayRecord) {
               const homeRecordCopy = {...homeRecord};
               const awayRecordCopy = {...awayRecord};
-              const [homeGoals, awayGoals] = resultSplitter(match.result);
+              const [homeGoals, awayGoals] = resultSplitter(matchStats.result);
               if (homeGoals > awayGoals) {
                 homeRecordCopy.wins++;
                 awayRecordCopy.loses++;

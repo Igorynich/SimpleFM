@@ -89,9 +89,9 @@ export class CurrentGameEffects {
       filter(value => !!this.userService.userName),
       switchMap(actions => {
         return combineLatest([
-          this.store.pipe(select(getAllCountries)),
-          this.store.pipe(select(getAllLeagues)),
-          this.store.pipe(select(getAllClubs))]).pipe(
+          this.store.pipe(select(getAllCountries), take(1)),
+          this.store.pipe(select(getAllLeagues), take(1)),
+          this.store.pipe(select(getAllClubs), take(1))]).pipe(
           filter(value => !!this.userService.userName),
           map(([countries, leagues, clubs]) => {
             const leagueSchedules = this.game.generateLeagueSchedules(leagues, clubs);

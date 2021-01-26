@@ -34,7 +34,9 @@
             {{getMatchOpponent(match).field}}
           </div>
           <div class="col-2 text-center">
-            <span [ngClass]="getMatchResultClass(match)" [appMatchTooltip]="match" [showGains]="true">{{match.result}}</span>
+            <span [ngClass]="getMatchResultClass(match, getMatchStats(match) | async)" [appMatchTooltip]="match" [showGains]="true">
+              {{(getMatchStats(match) | async)?.result}}
+            </span>
           </div>
         </ng-container>
         <ng-container *ngIf="!getMatchOpponent(match)?.club">

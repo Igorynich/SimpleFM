@@ -8,15 +8,15 @@
         {{record.description}}
       </div>
       <div class="col" [ngClass]="{'red': !!record.expense, 'green': !!record.income}">
-        {{record.income || record.expense}}
+        {{(record.income || record.expense) | currency}}
       </div>
     </div>
   </div>
 </div>
 <div class="row">
-  <div class="col" [ngClass]="{'red': calculateBudget(curClub$ | async, financeRecords$ | async) < 0,
-   'green': calculateBudget(curClub$ | async, financeRecords$ | async) > 0}">
-    Бюджет: {{calculateBudget(curClub$ | async, financeRecords$ | async)}}M
+  <div class="col" [ngClass]="{'red': (curClub$ | async).budget < 0,
+   'green': (curClub$ | async).budget > 0}">
+    Бюджет: {{(curClub$ | async).budget | currency}}M
   </div>
 </div>
 <div class="row justify-content-end">

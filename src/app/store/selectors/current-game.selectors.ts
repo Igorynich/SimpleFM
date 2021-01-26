@@ -26,38 +26,42 @@ export const selectCurrentPlayers = createSelector(selectCurrentGameState, (stat
 export const selectCurrentWeek = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.currentWeek + 1);
 export const curGameLoading = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.loading);
 
-export const getAllClubs = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.data?.clubs);
-export const getAllLeagues = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.data?.leagues);
-export const getAllCountries = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.data?.countries);
+export const getAllClubs = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.clubs || []);
+export const getAllLeagues = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.leagues || []);
+export const getAllCountries = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.countries || []);
+
+export const selectClubByClubsNameEn = createSelector(selectCurrentGameState, (state: CurrentGameState, {clubsNameEn}) => {
+  return state.clubs.find(value => value.nameEn === clubsNameEn);
+});
 
 export const selectPlayersByClubsNameEn = createSelector(selectCurrentGameState, (state, {clubsNameEn}) => {
   if (clubsNameEn === state.currentClub.nameEn) {
-    return state.currentPlayers || state.data.players.filter(value => value.clubNameEn === clubsNameEn);
+    return state.currentPlayers || state.players.filter(value => value.clubNameEn === clubsNameEn);
   }
-  const teamRoster: Player[] = state.data.players.filter(value => value.clubNameEn === clubsNameEn);
+  const teamRoster: Player[] = state.players.filter(value => value.clubNameEn === clubsNameEn);
   return sortClubsRoster(teamRoster);
 });
 
 export const selectLeagueScheduleByLeaguesNameEn = createSelector(selectCurrentGameState, (state, {leaguesNameEn}) => {
-  const league = state.data.leagues.find(value => value.nameEn === leaguesNameEn);
+  const league = state.leagues.find(value => value.nameEn === leaguesNameEn);
   return state.schedule[league.id].map((value: WeekSchedule[]) => value.map(value1 => state.matches[value1.matchId]));
 });
 
 export const selectCupScheduleByLeaguesNameEn = createSelector(selectCurrentGameState, (state, {leaguesNameEn}) => {
-  const league = state.data.leagues.find(value => value.nameEn === leaguesNameEn);
-  const country = state.data.countries.find(value => value.nameEn === league.countryNameEn);
+  const league = state.leagues.find(value => value.nameEn === leaguesNameEn);
+  const country = state.countries.find(value => value.nameEn === league.countryNameEn);
   return state.schedule[country.id].map((value: WeekSchedule[]) => value.map(value1 => state.matches[value1.matchId]));
 });
 
 export const selectLeagueTableByLeaguesNameEn = createSelector(selectCurrentGameState, (state, {leaguesNameEn}) => {
-  const league = state.data.leagues.find(value => value.nameEn === leaguesNameEn);
+  const league = state.leagues.find(value => value.nameEn === leaguesNameEn);
   return [...state.tables[league.id]].sort(sortTable);
 });
 
 export const selectClubPowersByLeaguesNameEn = createSelector(selectCurrentGameState, (state, {leaguesNameEn}) => {
   const clubPowers = [];
   state.seasonData.clubPowers.forEach((power: number, clubNameEn: string) => {
-    const club: Club = state.data.clubs.find(value => value.nameEn === clubNameEn);
+    const club: Club = state.clubs.find(value => value.nameEn === clubNameEn);
     if (club && club.leagueNameEn === leaguesNameEn) {
       clubPowers.push({
         club,
@@ -81,8 +85,8 @@ export const selectCurrentWeekSchedule = createSelector(selectCurrentGameState, 
   const curClub = state.currentClub;
   const schedule = [];      // {matches: null, tournament: null};
   if (!!curWeek && curWeek % CUP_INTERVAL === 0) {
-    const league = state.data.leagues.find(value => value.nameEn === curClub.leagueNameEn);
-    const country = state.data.countries.find(value => value.nameEn === league.countryNameEn);
+    const league = state.leagues.find(value => value.nameEn === curClub.leagueNameEn);
+    const country = state.countries.find(value => value.nameEn === league.countryNameEn);
     const allCupMatches: Match[] = state.schedule[country.id][(curWeek / CUP_INTERVAL) - 1].map(value => state.matches[value.matchId]);
     const onlyRealMatches: Match[] = allCupMatches.filter(value => !!value.home && !!value.away);
     schedule.push({
@@ -91,9 +95,9 @@ export const selectCurrentWeekSchedule = createSelector(selectCurrentGameState, 
       stats: onlyRealMatches.map(value => state.stats[value.id])
     });
   } else {
-    const league = state.data.leagues.find(value => value.nameEn === curClub.leagueNameEn);
-    const country = state.data.countries.find(value => value.nameEn === league.countryNameEn);
-    const countryLeagues = state.data.leagues.filter(value => value.countryNameEn === country.nameEn);
+    const league = state.leagues.find(value => value.nameEn === curClub.leagueNameEn);
+    const country = state.countries.find(value => value.nameEn === league.countryNameEn);
+    const countryLeagues = state.leagues.filter(value => value.countryNameEn === country.nameEn);
     const index = getLeagueWeek(curWeek);     // index учитывает кубковые недели
     countryLeagues.forEach(value => {
       const leagueSchedule = state.schedule[value.id] ? state.schedule[value.id][index] : null;
@@ -110,9 +114,9 @@ export const selectCurrentWeekSchedule = createSelector(selectCurrentGameState, 
 });
 
 export const selectScheduleByClubsNameEn = createSelector(selectCurrentGameState, (state, {clubsNameEn}) => {
-  const club = state.data.clubs.find(value => value.nameEn === clubsNameEn);
-  const league = state.data.leagues.find(value => value.nameEn === club.leagueNameEn);
-  const country = state.data.countries.find(value => value.nameEn === league.countryNameEn);
+  const club = state.clubs.find(value => value.nameEn === clubsNameEn);
+  const league = state.leagues.find(value => value.nameEn === club.leagueNameEn);
+  const country = state.countries.find(value => value.nameEn === league.countryNameEn);
   const leagueSchedule: WeekSchedule[][] = state.schedule[league.id];
   const clubsLeagueSchedule: WeekSchedule[] = leagueSchedule.map((value: WeekSchedule[]) => {
     return value.find(match => {
@@ -137,17 +141,17 @@ export const selectScheduleByClubsNameEn = createSelector(selectCurrentGameState
 });
 
 export const selectCupScheduleByCountryNameEn = createSelector(selectCurrentGameState, (state, {countryNameEn}) => {
-  const country = state.data.countries.find(value => value.nameEn === countryNameEn);
+  const country = state.countries.find(value => value.nameEn === countryNameEn);
   return state.schedule[country.id];
 });
 
 export const selectClubsByLeagueId = createSelector(selectCurrentGameState, (state, {leagueId}) => {
-  const league = state.data.leagues.find(value => value.id === leagueId);
-  return state.data.clubs.filter(value => value.leagueNameEn === league.nameEn) || [];
+  const league = state.leagues.find(value => value.id === leagueId);
+  return state.clubs.filter(value => value.leagueNameEn === league.nameEn) || [];
 });
 
 export const selectLeagueScheduleShellByNumberOfClubs = createSelector(selectCurrentGameState, (state, {numOfClubs}) => {
-  return state.data.scheduleShells[`league_${numOfClubs}`];
+  return state.scheduleShells[`league_${numOfClubs}`];
 });
 
 export const selectNextOpponent = createSelector(selectCurrentGameState, selectScheduleByClubsNameEn,
@@ -180,7 +184,7 @@ export const selectMatchGainsByMatchId = createSelector(selectCurrentGameState, 
 export const selectClubsRosterStats = createSelector(selectCurrentGameState, selectScheduleByClubsNameEn,
   (state, clubsSchedule: Match[], {clubsNameEn}) => {
     const map = new Map<string, PlayerStats>();
-    const clubsRoster: Player[] = state.data.players.filter((value: Player) => value.clubNameEn === clubsNameEn);
+    const clubsRoster: Player[] = state.players.filter((value: Player) => value.clubNameEn === clubsNameEn);
     const matchStats: MatchStats[] = clubsSchedule.map(value => state.stats[value?.id]);
     clubsRoster.forEach((player: Player) => {
       const games = matchStats.reduce((sum, curMatchStats) => {
@@ -210,12 +214,13 @@ export const selectClubsRosterStats = createSelector(selectCurrentGameState, sel
         goals
       };
       if (player.position === 'GK') {
-        const conceded = clubsSchedule.reduce((sum, curMatch) => {
+        const conceded = clubsSchedule.reduce((sum, curMatch: Match) => {
           const havePlayedInMatch = !!state.stats[curMatch?.id]?.homeRoster.find(pl => pl.nameEn === player.nameEn) ||
             !!state.stats[curMatch?.id]?.awayRoster.find(pl => pl.nameEn === player.nameEn);
           if (!!curMatch && havePlayedInMatch) {
             const isHome = !!state.stats[curMatch.id]?.homeRoster.find(pl => pl.nameEn === player.nameEn);
-            const [homeGoals, awayGoals] = resultSplitter(curMatch.result);
+            const curMatchStats = state.stats[curMatch.id];
+            const [homeGoals, awayGoals] = resultSplitter(curMatchStats.result);
             const conc = isHome ? awayGoals : homeGoals;
             return sum - conc;
           }
@@ -238,7 +243,7 @@ export const selectClubsRosterLastMatchStats = createSelector(selectCurrentGameS
       const lastMatchStats: MatchStats = state.stats[lastMatch?.id];
       const lastMatchGains: {gains: Player[], losses: Player[]} = state.gainsAndLosses[lastMatch?.id];
       console.log('Last Match Stats and Gains', lastMatchStats, lastMatchGains);
-      const clubsRoster: Player[] = state.data.players.filter((value: Player) => value.clubNameEn === clubsNameEn);
+      const clubsRoster: Player[] = state.players.filter((value: Player) => value.clubNameEn === clubsNameEn);
       clubsRoster.forEach((player: Player) => {
         const playerStats: PlayerStats = {
           assists: 0,
@@ -264,7 +269,7 @@ export const selectClubsRosterLastMatchStats = createSelector(selectCurrentGameS
           if (player.position === 'GK') {
             const havePlayedInMatch = isHome || isAway;
             if (havePlayedInMatch) {
-              const [homeG, awayG] = resultSplitter(lastMatch.result);
+              const [homeG, awayG] = resultSplitter(lastMatchStats.result);
               playerStats.conceded = isHome ? awayG : homeG;
             }
           }

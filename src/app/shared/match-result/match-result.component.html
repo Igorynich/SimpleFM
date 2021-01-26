@@ -9,13 +9,13 @@
               </span>
       </div>
     </div>
-    <div class="row" *ngIf="match.result">
+    <div class="row" *ngIf="(matchStats$ | async).result">
       <div class="col text-center" [ngClass]="{'my-club': (isMyClub$(match).home | async) ||
                (isMyClub$(match).away | async)}">
-        {{match.result}}
+        {{(matchStats$ | async).result}}
       </div>
     </div>
-    <div class="row" *ngIf="match.result">
+    <div class="row" *ngIf="(matchStats$ | async).result">
       <div class="col">
         Att: {{(matchStats$ | async).attendance}}({{match.home.stadium}})
       </div>

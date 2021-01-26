@@ -58,19 +58,20 @@ export class BaseResultGenService implements ResultGenerator {
   }
 
   generateWeekResults(): Observable<CurrentWeekSchedule[]> {
-    const a$ = this.store.select(selectCurrentWeekSchedule).pipe(filter((value: CurrentWeekSchedule[]) => {
+    const a$ = this.store.select(selectCurrentWeekSchedule).pipe(take(1), filter((value: CurrentWeekSchedule[]) => {
         console.error('LUL searching', value);
         const lastSchedule = value[value.length - 1];
         const lastMatchInLastSchedule = lastSchedule.matches[lastSchedule.matches.length - 1];
         console.error('LUL searching 1', lastSchedule, lastMatchInLastSchedule);
-        if (lastMatchInLastSchedule.result) {
+        return true;
+        /*if (lastMatchInLastSchedule.result) {
           // this.inProgress = false;
           console.log('Lul next', [...value]);
           // gotta use lul$ cause of strange behaviour of a$ observable(in subscription - new value, then, for some reason old)
           // TODO check if lul is still needed
           this.lul$.next([...value]);
         }
-        return (!this.inProgress && !lastMatchInLastSchedule.result) || (this.inProgress && !!lastMatchInLastSchedule.result);
+        return (!this.inProgress && !lastMatchInLastSchedule.result) || (this.inProgress && !!lastMatchInLastSchedule.result);*/
       }),
       map((value: CurrentWeekSchedule[]) => {
         console.warn(`Current Week Schedule`, value, value.length);
@@ -107,11 +108,11 @@ export class BaseResultGenService implements ResultGenerator {
     matches.forEach((value: Match) => {
       results.push(this.generateResult(value));
     });
-    this.store.dispatch(setABunchOfResult({results, matches}));
+    // this.store.dispatch(setABunchOfResult({results, matches}));
   }
 
   private generateResult(match: Match): string {
-    console.log('Generating res for ', match);
+    console.warn(`Generating for ${match.home.nameEn} - ${match.away.nameEn} ---- START`, match);
     const {home, away} = match;
     let result;
     clearSubscription(this._selectSub);
@@ -126,11 +127,13 @@ export class BaseResultGenService implements ResultGenerator {
         result = this.calculateResult(homePower, awayPower, match);
         this.generateMatchStats(homeRoster, awayRoster, result, match);
         this.generateAttendancesAndIncome(homeRoster, awayRoster, result, match);
+        console.warn(`Generating for ${match.home.nameEn} - ${match.away.nameEn} ---- FINISH`, match);
       });
     return result;
   }
 
   private calculateResult(homePower: RosterPower, awayPower: RosterPower, match: Match): string {
+    console.warn(`Calculating Result for ${match.home.nameEn} - ${match.away.nameEn} ---- START`, match);
     const homeOffensePower = homePower.f + homePower.m;
     const awayOffensePower = awayPower.f + awayPower.m;
     const homeDefencePower = homePower.gk + homePower.d;
@@ -179,16 +182,20 @@ export class BaseResultGenService implements ResultGenerator {
           break;
       }
     }
+    console.warn(`Result: ${homeGoals}${cupDeciderH} - ${awayGoals}${cupDeciderA}`);
+    console.warn(`Calculating Result for ${match.home.nameEn} - ${match.away.nameEn} ---- FINISH`);
     return `${homeGoals}${cupDeciderH} - ${awayGoals}${cupDeciderA}`;
   }
 
   private generateMatchStats(homeRoster: Player[], awayRoster: Player[], result: string, match: Match) {
+    console.warn(`Generating Match Stats for ${match.home.nameEn} - ${match.away.nameEn} ---- START`, match);
     const [homeGoals, awayGoals] = resultSplitter(result);
     const cupDecider = result.includes('e') ? 'e' : '';
     const homeScorers: { goals: { [minute: number]: Player }, assists: { [minute: number]: Player | null } } =
       this.generateGoalScorers(homeGoals, homeRoster, homeGoals > awayGoals ? cupDecider : '');
     const awayScorers: { goals: { [minute: number]: Player }, assists: { [minute: number]: Player | null } } =
       this.generateGoalScorers(awayGoals, awayRoster, homeGoals < awayGoals ? cupDecider : '');
+    console.warn(`Goalscorers pre dispatch`);
     this.store.dispatch(addGoalScorersForMatch({
       matchId: match.id,
       goals: {
@@ -198,14 +205,19 @@ export class BaseResultGenService implements ResultGenerator {
         homeAssists: homeScorers.assists,
         awayGoals: awayScorers.goals,
         awayAssists: awayScorers.assists
-      }
+      },
+      result
     }));
+    console.warn(`Goalscorers post dispatch`);
     const {gains, losses} = this.gainsService.generateGainsAndLosses(homeRoster, awayRoster, result, match, homeScorers, awayScorers);
+    console.warn(`GainsLosses pre dispatch`);
     this.store.dispatch(addGainsAndLossesForMatch({
       matchId: match.id,
       gains,
       losses
     }));
+    console.warn(`GainsLosses post dispatch`);
+    console.warn(`Generating Match Stats for ${match.home.nameEn} - ${match.away.nameEn} ---- FINISH`);
   }
 
   private generateGoalScorers(numOfGoals: number, roster: Player[], cupDecider: '' | 'e' = ''):
@@ -264,6 +276,7 @@ export class BaseResultGenService implements ResultGenerator {
   }
 
   private generateAttendancesAndIncome(homeRoster: Player[], awayRoster: Player[], result: string, match: Match) {
+    console.warn(`Generating Attendance for ${match.home.nameEn} - ${match.away.nameEn} ---- START`, match);
     const homeSumPower = homeRoster.filter((value, index) => index < 11)
       .reduce((previousValue, currentValue: Player) => previousValue + currentValue.power, 0);
     const awaySumPower = awayRoster.filter((value, index) => index < 11)
@@ -274,13 +287,15 @@ export class BaseResultGenService implements ResultGenerator {
       attendance
     }));
     const income = this.financeService.generateMatchIncome(attendance, match.home);
+    console.warn(`Attendance pre dispatch`);
     this.store.dispatch(addFinanceRecord({
       clubNameEn: match.home.nameEn,
       description: 'match day income',
       income,
       expense: null
     }));
-
+    console.warn(`Attendance post dispatch`);
+    console.warn(`Generating Attendance for ${match.home.nameEn} - ${match.away.nameEn} ---- FINISH`, match);
   }
 
   private getGoalChanceWeights(roster: Player[]): number[] {
