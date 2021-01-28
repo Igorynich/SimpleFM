@@ -3,9 +3,9 @@
     <div class="row">
       <div class="col text-center">
                 <span [ngClass]="{'my-club': (isMyClub$(match).home | async)}">
-                  {{match.home.nameRu}}
+                  {{(homeClub$ | async).nameRu}}
                 </span> - <span [ngClass]="{'my-club': (isMyClub$(match).away | async)}">
-                {{match.away.nameRu}}
+                {{(awayClub$ | async).nameRu}}
               </span>
       </div>
     </div>
@@ -17,7 +17,7 @@
     </div>
     <div class="row" *ngIf="(matchStats$ | async)?.result">
       <div class="col">
-        Att: {{(matchStats$ | async).attendance}}({{match.home.stadium}})
+        Att: {{(matchStats$ | async).attendance}}({{(homeClub$ | async).stadium}})
       </div>
     </div>
     <div class="row justify-content-around">
@@ -39,24 +39,24 @@
     <div class="row justify-content-around">
       <div class="col-5 gains">
         <div *ngFor="let player of (matchGaines$ | async).gains">
-          <span *ngIf="player.clubNameEn === match.home.nameEn">{{player.nameRu}}</span>
+          <span *ngIf="player.clubNameEn === match.homeNameEn">{{player.nameRu}}</span>
         </div>
       </div>
       <div class="col-5 gains">
         <div *ngFor="let player of (matchGaines$ | async).gains">
-          <span *ngIf="player.clubNameEn === match.away.nameEn">{{player.nameRu}}</span>
+          <span *ngIf="player.clubNameEn === match.awayNameEn">{{player.nameRu}}</span>
         </div>
       </div>
     </div>
     <div class="row justify-content-around">
       <div class="col-5 losses">
         <div *ngFor="let player of (matchGaines$ | async).losses">
-          <span *ngIf="player.clubNameEn === match.home.nameEn">{{player.nameRu}}</span>
+          <span *ngIf="player.clubNameEn === match.homeNameEn">{{player.nameRu}}</span>
         </div>
       </div>
       <div class="col-5 losses">
         <div *ngFor="let player of (matchGaines$ | async).losses">
-          <span *ngIf="player.clubNameEn === match.away.nameEn">{{player.nameRu}}</span>
+          <span *ngIf="player.clubNameEn === match.awayNameEn">{{player.nameRu}}</span>
         </div>
       </div>
     </div>

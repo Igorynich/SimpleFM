@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 import {Store} from '@ngrx/store';
-import {AppState, selectClubPowersByLeaguesNameEn, selectLeagueTableByLeaguesNameEn} from '../store/selectors/current-game.selectors';
+import {
+  AppState,
+  selectClubByClubsNameEn,
+  selectClubPowersByLeaguesNameEn,
+  selectLeagueTableByLeaguesNameEn
+} from '../store/selectors/current-game.selectors';
 import {Match} from '../interfaces/match';
 import {take, withLatestFrom} from 'rxjs/operators';
 import {LeagueTable} from '../interfaces/league-table';
@@ -13,7 +18,7 @@ import {closest, limitTo} from '../utils/helpers';
 })
 export class BaseAttendanceGenService {
 
-  readonly LEAGUE_POS_DIF_COEF = {        // home - away
+  readonly LEAGUE_POS_DIF_COEF = {        // homeNameEn - awayNameEn
     10: 0.6,
     9: 0.7,
     8: 0.8,
@@ -94,24 +99,32 @@ export class BaseAttendanceGenService {
   constructor(private store: Store<AppState>) { }
 
   generateAttendance(homePower: number, awayPower: number, result: string, match: Match): number {
-    let attendance = match.home.stadium;
-    const baseAttendance = round(match.home.stadium / 2, 0);
-    this.store.select(selectLeagueTableByLeaguesNameEn, {leaguesNameEn: match.home.leagueNameEn})
-      .pipe(withLatestFrom(this.store.select(selectClubPowersByLeaguesNameEn, {leaguesNameEn: match.home.leagueNameEn})), take(1))
+    let home: Club;
+    let away: Club;
+    this.store.select(selectClubByClubsNameEn, {clubsNameEn: match.homeNameEn}).pipe(take(1)).subscribe(club => {
+      home = club;
+    });
+    this.store.select(selectClubByClubsNameEn, {clubsNameEn: match.awayNameEn}).pipe(take(1)).subscribe(club => {
+      away = club;
+    });
+    let attendance = home.stadium;
+    const baseAttendance = round(home.stadium / 2, 0);
+    this.store.select(selectLeagueTableByLeaguesNameEn, {leaguesNameEn: home.leagueNameEn})
+      .pipe(withLatestFrom(this.store.select(selectClubPowersByLeaguesNameEn, {leaguesNameEn: home.leagueNameEn})), take(1))
       .subscribe(([leagueTable, clubPowersArray]: [LeagueTable[], {club: Club, power: number}[]]) => {
         // use leaguePosition - powerPosition to generate attendance
-        const homeLeaguePos = leagueTable.findIndex((tableLine: LeagueTable) => match.home.nameEn === tableLine.clubName
-          || match.home.nameRu === tableLine.clubName);
-        const awayLeaguePos = leagueTable.findIndex((tableLine: LeagueTable) => match.away.nameEn === tableLine.clubName
-          || match.away.nameRu === tableLine.clubName);
+        const homeLeaguePos = leagueTable.findIndex((tableLine: LeagueTable) => home.nameEn === tableLine.clubName
+          || home.nameRu === tableLine.clubName);
+        const awayLeaguePos = leagueTable.findIndex((tableLine: LeagueTable) => away.nameEn === tableLine.clubName
+          || away.nameRu === tableLine.clubName);
         const homeStartSeasonPowerObj = clubPowersArray.find((powerObj: {club: Club, power: number}) =>
-          powerObj.club.nameEn === match.home.nameEn);
+          powerObj.club.nameEn === match.homeNameEn);
         const awayStartSeasonPowerObj = clubPowersArray.find((powerObj: {club: Club, power: number}) =>
-          powerObj.club.nameEn === match.away.nameEn);
+          powerObj.club.nameEn === match.awayNameEn);
         const homeStartSeasonPowerPos = clubPowersArray.findIndex((powerObj: {club: Club, power: number}) =>
-          powerObj.club.nameEn === match.home.nameEn);
+          powerObj.club.nameEn === match.homeNameEn);
         const awayStartSeasonPowerPos = clubPowersArray.findIndex((powerObj: {club: Club, power: number}) =>
-          powerObj.club.nameEn === match.away.nameEn);
+          powerObj.club.nameEn === match.awayNameEn);
         const posDif = limitTo(homeLeaguePos - awayLeaguePos, 10);
         console.log('posDif: real - rounded', homeLeaguePos - awayLeaguePos, posDif);
         const posDifAttCoef = this.LEAGUE_POS_DIF_COEF[posDif];
@@ -130,10 +143,10 @@ export class BaseAttendanceGenService {
          * ${powerDifCoef} * ${seasonStartPowerPosDifCoef}`);
         attendance = baseAttendance * posDifAttCoef * homeLeaguePosAttCoef * awayLeaguePosAttCoef * powerDifCoef
           * seasonStartPowerPosDifCoef;
-        if (attendance > match.home.stadium) {
-          attendance = match.home.stadium;
+        if (attendance > home.stadium) {
+          attendance = home.stadium;
         }
-        console.warn(`${match.home.nameEn} - ${match.away.nameEn} Attendance`, attendance);
+        console.warn(`${match.homeNameEn} - ${match.awayNameEn} Attendance`, attendance);
     });
     return round(attendance, 0);
   }

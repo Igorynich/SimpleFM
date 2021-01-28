@@ -1,7 +1,12 @@
 import {Injectable} from '@angular/core';
 import {ResultGenerator} from '../interfaces/result-generator';
 import {Store} from '@ngrx/store';
-import {AppState, selectCurrentWeekSchedule, selectPlayersByClubsNameEn} from '../store/selectors/current-game.selectors';
+import {
+  AppState,
+  selectClubByClubsNameEn,
+  selectCurrentWeekSchedule,
+  selectPlayersByClubsNameEn
+} from '../store/selectors/current-game.selectors';
 import {CurrentWeekSchedule} from '../interfaces/current-week-schedule';
 import {catchError, filter, map, take, withLatestFrom} from 'rxjs/operators';
 import {BehaviorSubject, Observable, of, Subject, Subscription} from 'rxjs';
@@ -95,7 +100,7 @@ export class BaseResultGenService implements ResultGenerator {
         this.inProgress = false;
         return value;
       }), catchError(err => {
-        console.error('Caught this shit', err)
+        console.error('Caught this shit', err);
         return of([]);
       }));
     return a$;
@@ -112,28 +117,28 @@ export class BaseResultGenService implements ResultGenerator {
   }
 
   private generateResult(match: Match): string {
-    console.warn(`Generating for ${match.home.nameEn} - ${match.away.nameEn} ---- START`, match);
-    const {home, away} = match;
+    console.warn(`Generating for ${match.homeNameEn} - ${match.awayNameEn} ---- START`, match);
+    const {homeNameEn, awayNameEn} = match;
     let result;
     clearSubscription(this._selectSub);
-    this._selectSub = this.store.select(selectPlayersByClubsNameEn, {clubsNameEn: home.nameEn})
+    this._selectSub = this.store.select(selectPlayersByClubsNameEn, {clubsNameEn: homeNameEn})
     // take(1) cause it runs result generation twice for LAST match (god knows why)
-      .pipe(withLatestFrom(this.store.select(selectPlayersByClubsNameEn, {clubsNameEn: away.nameEn})), take(1))
+      .pipe(withLatestFrom(this.store.select(selectPlayersByClubsNameEn, {clubsNameEn: awayNameEn})), take(1))
       .subscribe(([homeRoster, awayRoster]) => {
         const homePower = calculateRosterPower(homeRoster, true);
         const awayPower = calculateRosterPower(awayRoster);
-        console.log(`${home.nameEn} powers`, homePower);
-        console.log(`${away.nameEn} powers`, awayPower);
+        console.log(`${homeNameEn} powers`, homePower);
+        console.log(`${awayNameEn} powers`, awayPower);
         result = this.calculateResult(homePower, awayPower, match);
         this.generateMatchStats(homeRoster, awayRoster, result, match);
         this.generateAttendancesAndIncome(homeRoster, awayRoster, result, match);
-        console.warn(`Generating for ${match.home.nameEn} - ${match.away.nameEn} ---- FINISH`, match);
+        console.warn(`Generating for ${match.homeNameEn} - ${match.awayNameEn} ---- FINISH`, match);
       });
     return result;
   }
 
   private calculateResult(homePower: RosterPower, awayPower: RosterPower, match: Match): string {
-    console.warn(`Calculating Result for ${match.home.nameEn} - ${match.away.nameEn} ---- START`, match);
+    console.warn(`Calculating Result for ${match.homeNameEn} - ${match.awayNameEn} ---- START`, match);
     const homeOffensePower = homePower.f + homePower.m;
     const awayOffensePower = awayPower.f + awayPower.m;
     const homeDefencePower = homePower.gk + homePower.d;
@@ -170,7 +175,7 @@ export class BaseResultGenService implements ResultGenerator {
     let cupDeciderH = '';
     let cupDeciderA = '';
     if (match.isCupMatch && homeGoals === awayGoals) {      // cup match deciding goal
-      const rand = randomInteger(0, 1);     // randomize: winner - home or away
+      const rand = randomInteger(0, 1);     // randomize: winner - homeNameEn or awayNameEn
       const rand1 = randomInteger(0, 1);    // randomize: extra time or penalty
       switch (rand1) {
         case 0:               // extra time decider
@@ -183,12 +188,12 @@ export class BaseResultGenService implements ResultGenerator {
       }
     }
     console.warn(`Result: ${homeGoals}${cupDeciderH} - ${awayGoals}${cupDeciderA}`);
-    console.warn(`Calculating Result for ${match.home.nameEn} - ${match.away.nameEn} ---- FINISH`);
+    console.warn(`Calculating Result for ${match.homeNameEn} - ${match.awayNameEn} ---- FINISH`);
     return `${homeGoals}${cupDeciderH} - ${awayGoals}${cupDeciderA}`;
   }
 
   private generateMatchStats(homeRoster: Player[], awayRoster: Player[], result: string, match: Match) {
-    console.warn(`Generating Match Stats for ${match.home.nameEn} - ${match.away.nameEn} ---- START`, match);
+    console.warn(`Generating Match Stats for ${match.homeNameEn} - ${match.awayNameEn} ---- START`, match);
     const [homeGoals, awayGoals] = resultSplitter(result);
     const cupDecider = result.includes('e') ? 'e' : '';
     const homeScorers: { goals: { [minute: number]: Player }, assists: { [minute: number]: Player | null } } =
@@ -217,7 +222,7 @@ export class BaseResultGenService implements ResultGenerator {
       losses
     }));
     console.warn(`GainsLosses post dispatch`);
-    console.warn(`Generating Match Stats for ${match.home.nameEn} - ${match.away.nameEn} ---- FINISH`);
+    console.warn(`Generating Match Stats for ${match.homeNameEn} - ${match.awayNameEn} ---- FINISH`);
   }
 
   private generateGoalScorers(numOfGoals: number, roster: Player[], cupDecider: '' | 'e' = ''):
@@ -276,7 +281,7 @@ export class BaseResultGenService implements ResultGenerator {
   }
 
   private generateAttendancesAndIncome(homeRoster: Player[], awayRoster: Player[], result: string, match: Match) {
-    console.warn(`Generating Attendance for ${match.home.nameEn} - ${match.away.nameEn} ---- START`, match);
+    console.warn(`Generating Attendance for ${match.homeNameEn} - ${match.awayNameEn} ---- START`, match);
     const homeSumPower = homeRoster.filter((value, index) => index < 11)
       .reduce((previousValue, currentValue: Player) => previousValue + currentValue.power, 0);
     const awaySumPower = awayRoster.filter((value, index) => index < 11)
@@ -286,16 +291,18 @@ export class BaseResultGenService implements ResultGenerator {
       matchId: match.id,
       attendance
     }));
-    const income = this.financeService.generateMatchIncome(attendance, match.home);
-    console.warn(`Attendance pre dispatch`);
-    this.store.dispatch(addFinanceRecord({
-      clubNameEn: match.home.nameEn,
-      description: 'match day income',
-      income,
-      expense: null
-    }));
-    console.warn(`Attendance post dispatch`);
-    console.warn(`Generating Attendance for ${match.home.nameEn} - ${match.away.nameEn} ---- FINISH`, match);
+    this.store.select(selectClubByClubsNameEn, {clubsNameEn: match.homeNameEn}).pipe(take(1)).subscribe(club => {
+      const income = this.financeService.generateMatchIncome(attendance, club);
+      console.warn(`Attendance pre dispatch`);
+      this.store.dispatch(addFinanceRecord({
+        clubNameEn: match.homeNameEn,
+        description: 'match day income',
+        income,
+        expense: null
+      }));
+      console.warn(`Attendance post dispatch`);
+    });
+    console.warn(`Generating Attendance for ${match.homeNameEn} - ${match.awayNameEn} ---- FINISH`, match);
   }
 
   private getGoalChanceWeights(roster: Player[]): number[] {
@@ -324,7 +331,7 @@ export class BaseResultGenService implements ResultGenerator {
   /*private generateGains(homeRoster: Player[], awayRoster: Player[], result: string, match: Match,
                         homeScorers: { goals: { [minute: number]: Player }, assists: { [minute: number]: Player | null } },
                         awayScorers: { goals: { [minute: number]: Player }, assists: { [minute: number]: Player | null } }): Player[] {
-    const homePower: RosterPower = this.calculateRosterPower(homeRoster);      // home advantage bonus already included
+    const homePower: RosterPower = this.calculateRosterPower(homeRoster);      // homeNameEn advantage bonus already included
     const awayPower: RosterPower = this.calculateRosterPower(awayRoster);
     const homeSumPower = homePower.gk + homePower.d + homePower.m + homePower.f;
     const awaySumPower = awayPower.gk + awayPower.d + awayPower.m + awayPower.f;

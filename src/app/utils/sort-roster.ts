@@ -3,6 +3,9 @@ import {RosterPower, Starters} from '../services/base-result-gen.service';
 import {LeagueTable} from '../interfaces/league-table';
 import {CUP_INTERVAL, HOME_TEAM_POWER_ADVANTAGE_PCT} from '../constants/general';
 import {round} from 'lodash';
+import {Match1} from '../interfaces/match1';
+import {Match} from '../interfaces/match';
+import {Club} from '../interfaces/club';
 
 export function sortClubsRoster(roster: Player[]): Player[] {
   const gks = roster.filter(pl => pl.position === 'GK').sort((a, b) => b.power - a.power);
@@ -78,5 +81,16 @@ export function calculateRosterPower(roster: Player[], isHomeTeam = false): Rost
     d: round(d.reduce((previousValue, currentValue) => previousValue + currentValue.power, 0) * homeAdvMulti, 2),
     m: round(m.reduce((previousValue, currentValue) => previousValue + currentValue.power, 0) * homeAdvMulti, 2),
     f: round(f.reduce((previousValue, currentValue) => previousValue + currentValue.power, 0) * homeAdvMulti, 2)
+  };
+}
+
+export function matchToMatch1(match: Match, home: Club, away: Club): Match1 {
+  return {
+    away,
+    field: match.field,
+    home,
+    id: match.id,
+    isCupMatch: match.isCupMatch,
+    tournament: match.tournament
   };
 }

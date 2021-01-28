@@ -5,8 +5,8 @@ export interface LeagueSchedule {
 }
 
 export interface WeekSchedule {
-  // home: Club | null;
-  // away: Club | null;
+  // homeNameEn: Club | null;
+  // awayNameEn: Club | null;
   // result?: string;
   matchId: number;
   // isCupMatch: boolean;

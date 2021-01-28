@@ -325,8 +325,8 @@ const _currentGameReducer = createReducer(currentGameInitState,
       newSchedule[cupRound + 1] = [];       // обнуляем след раунд
       const newMatches: { [id: number]: Match } = {};
       let nextRoundMatch: Match = {
-        away: undefined,
-        home: undefined,
+        awayNameEn: undefined,
+        homeNameEn: undefined,
         id: undefined,
         tournament: {nameRu: `Кубок ${country.nameRu}`, nameEn: `Cup of ${country.nameEn}`},
         isCupMatch: true
@@ -337,26 +337,26 @@ const _currentGameReducer = createReducer(currentGameInitState,
         if (1) {
           const newId = (+Object.keys(newState.matches)[Object.keys(newState.matches).length - 1]) + 1;
           const nextRoundMatchIndex = Math.floor(index / 2);
-          let isHomeAWinner = !!match.home;
+          let isHomeAWinner = !!match.homeNameEn;
           if (matchStats.result) {
             const [homeScore, awayScore] = matchStats.result.split(' - ');
             const [homeGoals, awayGoals] = resultSplitter(matchStats.result);
             isHomeAWinner = homeScore.includes('e') || homeScore.includes('p') || homeGoals > awayGoals;
           }
           const nextId = cupScheduleNext[nextRoundMatchIndex]?.matchId ? cupScheduleNext[nextRoundMatchIndex].matchId : newId;
-          if (index % 2 === 0) {      // first match (decides home for next)
-            nextRoundMatch.home = isHomeAWinner ? match.home : match.away;
+          if (index % 2 === 0) {      // first match (decides homeNameEn for next)
+            nextRoundMatch.homeNameEn = isHomeAWinner ? match.homeNameEn : match.awayNameEn;
           }
-          if (index % 2 === 1) {      // second match (decides away for next)
-            nextRoundMatch.away = isHomeAWinner ? match.home : match.away;
+          if (index % 2 === 1) {      // second match (decides awayNameEn for next)
+            nextRoundMatch.awayNameEn = isHomeAWinner ? match.homeNameEn : match.awayNameEn;
             nextRoundMatch.id = nextId;
             newSchedule[cupRound + 1] = [...newSchedule[cupRound + 1], {matchId: nextRoundMatch.id}];
             newMatches[nextRoundMatch.id] = nextRoundMatch;
             console.log('newSchedule', newSchedule);
             console.log('newMatches', newMatches);
             nextRoundMatch = {      // reset
-              away: undefined,
-              home: undefined,
+              awayNameEn: undefined,
+              homeNameEn: undefined,
               id: undefined,
               tournament: {nameRu: `Кубок ${country.nameRu}`, nameEn: `Cup of ${country.nameEn}`},
               isCupMatch: true
@@ -379,12 +379,14 @@ const _currentGameReducer = createReducer(currentGameInitState,
         let newTableRecords = [];
         matches.forEach((match: Match) => {
           const matchStats = state.stats[match.id];
+          const home: Club = state.clubs.find(value => value.nameEn === match.homeNameEn);
+          const away: Club = state.clubs.find(value => value.nameEn === match.awayNameEn);
           console.warn('Match', match);
           if (matchStats?.result && !match.isCupMatch) {      // если есть result и матч не кубковый
             const homeRecord: LeagueTable = tableRecords.find(record =>
-              match.home.nameEn === record.clubName || match.home.nameRu === record.clubName);
+              home.nameEn === record.clubName || home.nameRu === record.clubName);
             const awayRecord: LeagueTable = tableRecords.find(record =>
-              match.away.nameEn === record.clubName || match.away.nameRu === record.clubName);
+              away.nameEn === record.clubName || away.nameRu === record.clubName);
             console.log('homeRecord - awayRecord', homeRecord, awayRecord);
             if (homeRecord && awayRecord) {
               const homeRecordCopy = {...homeRecord};

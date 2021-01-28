@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import {Store} from '@ngrx/store';
 import {
-  AppState,
+  AppState, selectClubByClubsNameEn,
   selectCurrentClub, selectMatchStatsByMatchId,
   selectScheduleByClubsNameEn
 } from '../../../store/selectors/current-game.selectors';
 import {map, switchMap, tap} from 'rxjs/operators';
 import {Club} from '../../../interfaces/club';
-import {combineLatest, Observable} from 'rxjs';
+import {combineLatest, Observable, of} from 'rxjs';
 import {Match} from '../../../interfaces/match';
 import {resultSplitter} from '../../../utils/sort-roster';
 import {MatchStats} from '../../../interfaces/match-stats';
@@ -38,22 +38,25 @@ export class ScheduleMainPageComponent implements OnInit {
     return this.store.select(selectMatchStatsByMatchId, {matchId: match.id});
   }
 
-  getMatchOpponent(match: {home: Club | null, away: Club | null} | null): {club: Club, field: 'H' | 'A'} {
+  getMatchOpponent(match: Match): {club: Observable<Club>, field: 'H' | 'A'} {
     if (!match) { return null; }
-    if (!match.away || !match.home) {
+    if (!match.awayNameEn || !match.homeNameEn) {
       return {
-        club: null,
+        club: of(null),
         field: null
       };
     }
+    this.store.select(selectClubByClubsNameEn, {clubsNameEn: match.awayNameEn});
     return {
-      club: match.home?.nameEn === this.currentClub?.nameEn ? match.away : match.home,
-      field: match.home?.nameEn === this.currentClub?.nameEn ? 'H' : 'A'
+      club: match.homeNameEn === this.currentClub?.nameEn ?
+        this.store.select(selectClubByClubsNameEn, {clubsNameEn: match.awayNameEn}) :
+        this.store.select(selectClubByClubsNameEn, {clubsNameEn: match.homeNameEn}),
+      field: match.homeNameEn === this.currentClub?.nameEn ? 'H' : 'A'
     };
   }
 
   getMatchResultClass(match: Match, stats: MatchStats) {
-    const isHomeMatch = match.home?.nameEn === this.currentClub?.nameEn;
+    const isHomeMatch = match.homeNameEn === this.currentClub?.nameEn;
     const resClass = {};
     if (stats?.result) {
       const [homeG, awayG] = resultSplitter(stats.result);

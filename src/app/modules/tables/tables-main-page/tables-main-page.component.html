@@ -152,13 +152,13 @@
     <h3 class="text-center">Неделя {{selectedWeek.num + 1}}</h3>
     <div class="row" *ngFor="let match of selectedWeek.schedule">
       <div class="col-5 text-right">
-        {{match.home.nameRu}}
+        {{match.homeNameEn.nameRu}}
       </div>
       <div class="col-1 text-center">
         -
       </div>
       <div class="col-5 text-left">
-        {{match.away.nameRu}}
+        {{match.awayNameEn.nameRu}}
       </div>
     </div>
   </div>
@@ -170,13 +170,13 @@
         <div class="row my-3 mr-3" *ngFor="let match of round"
              [ngStyle]="{'height.px': 100 * (i + 1), 'border': '2px dashed black'}">
           <div class="col-12 text-center">
-            <span [ngStyle]="{'line-height.px': 25 * (i + 1)}">{{match.home?.nameRu || '-&#45;&#45;'}}</span>
+            <span [ngStyle]="{'line-height.px': 25 * (i + 1)}">{{match.homeNameEn?.nameRu || '-&#45;&#45;'}}</span>
           </div>
           <div class="col-12 text-center align-middle">
             <span [ngStyle]="{'line-height.px': 25 * (i + 1)}">vs</span>
           </div>
           <div class="col-12 text-center">
-            <span [ngStyle]="{'line-height.px': 25 * (i + 1)}">{{match.away?.nameRu || '-&#45;&#45;'}}</span>
+            <span [ngStyle]="{'line-height.px': 25 * (i + 1)}">{{match.awayNameEn?.nameRu || '-&#45;&#45;'}}</span>
           </div>
           &lt;!&ndash;<mat-divider></mat-divider>&ndash;&gt;
         </div>

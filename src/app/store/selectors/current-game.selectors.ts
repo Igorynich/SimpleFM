@@ -1,15 +1,17 @@
 import {CurrentGameState} from '../reducers/current-game.reducer';
-import {createSelector} from '@ngrx/store';
+import {createSelector, MemoizedSelectorWithProps, State} from '@ngrx/store';
 import {WeekSchedule} from '../../interfaces/league-schedule';
 import {CUP_INTERVAL} from '../../constants/general';
 import {Match} from '../../interfaces/match';
-import {getLeagueWeek, resultSplitter, sortClubsRoster, sortTable} from '../../utils/sort-roster';
+import {getLeagueWeek, matchToMatch1, resultSplitter, sortClubsRoster, sortTable} from '../../utils/sort-roster';
 import {Player} from '../../interfaces/player';
 import {round} from 'lodash';
 import {PlayerStats} from '../../interfaces/player-stats';
 import {MatchStats} from '../../interfaces/match-stats';
 import {values} from '../../utils/helpers';
 import {Club} from '../../interfaces/club';
+import {Match1} from '../../interfaces/match1';
+import {Props} from '@ngrx/store/src/models';
 
 export interface AppState {
   currentGame: CurrentGameState;
@@ -42,19 +44,33 @@ export const selectPlayersByClubsNameEn = createSelector(selectCurrentGameState,
   return sortClubsRoster(teamRoster);
 });
 
-export const selectLeagueScheduleByLeaguesNameEn = createSelector(selectCurrentGameState, (state, {leaguesNameEn}) => {
+export const selectLeagueScheduleByLeaguesNameEn: MemoizedSelectorWithProps<AppState, {leaguesNameEn: string}, Match1[][]> =
+  createSelector(selectCurrentGameState, (state, {leaguesNameEn}) => {
   const league = state.leagues.find(value => value.nameEn === leaguesNameEn);
-  return state.schedule[league.id].map((value: WeekSchedule[]) => value.map(value1 => state.matches[value1.matchId]));
+  return state.schedule[league.id].map((value: WeekSchedule[]) => value.map(value1 => {
+    const match: Match = state.matches[value1.matchId];
+    const home: Club = state.clubs.find(value2 => value2.nameEn === match.homeNameEn);
+    const away: Club = state.clubs.find(value2 => value2.nameEn === match.awayNameEn);
+    return matchToMatch1(match, home, away);
+  }));
 });
 
-export const selectCupScheduleByLeaguesNameEn = createSelector(selectCurrentGameState, (state, {leaguesNameEn}) => {
+export const selectCupScheduleByLeaguesNameEn: MemoizedSelectorWithProps<AppState, {leaguesNameEn: string}, Match1[][]> =
+  createSelector(selectCurrentGameState, (state, {leaguesNameEn}) => {
   const league = state.leagues.find(value => value.nameEn === leaguesNameEn);
   const country = state.countries.find(value => value.nameEn === league.countryNameEn);
-  return state.schedule[country.id].map((value: WeekSchedule[]) => value.map(value1 => state.matches[value1.matchId]));
+  return state.schedule[country.id].map((value: WeekSchedule[]) => value.map(value1 => {
+    const match: Match = state.matches[value1.matchId];
+    const home: Club = state.clubs.find(value2 => value2.nameEn === match.homeNameEn);
+    const away: Club = state.clubs.find(value2 => value2.nameEn === match.awayNameEn);
+    return matchToMatch1(match, home, away);
+  }));
 });
 
 export const selectLeagueTableByLeaguesNameEn = createSelector(selectCurrentGameState, (state, {leaguesNameEn}) => {
+  console.log('selectLeagueTableByLeaguesNameEn', leaguesNameEn);
   const league = state.leagues.find(value => value.nameEn === leaguesNameEn);
+  console.log('selectLeagueTableByLeaguesNameEn1', league);
   return [...state.tables[league.id]].sort(sortTable);
 });
 
@@ -88,7 +104,7 @@ export const selectCurrentWeekSchedule = createSelector(selectCurrentGameState, 
     const league = state.leagues.find(value => value.nameEn === curClub.leagueNameEn);
     const country = state.countries.find(value => value.nameEn === league.countryNameEn);
     const allCupMatches: Match[] = state.schedule[country.id][(curWeek / CUP_INTERVAL) - 1].map(value => state.matches[value.matchId]);
-    const onlyRealMatches: Match[] = allCupMatches.filter(value => !!value.home && !!value.away);
+    const onlyRealMatches: Match[] = allCupMatches.filter(value => !!value.homeNameEn && !!value.awayNameEn);
     schedule.push({
       tournament: {nameRu: `Кубок ${country.nameRu}`, nameEn: `Cup of ${country.nameEn}`},
       matches: onlyRealMatches,  // TODO check this shit
@@ -120,15 +136,15 @@ export const selectScheduleByClubsNameEn = createSelector(selectCurrentGameState
   const leagueSchedule: WeekSchedule[][] = state.schedule[league.id];
   const clubsLeagueSchedule: WeekSchedule[] = leagueSchedule.map((value: WeekSchedule[]) => {
     return value.find(match => {
-      const realMatch = state.matches[match.matchId];
-      return realMatch.home.nameEn === club.nameEn || realMatch.away.nameEn === club.nameEn;
+      const realMatch: Match = state.matches[match.matchId];
+      return realMatch.homeNameEn === club.nameEn || realMatch.awayNameEn === club.nameEn;
     });
   });
   const cupSchedule: WeekSchedule[][] = state.schedule[country.id];
   const clubsCupSchedule: WeekSchedule[] = cupSchedule.map((value: WeekSchedule[]) =>
     value.find(match => {
-      const realMatch = state.matches[match.matchId];
-      return realMatch.home?.nameEn === club.nameEn || realMatch.away?.nameEn === club.nameEn;
+      const realMatch: Match = state.matches[match.matchId];
+      return realMatch.homeNameEn === club.nameEn || realMatch.awayNameEn === club.nameEn;
     }));
   console.log('clubsCupSchedule', clubsCupSchedule);
   clubsCupSchedule.forEach((value, index) => {
@@ -157,11 +173,13 @@ export const selectLeagueScheduleShellByNumberOfClubs = createSelector(selectCur
 export const selectNextOpponent = createSelector(selectCurrentGameState, selectScheduleByClubsNameEn,
   (state, clubsSchedule: Match[], {clubsNameEn}) => {
     const curWeek = state.currentWeek;
-    const curClub = state.currentClub;
-    const nextWeeksMatch = (clubsSchedule[curWeek]?.home && clubsSchedule[curWeek]?.away) ?
+    const curClub: Club = state.currentClub;
+    const nextWeeksMatch: Match = (clubsSchedule[curWeek]?.homeNameEn && clubsSchedule[curWeek]?.awayNameEn) ?
       clubsSchedule[curWeek] : clubsSchedule[curWeek + 1];
-    const nextOpp = nextWeeksMatch.home.nameEn === curClub.nameEn ? nextWeeksMatch.away : nextWeeksMatch.home;
-    const field = nextWeeksMatch.home.nameEn === curClub.nameEn ? 'H' : 'A';
+    const nextWeeksMatchHomeClub: Club = state.clubs.find(value => value.nameEn === nextWeeksMatch?.homeNameEn);
+    const nextWeeksMatchAwayClub: Club = state.clubs.find(value => value.nameEn === nextWeeksMatch?.awayNameEn);
+    const nextOpp: Club = nextWeeksMatch?.homeNameEn === curClub.nameEn ? nextWeeksMatchAwayClub : nextWeeksMatchHomeClub;
+    const field = nextWeeksMatch?.homeNameEn === curClub.nameEn ? 'H' : 'A';
     console.log('selectNextOpponent schedule', clubsSchedule);
     return {opponent: nextOpp, field};
   });

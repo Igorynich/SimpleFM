@@ -3,7 +3,7 @@ import {Match} from '../../interfaces/match';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {
-  AppState,
+  AppState, selectClubByClubsNameEn,
   selectCurrentClub,
   selectMatchGainsByMatchId,
   selectMatchStatsByMatchId
@@ -27,9 +27,14 @@ export class MatchResultComponent implements OnInit {
   matchStats$: Observable<MatchStats>;
   matchGaines$: Observable<{gains: Player[], losses: Player[]}>;
 
+  homeClub$: Observable<Club>;
+  awayClub$: Observable<Club>;
+
   constructor(private store: Store<AppState>) { }
 
   ngOnInit(): void {
+    this.homeClub$ = this.store.select(selectClubByClubsNameEn, {clubsNameEn: this.match.homeNameEn});
+    this.awayClub$ = this.store.select(selectClubByClubsNameEn, {clubsNameEn: this.match.awayNameEn});
     this.curClub$ = this.store.select(selectCurrentClub);
     this.matchStats$ = this.store.select(selectMatchStatsByMatchId, {matchId: this.match.id});
     this.matchGaines$ = this.store.select(selectMatchGainsByMatchId, {matchId: this.match.id});
@@ -37,8 +42,8 @@ export class MatchResultComponent implements OnInit {
 
   isMyClub$(match: Match): {home: Observable<boolean>, away: Observable<boolean>} {
     return {
-      home: this.curClub$.pipe(map(value => value.nameEn === match.home.nameEn)),
-      away: this.curClub$.pipe(map(value => value.nameEn === match.away.nameEn))
+      home: this.curClub$.pipe(map(value => value.nameEn === match.homeNameEn)),
+      away: this.curClub$.pipe(map(value => value.nameEn === match.awayNameEn))
     };
   }
 

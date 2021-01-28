@@ -1,10 +1,9 @@
-import {Club} from './club';
 import {League} from './league';
+import {Club} from './club';
 
-export interface Match {
-  homeNameEn: string;            // nameEn
-  awayNameEn: string;
-  // result?: string;
+export interface Match1 {
+  home: Club;
+  away: Club;
   id: number;
   isCupMatch: boolean;
   tournament: League | {nameRu: string, nameEn: string};

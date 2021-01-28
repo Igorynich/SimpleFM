@@ -84,7 +84,7 @@ export class BaseGainsGenService {
                          homeScorers: { goals: { [minute: number]: Player }, assists: { [minute: number]: Player | null } },
                          awayScorers: { goals: { [minute: number]: Player }, assists: { [minute: number]: Player | null } })
     : { gains: Player[], losses: Player[] } {
-    const homePower: RosterPower = calculateRosterPower(homeRoster);      // home advantage bonus already included
+    const homePower: RosterPower = calculateRosterPower(homeRoster);      // homeNameEn advantage bonus already included
     const awayPower: RosterPower = calculateRosterPower(awayRoster);
     const homeStartingRoster = homeRoster.filter((value, index) => index < 11);
     const awayStartingRoster = awayRoster.filter((value, index) => index < 11);
@@ -93,7 +93,7 @@ export class BaseGainsGenService {
     const sumPowerDif = (homeSumPower - awaySumPower) / 11;
     const [homeGoals, awayGoals] = resultSplitter(result);
     const resultDif = this.limitTo(homeGoals - awayGoals);
-    console.warn(`${match.home.nameEn} - ${match.away.nameEn}--------------START`);
+    console.warn(`${match.homeNameEn} - ${match.awayNameEn}--------------START`);
     console.warn('REsult Dif', resultDif, result);
     const okPowerDif = this.OK_RESULTS_STEPS[resultDif];
     console.log('okPowerDif', okPowerDif);
@@ -106,7 +106,7 @@ export class BaseGainsGenService {
     const indivGainsCoef = this.INDIVID_GAINS_RESULT_COEF[powerDiscr];
     const resultGainsPlayers = [];
     const resultLossesPlayers = [];
-    // home
+    // homeNameEn
     console.warn('Regular Gains Home');
     resultGainsPlayers.push(...this.assignRegularGains(homeStartingRoster, gains.hg));
     console.warn('Regular Losses Home');
@@ -115,7 +115,7 @@ export class BaseGainsGenService {
     resultGainsPlayers.push(...this.assignIndividualGains(homeStartingRoster, homeScorers, awayGoals, indivGainsCoef.hc));
     console.warn('Individual Losses Home');
     resultLossesPlayers.push(...this.assignIndividualLosses(homeStartingRoster, homeScorers, homeGoals, awayGoals, indivGainsCoef.hc));
-    // away
+    // awayNameEn
     console.warn('Regular Gains Away');
     resultGainsPlayers.push(...this.assignRegularGains(awayStartingRoster, gains.ag));
     console.warn('Regular Losses Away');
@@ -124,7 +124,7 @@ export class BaseGainsGenService {
     resultGainsPlayers.push(...this.assignIndividualGains(awayStartingRoster, awayScorers, homeGoals, indivGainsCoef.ac));
     console.warn('Individual Lossses Home');
     resultLossesPlayers.push(...this.assignIndividualLosses(awayStartingRoster, awayScorers, awayGoals, homeGoals, indivGainsCoef.ac));
-    console.warn(`${match.home.nameEn} - ${match.away.nameEn}--------------FINISH`, resultGainsPlayers);
+    console.warn(`${match.homeNameEn} - ${match.awayNameEn}--------------FINISH`, resultGainsPlayers);
     return {gains: resultGainsPlayers, losses: resultLossesPlayers};
   }
 

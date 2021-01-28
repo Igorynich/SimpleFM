@@ -86,8 +86,8 @@ export class CurrentGameService {
       id: this.idCounter,
       isCupMatch,
       tournament,
-      home: homeTeam,
-      away: awayTeam
+      homeNameEn: homeTeam?.nameEn,
+      awayNameEn: awayTeam?.nameEn
     };
     this.idCounter++;
     // console.log('Dispatching addMatch', match.id);
@@ -172,8 +172,8 @@ export class CurrentGameService {
           const match1 = cupSchedule[i - 1][j];
           const match2 = cupSchedule[i - 1][j + 1];
           roundSchedule.push({
-            home: (!match1.home || !match1.away) ? (match1.home || match1.away) : null,
-            away: (!match2.home || !match2.away) ? (match2.home || match2.away) : null,
+            homeNameEn: (!match1.homeNameEn || !match1.awayNameEn) ? (match1.homeNameEn || match1.awayNameEn) : null,
+            awayNameEn: (!match2.homeNameEn || !match2.awayNameEn) ? (match2.homeNameEn || match2.awayNameEn) : null,
             isCupMatch: true
           });
         }
@@ -257,7 +257,8 @@ export class CurrentGameService {
       this.scheduleShell.push(this.weekScheduleShell);
     }
 
-    console.log('Resulting schedule', this.scheduleShell.map(value => value.map(value1 => `${value1.home.num} - ${value1.away.num}`)));
+    console.log('Resulting schedule', this.scheduleShell.map(value => value.map(value1 =>
+     `${value1.homeNameEn.num} - ${value1.awayNameEn.num}`)));
   }*/
 
   /*generateWeeklySchedule(teams: Team[]) {
@@ -299,11 +300,11 @@ export class CurrentGameService {
   /*getTeamPlayed(team: Team, scheduleShell = this.scheduleShell): number[] {
     const played: number[] = [];
     scheduleShell.forEach((value, index) => {
-      const teamsMatch = value.find(value1 => value1.home.num === team.num || value1.away.num === team.num);
+      const teamsMatch = value.find(value1 => value1.homeNameEn.num === team.num || value1.awayNameEn.num === team.num);
       if (!teamsMatch) {
         console.error(`No match for ${team.num} in week ${index + 1}`, value);
       }
-      const opponentNum = teamsMatch.home.num === team.num ? teamsMatch.away.num : teamsMatch.home.num;
+      const opponentNum = teamsMatch.homeNameEn.num === team.num ? teamsMatch.awayNameEn.num : teamsMatch.homeNameEn.num;
       played.push(opponentNum);
     });
     return played;
@@ -312,8 +313,8 @@ export class CurrentGameService {
   pushTeamsToWeekly(homeTeam: Team, awayTeam: Team) {
     // console.log('Pushing to weekly', homeTeam, awayTeam);
     this.weekScheduleShell.push({
-      home: homeTeam,
-      away: awayTeam
+      homeNameEn: homeTeam,
+      awayNameEn: awayTeam
     });
     // marking teams - who they played and where
     // homeTeam.played.push(awayTeam.num);
@@ -324,7 +325,7 @@ export class CurrentGameService {
 
   teamIsNotInWeekSchedule(team: Team): boolean {
     return !this.weekScheduleShell.find(value => {
-      return value.home.num === team.num || value.away.num === team.num;
+      return value.homeNameEn.num === team.num || value.awayNameEn.num === team.num;
     });
   }*/
 

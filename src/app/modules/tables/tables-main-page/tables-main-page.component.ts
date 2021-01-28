@@ -15,6 +15,7 @@ import {Match} from '../../../interfaces/match';
 import {Club} from '../../../interfaces/club';
 import {CUP_INTERVAL} from '../../../constants/general';
 import {getLeagueWeek} from '../../../utils/sort-roster';
+import {Match1} from '../../../interfaces/match1';
 
 @CleanSubscriptions()
 @Component({
@@ -24,8 +25,8 @@ import {getLeagueWeek} from '../../../utils/sort-roster';
 })
 export class TablesMainPageComponent implements OnInit, OnDestroy {
 
-  schedule$: Observable<WeekSchedule[][]>;
-  schedule: WeekSchedule[][];
+  schedule$: Observable<Match1[][]>;
+  schedule: Match1[][];
   cupSchedule$;
   curClub$: Observable<Club>;
   selectedWeek = {
@@ -47,9 +48,9 @@ export class TablesMainPageComponent implements OnInit, OnDestroy {
       this.selectedWeek.num = getLeagueWeek(value) - 1;
     });
     this.curClub$ = this.store.select(selectCurrentClub);
-    this.schedule$ = this.store.select(selectCurrentClub).pipe(switchMap(curClub =>
+    this.schedule$ = this.curClub$.pipe(switchMap(curClub =>
       this.store.select(selectLeagueScheduleByLeaguesNameEn, {leaguesNameEn: curClub.leagueNameEn})
-        .pipe(tap(x => {
+        .pipe(tap((x: Match1[][]) => {
           this.schedule = x;
           this.selectedWeek.schedule = x[this.selectedWeek.num];
           console.log('League Schedule', x);
@@ -62,8 +63,10 @@ export class TablesMainPageComponent implements OnInit, OnDestroy {
           console.log('Cup Schedule', x);
           return x;
         }))));
-    this.table$ = this.store.select(selectCurrentClub).pipe(switchMap(curClub =>
-      this.store.select(selectLeagueTableByLeaguesNameEn, {leaguesNameEn: curClub.leagueNameEn})));
+    this.table$ = this.curClub$.pipe(switchMap(curClub => {
+      console.log('Table$ curClub', curClub);
+      return this.store.select(selectLeagueTableByLeaguesNameEn, {leaguesNameEn: curClub.leagueNameEn});
+    }));
   }
 
   ngOnDestroy(): void {
@@ -78,8 +81,8 @@ export class TablesMainPageComponent implements OnInit, OnDestroy {
 
   isMyClub$(match: Match): {home: Observable<boolean>, away: Observable<boolean>} {
     return {
-      home: this.curClub$.pipe(map(value => value.nameEn === match.home?.nameEn)),
-      away: this.curClub$.pipe(map(value => value.nameEn === match.away?.nameEn))
+      home: this.curClub$.pipe(map(value => value.nameEn === match.homeNameEn)),
+      away: this.curClub$.pipe(map(value => value.nameEn === match.awayNameEn))
     };
   }
 
