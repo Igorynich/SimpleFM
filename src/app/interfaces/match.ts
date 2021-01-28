@@ -2,7 +2,7 @@ import {Club} from './club';
 import {League} from './league';
 
 export interface Match {
-  home: Club | null;
+  home: Club | null;            // change to nameEn
   away: Club | null;
   // result?: string;
   id: number;

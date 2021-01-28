@@ -59,3 +59,5 @@ export const addAttendanceForMatch = createAction('Adds attendance to match stat
 }>());
 
 export const addFinanceRecord = createAction('Adds finance record', props<{clubNameEn, description, income, expense}>());
+
+export const expandStadium = createAction('Expands stadium by {step} places', props<{step, cost}>());

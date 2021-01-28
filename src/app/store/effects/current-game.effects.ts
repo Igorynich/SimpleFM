@@ -2,6 +2,8 @@ import {Injectable} from '@angular/core';
 import {Actions, createEffect, EffectNotification, ofType, OnRunEffects} from '@ngrx/effects';
 import {FirebaseService} from '../../services/firebase.service';
 import {
+  addFinanceRecord,
+  expandStadium,
   getBaseData,
   getClub,
   gotBaseData,
@@ -11,7 +13,7 @@ import {
   scheduleGenerated,
   tablesGenerated
 } from '../actions/current-game.actions';
-import {concatMap, exhaustMap, filter, map, switchMap, take, takeUntil, tap, withLatestFrom} from 'rxjs/operators';
+import {concatMap, exhaustMap, filter, map, mergeMap, switchMap, take, takeUntil, tap, withLatestFrom} from 'rxjs/operators';
 import {select, Store} from '@ngrx/store';
 import {CurrentGameState} from '../reducers/current-game.reducer';
 import {combineLatest, Observable, of} from 'rxjs';
@@ -111,6 +113,27 @@ export class CurrentGameEffects {
           map(leagues => {
             const leagueTables = this.game.generateTables(leagues);
             return tablesGenerated({tables: {...leagueTables}});
+          }));
+      })
+    ));
+
+
+
+  stadiumExpansionFinanceReportGeneration$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(expandStadium),
+      filter(value => !!this.userService.userName),
+      mergeMap(({step, cost}) => {
+        console.warn('stadiumExpansionFinanceReportGeneration$', step, cost);
+        return this.store.pipe(select(selectCurrentClub)).pipe(
+          take(1),
+          map(curClub => {
+            return addFinanceRecord({
+              clubNameEn: curClub.nameEn,
+              description: `Увеличение вместительности стадиона на ${step}`,
+              expense: cost * 1000000,
+              income: null
+            });
           }));
       })
     ));

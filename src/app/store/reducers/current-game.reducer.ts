@@ -1,12 +1,12 @@
 import {Club} from '../../interfaces/club';
 import {Player} from '../../interfaces/player';
-import {Action, createReducer, on} from '@ngrx/store';
+import {Action, ActionCreator, ActionType, createReducer, On, on} from '@ngrx/store';
 import {
   addAttendanceForMatch, addFinanceRecord,
   addGainsAndLossesForMatch,
   addGoalScorersForMatch,
   addMatch,
-  advanceAWeek,
+  advanceAWeek, expandStadium,
   getClub,
   gotBaseData,
   gotClub,
@@ -26,7 +26,7 @@ import {resultSplitter, sortClubsRoster, sortStarters} from '../../utils/sort-ro
 import {round} from 'lodash';
 import {closest} from '../../utils/helpers';
 import {FinanceRecord} from '../../interfaces/finance-record';
-import produce, {enableMapSet} from 'immer';
+import produce, {Draft, enableMapSet} from 'immer';
 
 export interface CurrentGameState {
   currentWeek: number;
@@ -76,6 +76,17 @@ export const currentGameInitState: CurrentGameState = {
 };
 
 enableMapSet();
+
+export function produceOn<C1 extends ActionCreator, S>(
+  actionType: C1,
+  callback: (draft: Draft<S>, action: ActionType<C1>) => any,
+): On<S> {
+  return on(
+    actionType,
+    (state: S, action: ActionType<C1>): S =>
+      produce(state, (draft: Draft<S>) => callback(draft, action)),
+  );
+}
 
 const _currentGameReducer = createReducer(currentGameInitState,
   on(gotBaseData, (state, {countries, leagues, clubs, players, scheduleShells}) => {
@@ -132,6 +143,7 @@ const _currentGameReducer = createReducer(currentGameInitState,
     return {...state, matches: {...state.matches, ...match}};
   }),
   on(addFinanceRecord, (state, {clubNameEn, description, expense, income}) => {
+    console.log('addFinanceRecord', clubNameEn, description, expense, income);
     const newState = produce(state, draft => {
       // old
       const map = new Map<string, {[week: number]: FinanceRecord[]}>();
@@ -148,13 +160,29 @@ const _currentGameReducer = createReducer(currentGameInitState,
       //
       draft.finances = finances;
       const club = draft.clubs.find(value => value.nameEn === clubNameEn);
+      // добавляем доходы-расходы в бюджет
       club.budget = club.budget + (income / 1000000 || 0) - (expense / 1000000 || 0);
-      if (clubNameEn === draft.currentClub.nameEn) {
+      if (clubNameEn === draft.currentClub.nameEn) {      // если это нынешний клуб то добавляем доходы туда тоже
         draft.currentClub.budget = draft.currentClub.budget + (income / 1000000 || 0) - (expense / 1000000 || 0);
       }
     });
+    console.log('addFinanceRecord newState', newState);
     return newState;
     // return {...state, finances};
+  }),
+  on(expandStadium, (state, {step, cost}) => {
+    console.log('expandStadium', step, cost);
+    const newState = produce(state, draft => {
+      if (draft.currentClub.budget >= cost) {     // если достаточно денег
+        draft.currentClub.budget -= cost;
+        draft.currentClub.stadium += step;
+        const curClub = draft.clubs.find(club => club.nameEn === draft.currentClub.nameEn);
+        curClub.stadium += step;
+        // add finance record
+      }
+    });
+    console.log('expandStadium newState', newState);
+    return newState;
   }),
   on(setResult, (state, {result, match}) => {
     console.log('Setting Result', result, match);
