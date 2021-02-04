@@ -39,14 +39,13 @@ export class TransferService {
   constructor(private store: Store<AppState>) {
   }
 
-  getListedPlayers(): Observable<Player[]> {
-    return this.store.select(selectCurrentWeek).pipe(switchMap(curWeek => {
+  generateTransferList(): void {
+    this.store.select(selectCurrentWeek).pipe(take(1)).subscribe((curWeek => {
       // week 1 or weeks over interval
       if (this.generatedForWeekNum !== curWeek && (curWeek === 1 || (curWeek - 1) % this.TRANSFER_LIST_UPDATE_INTERVAL === 0)) {
         this.generateListedPlayers();
         this.generatedForWeekNum = curWeek;
       }
-      return this.store.select(selectTransferListedPlayers);
     }));
   }
 

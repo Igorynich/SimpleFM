@@ -113,6 +113,9 @@ export class CurrentGameEffects {
           filter(value => !!this.userService.userName),
           map(leagues => {
             const leagueTables = this.game.generateTables(leagues);
+            // generating first transfer list
+            this.transferService.generateTransferList();
+            //
             return tablesGenerated({tables: {...leagueTables}});
           }));
       })

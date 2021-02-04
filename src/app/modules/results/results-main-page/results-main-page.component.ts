@@ -8,6 +8,7 @@ import {advanceAWeek} from '../../../store/actions/current-game.actions';
 import {BaseResultGenService} from '../../../services/base-result-gen.service';
 import {concatMap, count, switchMap, tap} from 'rxjs/operators';
 import {CurrentWeekSchedule} from '../../../interfaces/current-week-schedule';
+import {TransferService} from '../../../services/transfer.service';
 
 @Component({
   selector: 'app-results-main-page',
@@ -27,7 +28,8 @@ export class ResultsMainPageComponent implements OnInit {
 
   constructor(private store: Store<AppState>,
               private router: Router,
-              public resultGen: BaseResultGenService) { }
+              public resultGen: BaseResultGenService,
+              private transferService: TransferService) { }
 
   ngOnInit(): void {
     this.currentWeek$ = this.store.select(selectCurrentWeek);
@@ -57,7 +59,10 @@ export class ResultsMainPageComponent implements OnInit {
       // this._resultGenLulSub.unsubscribe();
 
       this.store.dispatch(advanceAWeek());
-
+      // generate new transfer list if needed
+      this.transferService.generateTransferList();
+      // get new job offer
+      // random transfers
       this.router.navigate([this.ROUTES.OFFICE]).catch(reason => {
         console.error(reason);
       });

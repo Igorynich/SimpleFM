@@ -4,7 +4,7 @@ import {Player} from '../../../interfaces/player';
 import {Observable, Subscription} from 'rxjs';
 import {Club} from '../../../interfaces/club';
 import {Store} from '@ngrx/store';
-import {AppState, selectCurrentClub} from '../../../store/selectors/current-game.selectors';
+import {AppState, selectCurrentClub, selectTransferListedPlayers} from '../../../store/selectors/current-game.selectors';
 import {playerTransferToAClub, playerTransferToCurClub} from '../../../store/actions/current-game.actions';
 import {MatDialog} from '@angular/material/dialog';
 import {ConfirmationDialogComponent} from '../../../shared/confirmation-dialog/confirmation-dialog.component';
@@ -35,7 +35,7 @@ export class TransferMarketMainPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.curClub$ = this.store.select(selectCurrentClub);
-    this.listedPlayers$ = this.transferService.getListedPlayers();
+    this.listedPlayers$ = this.store.select(selectTransferListedPlayers);
   }
 
   ngOnDestroy(): void {
