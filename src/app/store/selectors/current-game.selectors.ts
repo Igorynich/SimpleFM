@@ -31,6 +31,7 @@ export const curGameLoading = createSelector(selectCurrentGameState, (state: Cur
 export const getAllClubs = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.clubs || []);
 export const getAllLeagues = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.leagues || []);
 export const getAllCountries = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.countries || []);
+export const getAllPlayers = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.players || []);
 
 export const selectClubByClubsNameEn = createSelector(selectCurrentGameState, (state: CurrentGameState, {clubsNameEn}) => {
   return state.clubs.find(value => value.nameEn === clubsNameEn);
@@ -302,3 +303,6 @@ export const selectClubsRosterLastMatchStats = createSelector(selectCurrentGameS
     }
     return map;
   });
+
+export const selectTransferListedPlayers = createSelector(selectCurrentGameState,
+  (state: CurrentGameState) => state.transferListedPlayers);

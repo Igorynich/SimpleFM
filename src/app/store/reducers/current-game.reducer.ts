@@ -10,7 +10,7 @@ import {
   getClub,
   gotBaseData,
   gotClub,
-  gotPlayers, logOut,
+  gotPlayers, logOut, playersListedOnTransfer, playerTransferToAClub, playerTransferToCurClub,
   scheduleGenerated, setABunchOfResult, setResult,
   tablesGenerated,
   updatePlayers, updateTables
@@ -27,20 +27,23 @@ import {round} from 'lodash';
 import {closest} from '../../utils/helpers';
 import {FinanceRecord} from '../../interfaces/finance-record';
 import produce, {Draft, enableMapSet} from 'immer';
+import {Transfer} from '../../interfaces/transfer';
+import {valueReferenceToExpression} from '@angular/compiler-cli/src/ngtsc/annotations/src/util';
+import {AppState} from '../selectors/current-game.selectors';
 
 export interface CurrentGameState {
   currentWeek: number;
   currentClub: Club;
   currentPlayers: Player[];
   // data: {     // loaded from b/e
-    countries: Country[];
-    leagues: League[];
-    clubs: Club[];
-    players: Player[];
-  scheduleShells: {[league_NumOfClubs: string]: any};
+  countries: Country[];
+  leagues: League[];
+  clubs: Club[];
+  players: Player[];
+  scheduleShells: { [league_NumOfClubs: string]: any };
   // };
-  finances: Map<string, {[week: number]: FinanceRecord[]}>;      // {[week: number]: Map<string, FinanceRecord[]>};
-  gainsAndLosses: {[matchId: number]: {gains: Player[], losses: Player[]}};
+  finances: Map<string, { [week: number]: FinanceRecord[] }>;      // {[week: number]: Map<string, FinanceRecord[]>};
+  gainsAndLosses: { [matchId: number]: { gains: Player[], losses: Player[] } };
   loading: boolean;
   matches: { [id: number]: Match };
   schedule: { [leagueId: string]: WeekSchedule[][] };
@@ -50,6 +53,8 @@ export interface CurrentGameState {
   };
   stats: { [matchId: number]: MatchStats };
   tables: { [leagueId: string]: LeagueTable[] };
+  transferListedPlayers: Player[];
+  transfers: Transfer[];
 }
 
 export const currentGameInitState: CurrentGameState = {
@@ -72,7 +77,9 @@ export const currentGameInitState: CurrentGameState = {
     ticketPrices: null
   },
   stats: {},
-  tables: null
+  tables: null,
+  transferListedPlayers: [],
+  transfers: []
 };
 
 enableMapSet();
@@ -146,10 +153,10 @@ const _currentGameReducer = createReducer(currentGameInitState,
     console.log('addFinanceRecord', clubNameEn, description, expense, income);
     const newState = produce(state, draft => {
       // old
-      const map = new Map<string, {[week: number]: FinanceRecord[]}>();
+      const map = new Map<string, { [week: number]: FinanceRecord[] }>();
       const week = draft.currentWeek;
       const finances = draft.finances ? new Map(draft.finances) : map;
-      const clubsRecords: {[week: number]: FinanceRecord[]} = finances && finances.get(clubNameEn);
+      const clubsRecords: { [week: number]: FinanceRecord[] } = finances && finances.get(clubNameEn);
       if (!!clubsRecords) {
         clubsRecords[week] ? clubsRecords[week].push({description, expense, income}) : clubsRecords[week]
           = [{description, expense, income}];
@@ -221,78 +228,54 @@ const _currentGameReducer = createReducer(currentGameInitState,
     return {...state, stats: {...state.stats, [matchId]: {...state.stats[matchId], ...goals, result}}};
   }),
   on(addGainsAndLossesForMatch, (state, {matchId, gains, losses}) => {
-    const changedPlayers = [];
-    // TODO think of better solution - maybe use immer
-    state.players.forEach(pl => {
-      changedPlayers.push({...pl});
-    });
-    //
-    const currentPlayers = [];
-    state.currentPlayers.forEach(pl => {
-      currentPlayers.push({...pl});
-    });
-    losses.forEach((pl: Player) => {
-      const dataPlayer = changedPlayers.find(value => value.nameEn === pl.nameEn);
-      console.log('Losses Player', pl, dataPlayer);
-      if (dataPlayer) {
-        if (dataPlayer.power > 0.1) {     // cant be less than 0.1
-          dataPlayer.power = round(dataPlayer.power - 0.1, 1);
-          if (!dataPlayer.gain) {
-            dataPlayer.gain = 0;
+    const newState = produce(state, (draft: CurrentGameState) => {
+      losses.forEach((pl: Player) => {
+        const dataPlayer = draft.players.find(value => value.nameEn === pl.nameEn);
+        if (!!dataPlayer) {
+          if (dataPlayer.power > 0.1) {     // cant be less than 0.1
+            dataPlayer.power = round(dataPlayer.power - 0.1, 1);
+            if (!dataPlayer.gain) {
+              dataPlayer.gain = 0;
+            }
+            dataPlayer.gain = round(dataPlayer.gain - 0.1, 1);
           }
-          dataPlayer.gain = round(dataPlayer.gain - 0.1, 1);
-          console.log('Losses Player -0.1', dataPlayer);
         }
-      }
-      // TODO updating current players - think of another solution - like updateCurrentPlayers action
-      const curPlayer = currentPlayers.find(value => value.nameEn === pl.nameEn);
-      console.log('Losses cur Player', pl, curPlayer);
-      if (curPlayer) {
-        if (curPlayer.power > 0.1) {
-          curPlayer.power = round(curPlayer.power - 0.1, 1);
-          if (!curPlayer.gain) {
-            curPlayer.gain = 0;
+        const curPlayer = draft.currentPlayers.find(value => value.nameEn === pl.nameEn);
+        if (!!curPlayer) {
+          if (curPlayer.power > 0.1) {
+            curPlayer.power = round(curPlayer.power - 0.1, 1);
+            if (!curPlayer.gain) {
+              curPlayer.gain = 0;
+            }
+            curPlayer.gain = round(curPlayer.gain - 0.1, 1);
           }
-          curPlayer.gain = round(curPlayer.gain - 0.1, 1);
-          console.log('Losses Player -0.1', curPlayer);
         }
-      }
-    });
-    gains.forEach((pl: Player) => {
-      const dataPlayer = changedPlayers.find(value => value.nameEn === pl.nameEn);
-      if (dataPlayer) {
-        if (dataPlayer.power < 10) {
-          dataPlayer.power = round(dataPlayer.power + 0.1, 1);
-          if (!dataPlayer.gain) {
-            dataPlayer.gain = 0;
+      });
+      gains.forEach((pl: Player) => {
+        const dataPlayer = draft.players.find(value => value.nameEn === pl.nameEn);
+        if (!!dataPlayer) {
+          if (dataPlayer.power < 10) {    // cant be more than 10
+            dataPlayer.power = round(dataPlayer.power + 0.1, 1);
+            if (!dataPlayer.gain) {
+              dataPlayer.gain = 0;
+            }
+            dataPlayer.gain = round(dataPlayer.gain + 0.1, 1);
           }
-          dataPlayer.gain = round(dataPlayer.gain + 0.1, 1);
         }
-      }
-      // TODO updating current players - think of another solution - like updateCurrentPlayers action
-      const curPlayer = currentPlayers.find(value => value.nameEn === pl.nameEn);
-      if (curPlayer) {
-        if (curPlayer.power < 10) {
-          curPlayer.power = round(curPlayer.power + 0.1, 1);
-          if (!curPlayer.gain) {
-            curPlayer.gain = 0;
+        const curPlayer = draft.currentPlayers.find(value => value.nameEn === pl.nameEn);
+        if (!!curPlayer) {
+          if (curPlayer.power < 10) {
+            curPlayer.power = round(curPlayer.power + 0.1, 1);
+            if (!curPlayer.gain) {
+              curPlayer.gain = 0;
+            }
+            curPlayer.gain = round(curPlayer.gain + 0.1, 1);
           }
-          curPlayer.gain = round(curPlayer.gain + 0.1, 1);
         }
-      }
+      });
+      draft.gainsAndLosses = {...draft.gainsAndLosses, [matchId]: {gains, losses}};
     });
-    console.warn('addGainsAndLossesForMatch', {
-      ...state,
-      currentPlayers,
-      gainsAndLosses: {...state.gainsAndLosses, [matchId]: {gains, losses}},
-      players: changedPlayers
-    });
-    return {
-      ...state,
-      currentPlayers,
-      gainsAndLosses: {...state.gainsAndLosses, [matchId]: {gains, losses}},
-      players: changedPlayers
-    };
+    return newState;
   }),
   on(addAttendanceForMatch, (state, {matchId, attendance}) => {
     console.log('addAttendanceForMatch', {
@@ -338,7 +321,7 @@ const _currentGameReducer = createReducer(currentGameInitState,
           const newId = (+Object.keys(newState.matches)[Object.keys(newState.matches).length - 1]) + 1;
           const nextRoundMatchIndex = Math.floor(index / 2);
           let isHomeAWinner = !!match.homeNameEn;
-          if (matchStats.result) {
+          if (matchStats?.result) {
             const [homeScore, awayScore] = matchStats.result.split(' - ');
             const [homeGoals, awayGoals] = resultSplitter(matchStats.result);
             isHomeAWinner = homeScore.includes('e') || homeScore.includes('p') || homeGoals > awayGoals;
@@ -425,7 +408,48 @@ const _currentGameReducer = createReducer(currentGameInitState,
 
     console.log('UpdatingTables', curWeek, newState);
     return newState;
-  })
+  }),
+  on(playersListedOnTransfer, (state, {listedPlayers}) => {
+    return {
+      ...state,
+      transferListedPlayers: listedPlayers
+    };
+  }),
+  on(playerTransferToCurClub, (state, {player}) => {
+    const newState = produce(state, draft => {
+      const curClub = draft.currentClub;
+      if ((curClub.budget - player.price) >= 0) {
+        const curPlayers = draft.currentPlayers;
+        const curClubInClubsList = draft.clubs.find(value => value.nameEn === curClub.nameEn);
+        const playerInList = draft.players.find(value => value.nameEn === player.nameEn);
+        const playersClub = draft.clubs.find(value => value.nameEn === playerInList.clubNameEn);
+        // changing players Club
+        playerInList.clubNameEn = curClub.nameEn;
+        playerInList.clubNameRu = curClub.nameRu;
+        // pushing player to Current Players
+        curPlayers.push(playerInList);
+        // removing player from TransferList
+        draft.transferListedPlayers = draft.transferListedPlayers.filter(value => value.nameEn !== player.nameEn);
+      }
+    });
+    return newState;
+  }),
+  on(playerTransferToAClub, (state, {player, clubsNameEn}) => {
+    const newState = produce(state, (draft: CurrentGameState) => {
+      const playersNewClub = draft.clubs.find(value => value.nameEn === clubsNameEn);
+      if ((playersNewClub.budget - player.price) >= 0) {
+        const playerInList = draft.players.find(value => value.nameEn === player.nameEn);
+        // changing players Club
+        playerInList.clubNameEn = playersNewClub.nameEn;
+        playerInList.clubNameRu = playersNewClub.nameRu;
+        // removing player from Current Players
+        draft.currentPlayers = draft.currentPlayers.filter(value => value.nameEn !== player.nameEn);
+        // sorting
+        draft.currentPlayers = sortClubsRoster(draft.currentPlayers);
+      }
+    });
+    return newState;
+  }),
 );
 
 export function currentGameReducer(state: CurrentGameState, action: Action) {

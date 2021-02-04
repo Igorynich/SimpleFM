@@ -61,3 +61,10 @@ export const addAttendanceForMatch = createAction('Adds attendance to match stat
 export const addFinanceRecord = createAction('Adds finance record', props<{clubNameEn, description, income, expense}>());
 
 export const expandStadium = createAction('Expands stadium by {step} places', props<{step, cost}>());
+
+export const playersListedOnTransfer = createAction('Players listed on transfer', props<{listedPlayers}>());
+
+export const playerTransferToCurClub = createAction('Player being transferred', props<{player}>());
+
+export const playerTransferToAClub = createAction('Player being sold to a club({clubsNameEn})',
+  props<{player: Player, clubsNameEn: string}>());

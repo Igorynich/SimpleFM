@@ -1,0 +1,40 @@
+<div class="row">
+  <div class="col">
+    <mat-list role="list">
+      <mat-list-item role="listitem" *ngFor="let player of curPlayers$ | async" class="list-item">
+        <div class="row w-100 pos-{{player.position.toLowerCase()}}">
+          <div class="col">
+            <div class="row w-100">
+              <div class="col-1">
+                {{player.position}}
+              </div>
+              <div class="col-5">
+                {{player.nameRu}}
+              </div>
+              <div class="col-1">
+                {{player.power}}
+              </div>
+              <div class="col-1">
+                {{player.price | currency}}M
+              </div>
+              <div class="col-3"></div>
+              <div class="col-1" [matTooltip]="getSellButtonTooltip(player)"
+                   [matTooltipDisabled]="!getSellButtonTooltip(player)">
+                <button mat-raised-button (click)="sellPlayerClick(player)"
+                        [disabled]="playerNotEligibleByPosition(player) || playerNotEligibleByWeeklyLimit(player)">
+                  Продать
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-list-item>
+    </mat-list>
+  </div>
+</div>
+<div class="row justify-content-center">
+  <div class="col-1">
+    <button mat-raised-button color="primary" [mat-dialog-close]="null">Закрыть</button>
+  </div>
+</div>
+

@@ -24,6 +24,22 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   cursor: pointer;
 }
 
+.pos-gk {
+  background-color: greenyellow;
+}
+
+.pos-d {
+  background-color: ghostwhite;
+}
+
+.pos-m {
+  background-color: aqua;
+}
+
+.pos-f {
+  background-color: goldenrod;
+}
+
 .w-20 {
   width: 20% !important
 }

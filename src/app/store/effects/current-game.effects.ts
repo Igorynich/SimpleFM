@@ -9,7 +9,7 @@ import {
   gotBaseData,
   gotClub,
   gotPlayers,
-  logOut,
+  logOut, playerTransferToAClub, playerTransferToCurClub,
   scheduleGenerated,
   tablesGenerated
 } from '../actions/current-game.actions';
@@ -31,6 +31,7 @@ import {InfoDialogComponent} from '../../shared/info-dialog/info-dialog.componen
 import {CurrentGameService} from '../../services/current-game.service';
 import {sortClubsRoster} from '../../utils/sort-roster';
 import {UserService} from '../../services/user.service';
+import {TransferService} from '../../services/transfer.service';
 
 @Injectable()
 export class CurrentGameEffects {
@@ -118,7 +119,6 @@ export class CurrentGameEffects {
     ));
 
 
-
   stadiumExpansionFinanceReportGeneration$ = createEffect(() =>
     this.actions$.pipe(
       ofType(expandStadium),
@@ -137,13 +137,71 @@ export class CurrentGameEffects {
           }));
       })
     ));
+  // transfer to current club
+  playerTransferToCurClubFinanceReportGeneration$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(playerTransferToCurClub),
+      filter(value => !!this.userService.userName),
+      mergeMap(({player}) => {
+        console.warn('playerTransferFinanceReportGeneration$', player);
+        return this.store.pipe(select(selectCurrentClub)).pipe(
+          take(1),
+          switchMap(curClub => [
+            addFinanceRecord({
+              clubNameEn: curClub.nameEn,
+              description: `Покупка ${player.nameRu}`,
+              expense: player.price * 1000000,
+              income: null
+            }),
+            addFinanceRecord({
+              clubNameEn: player.clubNameEn,
+              description: `Продажа ${player.nameRu}`,
+              expense: null,
+              income: player.price * 1000000
+            })]),
+        );
+      })
+    ));
+
+  // transfer to any club
+  playerTransferToAClubFinanceReportGeneration$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(playerTransferToAClub),
+      filter(value => !!this.userService.userName),
+      mergeMap(({player, clubsNameEn}) => {
+        console.warn('playerTransferToAClubFinanceReportGeneration$', player, clubsNameEn);
+        return this.store.pipe(select(selectCurrentClub)).pipe(
+          take(1),
+          switchMap(curClub => {
+            // if selling current player - to block more sales this week
+            if (player.clubNameEn === curClub.nameEn) {
+              this.transferService.currentPlayerSold();
+            }
+            return [
+              addFinanceRecord({
+                clubNameEn: curClub.nameEn,
+                description: `Продажа ${player.nameRu}`,
+                expense: null,
+                income: player.price * 1000000
+              }),
+              addFinanceRecord({
+                clubNameEn: clubsNameEn,
+                description: `Покупка ${player.nameRu}`,
+                expense: player.price * 1000000,
+                income: null
+              })];
+          }),
+        );
+      })
+    ));
 
   constructor(private actions$: Actions,
               private fs: FirebaseService,
               private store: Store<AppState>,
               private dialog: MatDialog,
               private game: CurrentGameService,
-              private userService: UserService) {
+              private userService: UserService,
+              private transferService: TransferService) {
   }
 
 }

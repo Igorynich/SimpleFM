@@ -10,4 +10,5 @@ export interface Player {
   nameRu: string;         // "Давид Де Хеа"
   position: string;       // "GK"
   power: number;          // 8.5
+  price?: number;
 }

@@ -33,6 +33,10 @@ const officeRoutes = [
         path: ROUTES.STADIUM,
         loadChildren: () => import('../stadium/stadium.module').then(mod => mod.StadiumModule)
       },
+      {
+        path: ROUTES.TRANSFER_MARKET,
+        loadChildren: () => import('../transfer-market/transfer-market.module').then(mod => mod.TransferMarketModule)
+      },
     ]
   },
 ];
