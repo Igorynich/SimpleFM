@@ -33,7 +33,8 @@ export class EditLeagueDialogComponent implements OnInit {
         altNameRu: [league.altNameRu],
         country: [countryValue],
         nameEn: [league.nameEn, Validators.required],
-        nameRu: [league.nameRu, Validators.required]
+        nameRu: [league.nameRu, Validators.required],
+        tier: [league.tier, Validators.required]
       });
       this.loaded = true;
     }, error => {
@@ -51,7 +52,8 @@ export class EditLeagueDialogComponent implements OnInit {
         countryNameEn: this.leagueForm.value.country.nameEn,
         countryNameRu: this.leagueForm.value.country.nameRu,
         nameEn: this.leagueForm.value.nameEn,
-        nameRu: this.leagueForm.value.nameRu
+        nameRu: this.leagueForm.value.nameRu,
+        tier: this.leagueForm.value.tier
       };
       this.fs.updateLeague(this.data, leagueData).subscribe(value => {
         console.log(value);

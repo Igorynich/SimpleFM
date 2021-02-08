@@ -26,6 +26,7 @@ export const selectCurrentState = createSelector(selectCurrentGameState, (state:
 export const selectCurrentClub = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.currentClub);
 export const selectCurrentPlayers = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.currentPlayers);
 export const selectCurrentWeek = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.currentWeek + 1);
+export const selectCurrentSeason = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.currentSeason + 1);
 export const curGameLoading = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.loading);
 
 export const getAllClubs = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.clubs || []);

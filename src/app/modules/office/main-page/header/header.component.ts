@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {UserService} from '../../../../services/user.service';
 import {
   AppState,
-  selectCurrentClub, selectCurrentGameState, selectCurrentState,
+  selectCurrentClub, selectCurrentGameState, selectCurrentSeason, selectCurrentState,
   selectCurrentWeek,
   selectNextOpponent,
   selectScheduleByClubsNameEn
@@ -11,8 +11,8 @@ import {Store} from '@ngrx/store';
 import {Club} from '../../../../interfaces/club';
 import {ActivatedRoute, Router} from '@angular/router';
 import { ROUTES } from 'src/app/constants/routes';
-import {Observable} from 'rxjs';
-import {map, switchMap, take, tap} from 'rxjs/operators';
+import {interval, Observable} from 'rxjs';
+import {filter, map, switchMap, take, tap} from 'rxjs/operators';
 import { logOut } from 'src/app/store/actions/current-game.actions';
 
 @Component({
@@ -24,10 +24,13 @@ export class HeaderComponent implements OnInit {
 
   currentClub$: Observable<Club>;
   currentWeek$: Observable<number>;
+  currentSeason$: Observable<number>;
   nextOpponent$: Observable<{
     opponent: Club, field: string
   }>;
   ROUTES = ROUTES;
+
+  GO_THROUGH = 10;      // test shit
 
   constructor(public userService: UserService,
               private store: Store<AppState>,
@@ -37,6 +40,7 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     this.currentClub$ = this.store.select(selectCurrentClub);
     this.currentWeek$ = this.store.select(selectCurrentWeek);
+    this.currentSeason$ = this.store.select(selectCurrentSeason);
     this.nextOpponent$ = this.store.select(selectCurrentClub).pipe(switchMap(curClub =>
       this.store.select(selectNextOpponent, {clubsNameEn: curClub.nameEn})), tap(x => console.log('tap', x)));
   }
@@ -65,6 +69,16 @@ export class HeaderComponent implements OnInit {
   showState() {
     this.store.select(selectCurrentState).pipe(take(1)).subscribe(value => {
       console.warn('STATE: ', value);
+    });
+  }
+
+  goThroughXNextWeeks(x: number) {
+    let i = 0;
+    interval(500).pipe(filter(value => i < x)).subscribe(value => {
+      i++;
+      this.router.navigate([this.ROUTES.RESULTS], {queryParams: {goThrough: x - i}}).catch(reason => {
+        console.error(reason);
+      });
     });
   }
 }

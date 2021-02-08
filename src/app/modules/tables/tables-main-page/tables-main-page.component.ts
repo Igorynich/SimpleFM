@@ -4,7 +4,7 @@ import {
   AppState,
   selectCupScheduleByLeaguesNameEn,
   selectCurrentClub, selectCurrentWeek,
-  selectLeagueScheduleByLeaguesNameEn, selectLeagueTableByLeaguesNameEn
+  selectLeagueScheduleByLeaguesNameEn, selectLeagueTableByLeaguesNameEn, selectMatchStatsByMatchId
 } from '../../../store/selectors/current-game.selectors';
 import {map, switchMap, tap} from 'rxjs/operators';
 import {WeekSchedule} from '../../../interfaces/league-schedule';
@@ -16,6 +16,7 @@ import {Club} from '../../../interfaces/club';
 import {CUP_INTERVAL} from '../../../constants/general';
 import {getLeagueWeek} from '../../../utils/sort-roster';
 import {Match1} from '../../../interfaces/match1';
+import {MatchStats} from '../../../interfaces/match-stats';
 
 @CleanSubscriptions()
 @Component({
@@ -27,7 +28,7 @@ export class TablesMainPageComponent implements OnInit, OnDestroy {
 
   schedule$: Observable<Match1[][]>;
   schedule: Match1[][];
-  cupSchedule$;
+  cupSchedule$: Observable<Match1[][]>;
   curClub$: Observable<Club>;
   selectedWeek = {
     num: 0,
@@ -45,7 +46,7 @@ export class TablesMainPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this._curWeekSub = this.store.select(selectCurrentWeek).subscribe(value => {
-      this.selectedWeek.num = getLeagueWeek(value) - 1;
+      this.selectedWeek.num = getLeagueWeek(value - 1);
     });
     this.curClub$ = this.store.select(selectCurrentClub);
     this.schedule$ = this.curClub$.pipe(switchMap(curClub =>
@@ -79,14 +80,31 @@ export class TablesMainPageComponent implements OnInit, OnDestroy {
     };
   }
 
-  isMyClub$(match: Match): {home: Observable<boolean>, away: Observable<boolean>} {
+  getMatchStats(match: Match1): Observable<MatchStats> {
+    return this.store.select(selectMatchStatsByMatchId, {matchId: match.id});
+  }
+
+  isMyClub$(match: Match1): {home: Observable<boolean>, away: Observable<boolean>} {
     return {
-      home: this.curClub$.pipe(map(value => value.nameEn === match.homeNameEn)),
-      away: this.curClub$.pipe(map(value => value.nameEn === match.awayNameEn))
+      home: this.curClub$.pipe(map(value => value.nameEn === match.home?.nameEn)),
+      away: this.curClub$.pipe(map(value => value.nameEn === match.away?.nameEn))
     };
   }
 
   isMyClubsTableRecord(element: LeagueTable, curClub: Club): boolean {
     return element.clubName === curClub.nameEn || element.clubName === curClub.nameRu;
+  }
+
+  match1ToMatch(match: Match1): Match {
+    return {...match, homeNameEn: match.home.nameEn, awayNameEn: match.away.nameEn};
+  }
+
+  leagueTourToWeek(tour: number): number {
+    const add = Math.floor(tour / CUP_INTERVAL);
+    return tour + add;
+  }
+
+  cupRoundToWeek(round: number): number {
+    return round * CUP_INTERVAL + 1;
   }
 }

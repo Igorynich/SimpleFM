@@ -93,7 +93,7 @@ export class BaseResultGenService implements ResultGenerator {
           });
 
           this.generateResultsForWholeWeek(allMatches);
-          this.store.dispatch(updateTables());
+
           // generate attendance and income
           // update tables, stat boards, transfer market, progress players and update schedule (if cup?)
         }

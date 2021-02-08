@@ -1,15 +1,16 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState, selectCurrentWeek} from '../../../store/selectors/current-game.selectors';
-import {Observable, Subscription} from 'rxjs';
-import {Router} from '@angular/router';
+import {combineLatest, Observable, of, Subscription} from 'rxjs';
+import {ActivatedRoute, Router} from '@angular/router';
 import { ROUTES } from 'src/app/constants/routes';
-import {advanceAWeek} from '../../../store/actions/current-game.actions';
+import {advanceAWeek, updateTables} from '../../../store/actions/current-game.actions';
 import {BaseResultGenService} from '../../../services/base-result-gen.service';
 import {concatMap, count, switchMap, take, tap} from 'rxjs/operators';
 import {CurrentWeekSchedule} from '../../../interfaces/current-week-schedule';
 import {TransferService} from '../../../services/transfer.service';
 import {JobService} from '../../../services/job.service';
+import {clearSubscription} from '../../../utils/clean-subscriptions';
 
 @Component({
   selector: 'app-results-main-page',
@@ -31,7 +32,8 @@ export class ResultsMainPageComponent implements OnInit {
               private router: Router,
               public resultGen: BaseResultGenService,
               private transferService: TransferService,
-              private jobService: JobService) { }
+              private jobService: JobService,
+              private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.currentWeek$ = this.store.select(selectCurrentWeek).pipe(take(1));
@@ -41,9 +43,19 @@ export class ResultsMainPageComponent implements OnInit {
       console.warn('RESULTS111', value);
       this.curWeekResults = [...value];
     });*/
-    this._resultGenSub = this.resultGen.generateWeekResults().subscribe(value => {
+    /*this._resultGenSub = this.resultGen.generateWeekResults().subscribe(value => {
       this.curWeekResults = value;
-    });
+    });*/
+    this._resultGenSub = combineLatest([
+      this.resultGen.generateWeekResults(),
+      this.route.queryParams
+    ]).pipe(switchMap(([results, queryParams]) => {
+      this.curWeekResults = results;
+      if (queryParams.goThrough) {
+        this.advanceThroughWeek(true);
+      }
+      return of(null);
+    })).subscribe();
     /*this._resultGenLulSub = this.resultGen.lul$.subscribe(value => {
       console.error('RESULTS222', value);
       this.curWeekResults = [...value];
@@ -51,14 +63,15 @@ export class ResultsMainPageComponent implements OnInit {
   }
 
 
-  advanceThroughWeek() {
+  advanceThroughWeek(noJobs = false) {
     if (1) {
       // TODO check if season ends
 
       // unsub to prevent res gen for next week (cause store will emit this.store.select(selectCurrentWeekSchedule) value on curWeek change)
-      this._resultGenSub.unsubscribe();
+      clearSubscription(this._resultGenSub);
       // just a clean up unsub
       // this._resultGenLulSub.unsubscribe();
+      this.store.dispatch(updateTables());
 
       this.store.dispatch(advanceAWeek());
       // generate new transfer list if needed
@@ -66,7 +79,7 @@ export class ResultsMainPageComponent implements OnInit {
       // random transfers
 
       // get new job offer
-      if (this.jobService.gotNewJobOffer()) {
+      if (!noJobs && this.jobService.gotNewJobOffer()) {
         this.router.navigate([this.ROUTES.NEW_JOB]).catch(reason => {
           console.error(reason);
         });

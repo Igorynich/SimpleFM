@@ -7,70 +7,70 @@
           <mat-table [dataSource]="table$ | async" class="w-100">
             <!-- Position Column -->
             <ng-container matColumnDef="position">
-              <mat-header-cell *matHeaderCellDef class="w-5"> Поз </mat-header-cell>
+              <mat-header-cell *matHeaderCellDef class="w-5"> Поз</mat-header-cell>
               <mat-cell *matCellDef="let element; let i = index" class="w-5"
                         [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{i + 1}} </mat-cell>
             </ng-container>
 
             <!-- ClubName Column -->
             <ng-container matColumnDef="clubName">
-              <mat-header-cell *matHeaderCellDef class="w-25"> Клуб </mat-header-cell>
+              <mat-header-cell *matHeaderCellDef class="w-25"> Клуб</mat-header-cell>
               <mat-cell *matCellDef="let element" class="w-25"
                         [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.clubName}} </mat-cell>
             </ng-container>
 
             <!-- games Column -->
             <ng-container matColumnDef="games">
-              <mat-header-cell *matHeaderCellDef class="w-5"> И </mat-header-cell>
+              <mat-header-cell *matHeaderCellDef class="w-5"> И</mat-header-cell>
               <mat-cell *matCellDef="let element" class="w-5"
                         [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.games}} </mat-cell>
             </ng-container>
 
             <!-- wins Column -->
             <ng-container matColumnDef="wins">
-              <mat-header-cell *matHeaderCellDef class="w-5"> В </mat-header-cell>
+              <mat-header-cell *matHeaderCellDef class="w-5"> В</mat-header-cell>
               <mat-cell *matCellDef="let element" class="w-5"
                         [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.wins}} </mat-cell>
             </ng-container>
 
             <!-- draws Column -->
             <ng-container matColumnDef="draws">
-              <mat-header-cell *matHeaderCellDef class="w-5"> Н </mat-header-cell>
+              <mat-header-cell *matHeaderCellDef class="w-5"> Н</mat-header-cell>
               <mat-cell *matCellDef="let element" class="w-5"
                         [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.draws}} </mat-cell>
             </ng-container>
 
             <!-- loses Column -->
             <ng-container matColumnDef="loses">
-              <mat-header-cell *matHeaderCellDef class="w-5"> П </mat-header-cell>
+              <mat-header-cell *matHeaderCellDef class="w-5"> П</mat-header-cell>
               <mat-cell *matCellDef="let element" class="w-5"
                         [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.loses}} </mat-cell>
             </ng-container>
 
             <!-- gf Column -->
             <ng-container matColumnDef="gf">
-              <mat-header-cell *matHeaderCellDef class="w-5"> ЗМ </mat-header-cell>
+              <mat-header-cell *matHeaderCellDef class="w-5"> ЗМ</mat-header-cell>
               <mat-cell *matCellDef="let element" class="w-5"
                         [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.gf}} </mat-cell>
             </ng-container>
 
             <!-- ga Column -->
             <ng-container matColumnDef="ga">
-              <mat-header-cell *matHeaderCellDef class="w-5"> ПМ </mat-header-cell>
+              <mat-header-cell *matHeaderCellDef class="w-5"> ПМ</mat-header-cell>
               <mat-cell *matCellDef="let element" class="w-5"
                         [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.ga}} </mat-cell>
             </ng-container>
 
             <!-- gd Column -->
             <ng-container matColumnDef="gd">
-              <mat-header-cell *matHeaderCellDef class="w-5"> РМ </mat-header-cell>
+              <mat-header-cell *matHeaderCellDef class="w-5"> РМ</mat-header-cell>
               <mat-cell *matCellDef="let element" class="w-5"
                         [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.gd}} </mat-cell>
             </ng-container>
 
             <!-- points Column -->
             <ng-container matColumnDef="points">
-              <mat-header-cell *matHeaderCellDef class="w-5"> О </mat-header-cell>
+              <mat-header-cell *matHeaderCellDef class="w-5"> О</mat-header-cell>
               <mat-cell *matCellDef="let element" class="w-5"
                         [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.points}} </mat-cell>
             </ng-container>
@@ -88,14 +88,16 @@
       </span>
             </div>
           </div>
-          <h3 class="text-center">{{selectedWeek.num + 1}} тур</h3>
+          <h3 class="text-center">{{selectedWeek.num + 1}} тур(неделя {{leagueTourToWeek(selectedWeek.num) + 1}})</h3>
           <div class="row" *ngFor="let match of selectedWeek.schedule">
             <div class="col-5 text-right" [ngClass]="{'my-club': (isMyClub$(match).home | async)}">
               {{match.home.nameRu}}
             </div>
             <div class="col-1 text-center">
-              <span *ngIf="match.result" [appMatchTooltip]="match">{{match.result}}</span>
-              <span *ngIf="!match.result">-</span>
+              <span *ngIf="(getMatchStats(match) | async)?.result" [appMatchTooltip]="match1ToMatch(match)">
+                {{(getMatchStats(match) | async).result}}
+              </span>
+              <span *ngIf="!(getMatchStats(match) | async)?.result">-</span>
             </div>
             <div class="col-5 text-left" [ngClass]="{'my-club': (isMyClub$(match).away | async)}">
               {{match.away.nameRu}}
@@ -108,20 +110,25 @@
     <mat-tab label="Кубок">
       <div class="row align-items-center">
         <div class="col" *ngFor="let round of (cupSchedule$ | async); let i = index">
-          <!--<p>Раунд {{i + 1}}</p>-->
+          <p>Раунд {{i + 1}}(неделя {{cupRoundToWeek(i + 1)}})</p>
           <div class="row my-3 mx-3" *ngFor="let match of round"
                [ngStyle]="{'height.px': 100 * (i + 1), 'border': '2px dashed black'}">
             <div class="col-12 text-center">
-              <span [ngStyle]="{'line-height.px': 25 * (i + 1)}" [ngClass]="{'my-club': (isMyClub$(match).home | async)}">
+              <span [ngStyle]="{'line-height.px': 25 * (i + 1)}"
+                    [ngClass]="{'my-club': (isMyClub$(match).home | async)}">
                 {{match.home?.nameRu || '---'}}
               </span>
             </div>
             <div class="col-12 text-center align-middle">
-              <span [ngStyle]="{'line-height.px': 25 * (i + 1)}" *ngIf="match.result" [appMatchTooltip]="match">{{match.result}}</span>
-              <span [ngStyle]="{'line-height.px': 25 * (i + 1)}" *ngIf="!match.result">vs</span>
+              <span [ngStyle]="{'line-height.px': 25 * (i + 1)}" *ngIf="(getMatchStats(match) | async)?.result"
+                    [appMatchTooltip]="match1ToMatch(match)">{{(getMatchStats(match) | async).result}}</span>
+              <span [ngStyle]="{'line-height.px': 25 * (i + 1)}" *ngIf="!(getMatchStats(match) | async)?.result">
+                vs
+              </span>
             </div>
             <div class="col-12 text-center">
-              <span [ngStyle]="{'line-height.px': 25 * (i + 1)}" [ngClass]="{'my-club': (isMyClub$(match).away | async)}">
+              <span [ngStyle]="{'line-height.px': 25 * (i + 1)}"
+                    [ngClass]="{'my-club': (isMyClub$(match).away | async)}">
                 {{match.away?.nameRu || '---'}}
               </span>
             </div>
