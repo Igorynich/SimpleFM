@@ -71,4 +71,16 @@ export class ScheduleMainPageComponent implements OnInit {
     resClass['match-lost'] = !resClass['match-won'] && !resClass['match-draw'];
     return resClass;
   }
+
+  getAdjustResult(field: 'H' | 'A', matchStats: MatchStats): string {
+    if (!matchStats?.result) {
+      return '';
+    } else {
+      if (field === 'A') {
+        const [home, away] = resultSplitter(matchStats?.result);
+        return `${away} - ${home}`;
+      }
+      return matchStats?.result;
+    }
+  }
 }

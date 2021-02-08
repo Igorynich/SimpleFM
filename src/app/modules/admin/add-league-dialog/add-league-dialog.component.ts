@@ -26,7 +26,8 @@ export class AddLeagueDialogComponent implements OnInit {
       altNameRu: ['', Validators.required],
       country: ['', Validators.required],
       nameEn: ['', Validators.required],
-      nameRu: ['', Validators.required]
+      nameRu: ['', Validators.required],
+      tier: [1, Validators.required]
     });
     this.fs.getCountries(false).pipe(take(1)).subscribe(countries => {
       this.countryList = countries;
@@ -43,7 +44,8 @@ export class AddLeagueDialogComponent implements OnInit {
         countryNameEn: this.leagueForm.value.country.nameEn,
         countryNameRu: this.leagueForm.value.country.nameRu,
         nameEn: this.leagueForm.value.nameEn,
-        nameRu: this.leagueForm.value.nameRu
+        nameRu: this.leagueForm.value.nameRu,
+        tier: this.leagueForm.value.tier
       };
       this.fs.addLeague(leagueData).subscribe(value => {
         console.log(value);

@@ -3,12 +3,12 @@ import {Player} from '../interfaces/player';
 import {Store} from '@ngrx/store';
 import {
   AppState, getAllClubs,
-  getAllPlayers, selectCurrentClub,
+  getAllPlayers, getAlreadySoldAPlayerThisWeekNum, getGeneratedForWeekNum, selectCurrentClub,
   selectCurrentWeek,
   selectPlayersByClubsNameEn,
   selectTransferListedPlayers
 } from '../store/selectors/current-game.selectors';
-import {Observable, of} from 'rxjs';
+import {combineLatest, Observable, of} from 'rxjs';
 import {switchMap, take} from 'rxjs/operators';
 import {randomInteger} from '../utils/helpers';
 import {playersListedOnTransfer} from '../store/actions/current-game.actions';
@@ -31,22 +31,19 @@ export class TransferService {
     F: 3
   };
 
-  // to confirm generation only once a week
-  private generatedForWeekNum: number;
-
-  private alreadySoldAPlayerThisWeekNum: number;
-
   constructor(private store: Store<AppState>) {
   }
 
   generateTransferList(): void {
-    this.store.select(selectCurrentWeek).pipe(take(1)).subscribe((curWeek => {
+    combineLatest([
+      this.store.select(selectCurrentWeek),
+      this.store.select(getGeneratedForWeekNum)
+    ]).pipe(take(1)).subscribe(([curWeek, generatedForWeekNum]) => {
       // week 1 or weeks over interval
-      if (this.generatedForWeekNum !== curWeek && (curWeek === 1 || (curWeek - 1) % this.TRANSFER_LIST_UPDATE_INTERVAL === 0)) {
+      if (generatedForWeekNum !== curWeek && (curWeek === 1 || (curWeek - 1) % this.TRANSFER_LIST_UPDATE_INTERVAL === 0)) {
         this.generateListedPlayers();
-        this.generatedForWeekNum = curWeek;
       }
-    }));
+    });
   }
 
   private generateListedPlayers(): Player[] {
@@ -108,7 +105,6 @@ export class TransferService {
           // console.warn(`Club Players of ${club.nameEn} = ${clubPlayers}`, clubPlayers);
           const playersOfSamePosition: Player[] = clubPlayers.filter((pl, index) => pl.position === player.position);
           const startingPlayersOfSamePosition = playersOfSamePosition.filter((value, index) => index < 4);
-          // console.warn(`${player.position} starters for ${club.nameEn} = ${startingPlayersOfSamePosition}`, startingPlayersOfSamePosition);
           const averagePowerOfSamePos = startingPlayersOfSamePosition.reduce((prev, cur) => prev + cur.power, 0) /
             startingPlayersOfSamePosition.length;
           console.warn(`Average power of ${club.nameEn} ${player.position} = ${averagePowerOfSamePos}`);
@@ -159,15 +155,12 @@ export class TransferService {
 
   playerWasAlreadySoldThisWeek(): boolean {
     let res;
-    this.store.select(selectCurrentWeek).pipe(take(1)).subscribe(value => {
-      res = this.alreadySoldAPlayerThisWeekNum === value;
+    combineLatest([
+      this.store.select(selectCurrentWeek),
+      this.store.select(getAlreadySoldAPlayerThisWeekNum)
+    ]).pipe(take(1)).subscribe(([curWeek, alreadySoldWeekNum]) => {
+      res = alreadySoldWeekNum === curWeek;
     });
     return res;
-  }
-
-  currentPlayerSold() {
-    this.store.select(selectCurrentWeek).pipe(take(1)).subscribe(value => {
-      this.alreadySoldAPlayerThisWeekNum = value;
-    });
   }
 }

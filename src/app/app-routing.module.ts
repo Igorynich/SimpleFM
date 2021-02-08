@@ -21,6 +21,13 @@ const routes = [
     // canActivate: [UserGuard]
   },
   {
+    path: ROUTES.NEW_JOB,
+    loadChildren: () => import('./modules/new-job/new-job.module').then(mod => mod.NewJobModule),
+    canLoad: [UserGuard],
+    // data: { preload: true }
+    // canActivate: [UserGuard]
+  },
+  {
     path: '',
     loadChildren: () => import('./modules/home/home.module').then(mod => mod.HomeModule),
   },

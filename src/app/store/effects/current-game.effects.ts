@@ -176,10 +176,6 @@ export class CurrentGameEffects {
         return this.store.pipe(select(selectCurrentClub)).pipe(
           take(1),
           switchMap(curClub => {
-            // if selling current player - to block more sales this week
-            if (player.clubNameEn === curClub.nameEn) {
-              this.transferService.currentPlayerSold();
-            }
             return [
               addFinanceRecord({
                 clubNameEn: curClub.nameEn,

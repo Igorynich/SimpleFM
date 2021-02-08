@@ -33,6 +33,11 @@ export const getAllLeagues = createSelector(selectCurrentGameState, (state: Curr
 export const getAllCountries = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.countries || []);
 export const getAllPlayers = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.players || []);
 
+export const getLeagueTierHigher = createSelector(selectCurrentGameState, (state: CurrentGameState, {leaguesNameEn}) => {
+  const league = state.leagues.find(value => value.nameEn === leaguesNameEn);
+  return state.leagues.find(value => value.tier === league.tier + 1) || null;
+});
+
 export const selectClubByClubsNameEn = createSelector(selectCurrentGameState, (state: CurrentGameState, {clubsNameEn}) => {
   return state.clubs.find(value => value.nameEn === clubsNameEn);
 });
@@ -69,9 +74,9 @@ export const selectCupScheduleByLeaguesNameEn: MemoizedSelectorWithProps<AppStat
 });
 
 export const selectLeagueTableByLeaguesNameEn = createSelector(selectCurrentGameState, (state, {leaguesNameEn}) => {
-  console.log('selectLeagueTableByLeaguesNameEn', leaguesNameEn);
+  // console.log('selectLeagueTableByLeaguesNameEn', leaguesNameEn);
   const league = state.leagues.find(value => value.nameEn === leaguesNameEn);
-  console.log('selectLeagueTableByLeaguesNameEn1', league);
+  // console.log('selectLeagueTableByLeaguesNameEn1', league);
   return [...state.tables[league.id]].sort(sortTable);
 });
 
@@ -164,6 +169,11 @@ export const selectCupScheduleByCountryNameEn = createSelector(selectCurrentGame
 
 export const selectClubsByLeagueId = createSelector(selectCurrentGameState, (state, {leagueId}) => {
   const league = state.leagues.find(value => value.id === leagueId);
+  return state.clubs.filter(value => value.leagueNameEn === league.nameEn) || [];
+});
+
+export const selectClubsByLeagueName = createSelector(selectCurrentGameState, (state, {leaguesNameEn}) => {
+  const league = state.leagues.find(value => value.nameEn === leaguesNameEn);
   return state.clubs.filter(value => value.leagueNameEn === league.nameEn) || [];
 });
 
@@ -306,3 +316,12 @@ export const selectClubsRosterLastMatchStats = createSelector(selectCurrentGameS
 
 export const selectTransferListedPlayers = createSelector(selectCurrentGameState,
   (state: CurrentGameState) => state.transferListedPlayers);
+
+export const getWeeksOnCurrentJob = createSelector(selectCurrentGameState,
+  (state: CurrentGameState) => state.jobData.weeksOnCurrentJob);
+
+export const getGeneratedForWeekNum = createSelector(selectCurrentGameState,
+  (state: CurrentGameState) => state.transferData.generatedForWeekNum);
+
+export const getAlreadySoldAPlayerThisWeekNum = createSelector(selectCurrentGameState,
+  (state: CurrentGameState) => state.transferData.alreadySoldAPlayerThisWeekNum);

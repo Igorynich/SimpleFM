@@ -68,3 +68,8 @@ export const playerTransferToCurClub = createAction('Player being transferred', 
 
 export const playerTransferToAClub = createAction('Player being sold to a club({clubsNameEn})',
   props<{player: Player, clubsNameEn: string}>());
+
+export const newJobTaken = createAction('New job taken', props<{clubsNameEn: string}>());
+
+export const oneMoreWeekOnCurrentJob = createAction('Adds one more week to weeksOnCurrentJob counter');
+

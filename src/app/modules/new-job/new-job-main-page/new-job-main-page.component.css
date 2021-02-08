@@ -1,0 +1,23 @@
+.new-job-main-container {
+  /*background-color: black;*/
+  height: 95%;
+}
+
+.new-job-card--main {
+  margin: 25px;
+  background-color: black;
+  /*position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;*/
+  opacity: 95%;
+}
+
+.white {
+  color: white;
+}
+
+.new-job-buttons {
+  margin-top: auto;
+}

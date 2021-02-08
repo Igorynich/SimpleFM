@@ -40,3 +40,20 @@ export function closest(goal: number, array: string[] | number[]): string | numb
   });
   return res;
 }
+
+export function chooseItemByChance<T>(itemChanceObj: {item: T, chance: number}[]): T {
+  console.warn('------chooseItemByChance START', itemChanceObj);
+  const multipliedChanceItems = itemChanceObj.map(value => {
+    return {item: value.item, chance: value.chance * 1000};
+  });
+  const sumChance = multipliedChanceItems.reduce((prev, cur) => prev + cur.chance, 0);
+  const random = randomInteger(0, round(sumChance));
+  console.log('chooseItemByChance random', random);
+  const chances = multipliedChanceItems.map(value => value.chance);
+  const closestChance = closest(random, chances);
+  console.log('chooseItemByChance closestChance', closestChance);
+  const result = multipliedChanceItems.find(value => value.chance === closestChance);
+  console.log('chooseItemByChance result', result);
+  console.warn('------chooseItemByChance END', result.item);
+  return result.item;
+}

@@ -10,7 +10,7 @@ import {
   getClub,
   gotBaseData,
   gotClub,
-  gotPlayers, logOut, playersListedOnTransfer, playerTransferToAClub, playerTransferToCurClub,
+  gotPlayers, logOut, newJobTaken, oneMoreWeekOnCurrentJob, playersListedOnTransfer, playerTransferToAClub, playerTransferToCurClub,
   scheduleGenerated, setABunchOfResult, setResult,
   tablesGenerated,
   updatePlayers, updateTables
@@ -28,8 +28,6 @@ import {closest} from '../../utils/helpers';
 import {FinanceRecord} from '../../interfaces/finance-record';
 import produce, {Draft, enableMapSet} from 'immer';
 import {Transfer} from '../../interfaces/transfer';
-import {valueReferenceToExpression} from '@angular/compiler-cli/src/ngtsc/annotations/src/util';
-import {AppState} from '../selectors/current-game.selectors';
 
 export interface CurrentGameState {
   currentWeek: number;
@@ -44,6 +42,9 @@ export interface CurrentGameState {
   // };
   finances: Map<string, { [week: number]: FinanceRecord[] }>;      // {[week: number]: Map<string, FinanceRecord[]>};
   gainsAndLosses: { [matchId: number]: { gains: Player[], losses: Player[] } };
+  jobData: {
+    weeksOnCurrentJob: number
+  };
   loading: boolean;
   matches: { [id: number]: Match };
   schedule: { [leagueId: string]: WeekSchedule[][] };
@@ -53,6 +54,10 @@ export interface CurrentGameState {
   };
   stats: { [matchId: number]: MatchStats };
   tables: { [leagueId: string]: LeagueTable[] };
+  transferData: {
+    generatedForWeekNum: number;
+    alreadySoldAPlayerThisWeekNum: number;
+  };
   transferListedPlayers: Player[];
   transfers: Transfer[];
 }
@@ -69,6 +74,9 @@ export const currentGameInitState: CurrentGameState = {
   scheduleShells: null,
   finances: null,
   gainsAndLosses: null,
+  jobData: {
+    weeksOnCurrentJob: 0
+  },
   loading: true,
   matches: {},
   schedule: null,
@@ -78,6 +86,10 @@ export const currentGameInitState: CurrentGameState = {
   },
   stats: {},
   tables: null,
+  transferData: {
+    generatedForWeekNum: 0,
+    alreadySoldAPlayerThisWeekNum: 0,
+  },
   transferListedPlayers: [],
   transfers: []
 };
@@ -410,10 +422,10 @@ const _currentGameReducer = createReducer(currentGameInitState,
     return newState;
   }),
   on(playersListedOnTransfer, (state, {listedPlayers}) => {
-    return {
-      ...state,
-      transferListedPlayers: listedPlayers
-    };
+    return produce (state, draft => {
+      draft.transferData.generatedForWeekNum = draft.currentWeek;
+      draft.transferListedPlayers = listedPlayers;
+    });
   }),
   on(playerTransferToCurClub, (state, {player}) => {
     const newState = produce(state, draft => {
@@ -439,6 +451,10 @@ const _currentGameReducer = createReducer(currentGameInitState,
       const playersNewClub = draft.clubs.find(value => value.nameEn === clubsNameEn);
       if ((playersNewClub.budget - player.price) >= 0) {
         const playerInList = draft.players.find(value => value.nameEn === player.nameEn);
+        // updating Transfer Data alreadySoldAPlayerThisWeekNum constant
+        if (playerInList.clubNameEn === draft.currentClub.nameEn) {
+          draft.transferData.alreadySoldAPlayerThisWeekNum = draft.currentWeek;
+        }
         // changing players Club
         playerInList.clubNameEn = playersNewClub.nameEn;
         playerInList.clubNameRu = playersNewClub.nameRu;
@@ -447,6 +463,20 @@ const _currentGameReducer = createReducer(currentGameInitState,
         // sorting
         draft.currentPlayers = sortClubsRoster(draft.currentPlayers);
       }
+    });
+    return newState;
+  }),
+  on(oneMoreWeekOnCurrentJob, (state) => {
+    return produce(state, (draft: CurrentGameState) => {
+      draft.jobData.weeksOnCurrentJob++;
+    });
+  }),
+  on(newJobTaken, (state, {clubsNameEn}) => {
+    const newState = produce(state, (draft: CurrentGameState) => {
+      const newClub: Club = draft.clubs.find(value => value.nameEn === clubsNameEn);
+      draft.currentClub = newClub;
+      draft.currentPlayers = sortClubsRoster(draft.players.filter(pl => pl.clubNameEn === newClub.nameEn));
+      draft.jobData.weeksOnCurrentJob = 0;
     });
     return newState;
   }),

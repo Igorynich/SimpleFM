@@ -7,5 +7,6 @@ export const ROUTES = {
   RESULTS: 'results',
   FINANCE: 'finance',
   STADIUM: 'stadium',
-  TRANSFER_MARKET: 'transfer_market'
+  TRANSFER_MARKET: 'transfer_market',
+  NEW_JOB: 'new_job'
 };

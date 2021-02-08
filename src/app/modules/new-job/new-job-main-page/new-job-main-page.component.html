@@ -1,0 +1,25 @@
+<div class="row new-job-main-container">
+  <div class="col">
+    <mat-card class="new-job-card--main h-100">
+      <div class="row h-100">
+        <div class="col d-flex flex-column">
+          <div class="row justify-content-center my-auto">
+            <div class="col text-center white">
+              <h3>{{offeringClub.nameRu}} ({{offeringClubLeaguePosition$ | async}} место в {{offeringClub.leagueNameRu}})
+                - приглашает вас занять место главного тренера</h3>
+            </div>
+          </div>
+
+          <div class="row new-job-buttons">
+            <div class="col">
+              <button mat-raised-button color="primary" (click)="acceptOffer()">Принять предложение</button>
+            </div>
+            <div class="col">
+              <button mat-raised-button color="accent" (click)="declineOffer()">Отклонить предложение</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>

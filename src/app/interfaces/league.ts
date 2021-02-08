@@ -9,4 +9,5 @@ export interface League {
   id?: string;
   nameEn: string;
   nameRu: string;
+  tier: number;
 }

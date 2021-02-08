@@ -127,8 +127,8 @@ export class BaseResultGenService implements ResultGenerator {
       .subscribe(([homeRoster, awayRoster]) => {
         const homePower = calculateRosterPower(homeRoster, true);
         const awayPower = calculateRosterPower(awayRoster);
-        console.log(`${homeNameEn} powers`, homePower);
-        console.log(`${awayNameEn} powers`, awayPower);
+        // console.log(`${homeNameEn} powers`, homePower);
+        // console.log(`${awayNameEn} powers`, awayPower);
         result = this.calculateResult(homePower, awayPower, match);
         this.generateMatchStats(homeRoster, awayRoster, result, match);
         this.generateAttendancesAndIncome(homeRoster, awayRoster, result, match);
@@ -138,7 +138,7 @@ export class BaseResultGenService implements ResultGenerator {
   }
 
   private calculateResult(homePower: RosterPower, awayPower: RosterPower, match: Match): string {
-    console.warn(`Calculating Result for ${match.homeNameEn} - ${match.awayNameEn} ---- START`, match);
+    // console.warn(`Calculating Result for ${match.homeNameEn} - ${match.awayNameEn} ---- START`, match);
     const homeOffensePower = homePower.f + homePower.m;
     const awayOffensePower = awayPower.f + awayPower.m;
     const homeDefencePower = homePower.gk + homePower.d;
@@ -147,7 +147,7 @@ export class BaseResultGenService implements ResultGenerator {
     const awayShotsMulti = Math.pow(awayOffensePower / homeDefencePower, this.SHOTS_MULTI_POWER);
     const homeShots = this.BASE_NUMBER_OF_SHOTS * homeShotsMulti;
     const awayShots = this.BASE_NUMBER_OF_SHOTS * awayShotsMulti;
-    console.log(`SHOTS: ${homeShots} - ${awayShots}`);
+    // console.log(`SHOTS: ${homeShots} - ${awayShots}`);
     let homeGoals = 0;
     let awayGoals = 0;
     let i = 1;
@@ -187,20 +187,20 @@ export class BaseResultGenService implements ResultGenerator {
           break;
       }
     }
-    console.warn(`Result: ${homeGoals}${cupDeciderH} - ${awayGoals}${cupDeciderA}`);
-    console.warn(`Calculating Result for ${match.homeNameEn} - ${match.awayNameEn} ---- FINISH`);
+    // console.warn(`Result: ${homeGoals}${cupDeciderH} - ${awayGoals}${cupDeciderA}`);
+    // console.warn(`Calculating Result for ${match.homeNameEn} - ${match.awayNameEn} ---- FINISH`);
     return `${homeGoals}${cupDeciderH} - ${awayGoals}${cupDeciderA}`;
   }
 
   private generateMatchStats(homeRoster: Player[], awayRoster: Player[], result: string, match: Match) {
-    console.warn(`Generating Match Stats for ${match.homeNameEn} - ${match.awayNameEn} ---- START`, match);
+    // console.warn(`Generating Match Stats for ${match.homeNameEn} - ${match.awayNameEn} ---- START`, match);
     const [homeGoals, awayGoals] = resultSplitter(result);
     const cupDecider = result.includes('e') ? 'e' : '';
     const homeScorers: { goals: { [minute: number]: Player }, assists: { [minute: number]: Player | null } } =
       this.generateGoalScorers(homeGoals, homeRoster, homeGoals > awayGoals ? cupDecider : '');
     const awayScorers: { goals: { [minute: number]: Player }, assists: { [minute: number]: Player | null } } =
       this.generateGoalScorers(awayGoals, awayRoster, homeGoals < awayGoals ? cupDecider : '');
-    console.warn(`Goalscorers pre dispatch`);
+    // console.warn(`Goalscorers pre dispatch`);
     this.store.dispatch(addGoalScorersForMatch({
       matchId: match.id,
       goals: {
@@ -213,16 +213,16 @@ export class BaseResultGenService implements ResultGenerator {
       },
       result
     }));
-    console.warn(`Goalscorers post dispatch`);
+    // console.warn(`Goalscorers post dispatch`);
     const {gains, losses} = this.gainsService.generateGainsAndLosses(homeRoster, awayRoster, result, match, homeScorers, awayScorers);
-    console.warn(`GainsLosses pre dispatch`);
+    // console.warn(`GainsLosses pre dispatch`);
     this.store.dispatch(addGainsAndLossesForMatch({
       matchId: match.id,
       gains,
       losses
     }));
-    console.warn(`GainsLosses post dispatch`);
-    console.warn(`Generating Match Stats for ${match.homeNameEn} - ${match.awayNameEn} ---- FINISH`);
+    // console.warn(`GainsLosses post dispatch`);
+    // console.warn(`Generating Match Stats for ${match.homeNameEn} - ${match.awayNameEn} ---- FINISH`);
   }
 
   private generateGoalScorers(numOfGoals: number, roster: Player[], cupDecider: '' | 'e' = ''):
@@ -231,7 +231,7 @@ export class BaseResultGenService implements ResultGenerator {
     if (!!numOfGoals) {
       // goals
       const goalChanceWeightsArray = this.getGoalChanceWeights(roster);
-      console.log('goalChanceWeightsArray', goalChanceWeightsArray);
+      // console.log('goalChanceWeightsArray', goalChanceWeightsArray);
       const goalChanceSum = goalChanceWeightsArray.reduce((previousValue, currentValue) => previousValue + currentValue, 0);
       const goals: { [minute: number]: Player } = {};
       const assists: { [minute: number]: Player } = {};
@@ -255,7 +255,7 @@ export class BaseResultGenService implements ResultGenerator {
         // assists
         const assistChanceWeightsArray = this.getAssistChanceWeights(roster, lastScorerIndex);
         const assistChanceSum = assistChanceWeightsArray.reduce((previousValue, currentValue) => previousValue + currentValue, 0);
-        console.log('assistChanceWeightsArray', assistChanceWeightsArray);
+        // console.log('assistChanceWeightsArray', assistChanceWeightsArray);
         const randomIntAssist = randomInteger(1, assistChanceSum);
         let sumA = 0;
         const randomIntChanceOfAssistHappened = randomInteger(1, 100);
@@ -273,15 +273,15 @@ export class BaseResultGenService implements ResultGenerator {
           assists[randomMinute] = null;
         }
       }
-      console.warn('goals', goals);
-      console.warn('assists', assists);
+      // console.warn('goals', goals);
+      // console.warn('assists', assists);
       return {goals, assists};
     }
     return {goals: {}, assists: null};
   }
 
   private generateAttendancesAndIncome(homeRoster: Player[], awayRoster: Player[], result: string, match: Match) {
-    console.warn(`Generating Attendance for ${match.homeNameEn} - ${match.awayNameEn} ---- START`, match);
+    // console.warn(`Generating Attendance for ${match.homeNameEn} - ${match.awayNameEn} ---- START`, match);
     const homeSumPower = homeRoster.filter((value, index) => index < 11)
       .reduce((previousValue, currentValue: Player) => previousValue + currentValue.power, 0);
     const awaySumPower = awayRoster.filter((value, index) => index < 11)
@@ -293,16 +293,16 @@ export class BaseResultGenService implements ResultGenerator {
     }));
     this.store.select(selectClubByClubsNameEn, {clubsNameEn: match.homeNameEn}).pipe(take(1)).subscribe(club => {
       const income = this.financeService.generateMatchIncome(attendance, club);
-      console.warn(`Attendance pre dispatch`);
+      // console.warn(`Attendance pre dispatch`);
       this.store.dispatch(addFinanceRecord({
         clubNameEn: match.homeNameEn,
         description: 'match day income',
         income,
         expense: null
       }));
-      console.warn(`Attendance post dispatch`);
+      // console.warn(`Attendance post dispatch`);
     });
-    console.warn(`Generating Attendance for ${match.homeNameEn} - ${match.awayNameEn} ---- FINISH`, match);
+    // console.warn(`Generating Attendance for ${match.homeNameEn} - ${match.awayNameEn} ---- FINISH`, match);
   }
 
   private getGoalChanceWeights(roster: Player[]): number[] {
