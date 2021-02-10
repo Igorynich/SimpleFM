@@ -69,8 +69,32 @@ export function resultSplitter(result: string): number[] {
   return result ? result.split(' - ').map(value => parseInt(value, 10)) : [0, 0];
 }
 
-export function getLeagueWeek(curWeek: number): number {
+export function isCupWeek(curWeek: number, cupRounds: number): boolean {
+  return !!curWeek && curWeek % CUP_INTERVAL === 0 && curWeek <= CUP_INTERVAL * cupRounds;
+}
+
+export function getLeagueWeek(curWeek: number, cupRounds: number): number {
+  if (curWeek > CUP_INTERVAL * cupRounds) {
+    return curWeek - cupRounds;
+  }
   return curWeek - Math.floor(curWeek / CUP_INTERVAL);
+}
+
+export function leagueTourToWeek(tour: number, cupRounds: number): number {       // 22 , 5
+  let add = Math.floor(tour / CUP_INTERVAL);    // 4
+  if (add >= CUP_INTERVAL) {      // false
+    add += Math.floor(cupRounds / CUP_INTERVAL);
+  }
+  const sum = tour + add;         // 26
+  let res = tour + Math.floor(sum / CUP_INTERVAL);      // 27
+  if (res > CUP_INTERVAL * cupRounds) {     // true
+    // res -= cupRounds;       // 22
+    res = tour + cupRounds;
+  }
+  if (getLeagueWeek(res, cupRounds) !== tour) {
+    console.error('Yikes', tour, res);
+  }
+  return res;
 }
 
 export function calculateRosterPower(roster: Player[], isHomeTeam = false): RosterPower {

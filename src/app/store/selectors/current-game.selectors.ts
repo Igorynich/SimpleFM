@@ -3,7 +3,7 @@ import {createSelector, MemoizedSelectorWithProps, State} from '@ngrx/store';
 import {WeekSchedule} from '../../interfaces/league-schedule';
 import {CUP_INTERVAL} from '../../constants/general';
 import {Match} from '../../interfaces/match';
-import {getLeagueWeek, matchToMatch1, resultSplitter, sortClubsRoster, sortTable} from '../../utils/sort-roster';
+import {getLeagueWeek, isCupWeek, matchToMatch1, resultSplitter, sortClubsRoster, sortTable} from '../../utils/sort-roster';
 import {Player} from '../../interfaces/player';
 import {round} from 'lodash';
 import {PlayerStats} from '../../interfaces/player-stats';
@@ -28,6 +28,8 @@ export const selectCurrentPlayers = createSelector(selectCurrentGameState, (stat
 export const selectCurrentWeek = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.currentWeek + 1);
 export const selectCurrentSeason = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.currentSeason + 1);
 export const curGameLoading = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.loading);
+export const isLastWeekOfTheSeason = createSelector(selectCurrentGameState, (state: CurrentGameState) =>
+  state.currentWeek >= state.weeksInASeason);
 
 export const getAllClubs = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.clubs || []);
 export const getAllLeagues = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.leagues || []);
@@ -103,25 +105,34 @@ export const selectFinanceRecordsByClubsNameEn = createSelector(selectCurrentGam
   return state.finances?.get(clubsNameEn);
 });
 
+export const getCupRoundsNum = createSelector(selectCurrentGameState, state => {
+  const curClub = state.currentClub;
+  const league = state.leagues.find(value => value.nameEn === curClub.leagueNameEn);
+  const country = state.countries.find(value => value.nameEn === league.countryNameEn);
+  return state.schedule[country.id].length;
+});
+
 export const selectCurrentWeekSchedule = createSelector(selectCurrentGameState, state => {
   const curWeek = state.currentWeek;
   const curClub = state.currentClub;
+  const league = state.leagues.find(value => value.nameEn === curClub.leagueNameEn);
+  const country = state.countries.find(value => value.nameEn === league.countryNameEn);
+  const cupRounds = state.schedule[country.id].length;
   const schedule = [];      // {matches: null, tournament: null};
-  if (!!curWeek && curWeek % CUP_INTERVAL === 0) {
-    const league = state.leagues.find(value => value.nameEn === curClub.leagueNameEn);
-    const country = state.countries.find(value => value.nameEn === league.countryNameEn);
-    const allCupMatches: Match[] = state.schedule[country.id][(curWeek / CUP_INTERVAL) - 1].map(value => state.matches[value.matchId]);
-    const onlyRealMatches: Match[] = allCupMatches.filter(value => !!value.homeNameEn && !!value.awayNameEn);
-    schedule.push({
-      tournament: {nameRu: `Кубок ${country.nameRu}`, nameEn: `Cup of ${country.nameEn}`},
-      matches: onlyRealMatches,  // TODO check this shit
-      stats: onlyRealMatches.map(value => state.stats[value.id])
-    });
+  if (isCupWeek(curWeek, cupRounds)) {
+    if (state.schedule[country.id][(curWeek / CUP_INTERVAL) - 1]) {
+      const allCupMatches: Match[] = state.schedule[country.id][(curWeek / CUP_INTERVAL) - 1].map(value => state.matches[value.matchId]);
+      const onlyRealMatches: Match[] = allCupMatches.filter(value => !!value.homeNameEn && !!value.awayNameEn);
+      schedule.push({
+        tournament: {nameRu: `Кубок ${country.nameRu}`, nameEn: `Cup of ${country.nameEn}`},
+        matches: onlyRealMatches,  // TODO check this shit
+        stats: onlyRealMatches.map(value => state.stats[value.id])
+      });
+    }
   } else {
-    const league = state.leagues.find(value => value.nameEn === curClub.leagueNameEn);
-    const country = state.countries.find(value => value.nameEn === league.countryNameEn);
     const countryLeagues = state.leagues.filter(value => value.countryNameEn === country.nameEn);
-    const index = getLeagueWeek(curWeek);     // index учитывает кубковые недели
+    const index = getLeagueWeek(curWeek, cupRounds);     // index учитывает кубковые недели
+    console.log('leagueWeek', index);
     countryLeagues.forEach(value => {
       const leagueSchedule = state.schedule[value.id] ? state.schedule[value.id][index] : null;
       if (leagueSchedule) {
@@ -133,6 +144,7 @@ export const selectCurrentWeekSchedule = createSelector(selectCurrentGameState, 
       }
     });
   }
+  console.warn('SELECT WEEK SCHEDULE', curWeek, schedule);
   return schedule;
 });
 

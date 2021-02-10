@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {AppState, selectCurrentWeek} from '../../../store/selectors/current-game.selectors';
+import {AppState, isLastWeekOfTheSeason, selectCurrentWeek} from '../../../store/selectors/current-game.selectors';
 import {combineLatest, Observable, of, Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 import { ROUTES } from 'src/app/constants/routes';
@@ -11,6 +11,7 @@ import {CurrentWeekSchedule} from '../../../interfaces/current-week-schedule';
 import {TransferService} from '../../../services/transfer.service';
 import {JobService} from '../../../services/job.service';
 import {clearSubscription} from '../../../utils/clean-subscriptions';
+import {SeasonService} from '../../../services/season.service';
 
 @Component({
   selector: 'app-results-main-page',
@@ -33,19 +34,12 @@ export class ResultsMainPageComponent implements OnInit {
               public resultGen: BaseResultGenService,
               private transferService: TransferService,
               private jobService: JobService,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute,
+              private seasonService: SeasonService) { }
 
   ngOnInit(): void {
     this.currentWeek$ = this.store.select(selectCurrentWeek).pipe(take(1));
-    // this.curWeekResults$ = this.currentWeek$.pipe(concatMap(weekNum => this.resultGen.generateWeekResults()));
-    // this.curWeekResults$ = this.resultGen.generateWeekResults().pipe(tap(x => console.warn('RESULTS', x)));
-    /*this.curWeekResults$.subscribe(value => {
-      console.warn('RESULTS111', value);
-      this.curWeekResults = [...value];
-    });*/
-    /*this._resultGenSub = this.resultGen.generateWeekResults().subscribe(value => {
-      this.curWeekResults = value;
-    });*/
+
     this._resultGenSub = combineLatest([
       this.resultGen.generateWeekResults(),
       this.route.queryParams
@@ -56,27 +50,24 @@ export class ResultsMainPageComponent implements OnInit {
       }
       return of(null);
     })).subscribe();
-    /*this._resultGenLulSub = this.resultGen.lul$.subscribe(value => {
-      console.error('RESULTS222', value);
-      this.curWeekResults = [...value];
-    });*/
   }
 
 
   advanceThroughWeek(noJobs = false) {
-    if (1) {
-      // TODO check if season ends
 
-      // unsub to prevent res gen for next week (cause store will emit this.store.select(selectCurrentWeekSchedule) value on curWeek change)
-      clearSubscription(this._resultGenSub);
-      // just a clean up unsub
-      // this._resultGenLulSub.unsubscribe();
-      this.store.dispatch(updateTables());
+    clearSubscription(this._resultGenSub);
+    this.store.dispatch(updateTables());
+    this.store.dispatch(advanceAWeek());
 
-      this.store.dispatch(advanceAWeek());
+    let isLastWeekOfTheSeas;
+    this.store.select(isLastWeekOfTheSeason).pipe(take(1)).subscribe(value => isLastWeekOfTheSeas = value);
+    if (!isLastWeekOfTheSeas) {
+
+
+      // this.store.dispatch(advanceAWeek());
       // generate new transfer list if needed
       this.transferService.generateTransferList();
-      // random transfers
+      // TODO random transfers
 
       // get new job offer
       if (!noJobs && this.jobService.gotNewJobOffer()) {
@@ -89,6 +80,11 @@ export class ResultsMainPageComponent implements OnInit {
           console.error(reason);
         });
       }
+    } else {      // end of the season
+      this.jobService.oneMoreWeekOnCurrentJob();
+      this.router.navigate([this.ROUTES.SEASON_END]).catch(reason => {
+        console.error(reason);
+      });
     }
   }
 }

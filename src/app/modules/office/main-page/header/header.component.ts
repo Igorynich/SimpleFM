@@ -11,9 +11,10 @@ import {Store} from '@ngrx/store';
 import {Club} from '../../../../interfaces/club';
 import {ActivatedRoute, Router} from '@angular/router';
 import { ROUTES } from 'src/app/constants/routes';
-import {interval, Observable} from 'rxjs';
+import {interval, Observable, Subscription} from 'rxjs';
 import {filter, map, switchMap, take, tap} from 'rxjs/operators';
 import { logOut } from 'src/app/store/actions/current-game.actions';
+import {clearSubscription} from '../../../../utils/clean-subscriptions';
 
 @Component({
   selector: 'app-header',
@@ -31,6 +32,7 @@ export class HeaderComponent implements OnInit {
   ROUTES = ROUTES;
 
   GO_THROUGH = 10;      // test shit
+  isGoingThrough = false;
 
   constructor(public userService: UserService,
               private store: Store<AppState>,
@@ -73,12 +75,16 @@ export class HeaderComponent implements OnInit {
   }
 
   goThroughXNextWeeks(x: number) {
-    let i = 0;
-    interval(500).pipe(filter(value => i < x)).subscribe(value => {
-      i++;
-      this.router.navigate([this.ROUTES.RESULTS], {queryParams: {goThrough: x - i}}).catch(reason => {
+    // clearSubscription(this._intervalSub);
+    // let i = 0;
+    this.isGoingThrough = true;
+    interval(500).pipe(take(x)).subscribe(value => {
+      console.warn('Interval', value);
+      value++;
+      this.router.navigate([this.ROUTES.RESULTS], {queryParams: {goThrough: x - value}}).catch(reason => {
         console.error(reason);
       });
+
     });
   }
 }

@@ -20,10 +20,16 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-6">
-            <button mat-raised-button (click)="goThroughXNextWeeks(GO_THROUGH)">{{GO_THROUGH}} weeks</button>
+          <div class="col-3">
+            <button mat-raised-button (click)="goThroughXNextWeeks(42)" [disabled]="isGoingThrough">{{42}} weeks</button>
           </div>
-          <div class="col-6">
+          <div class="col-3">
+            <button mat-button (click)="goThroughXNextWeeks(GO_THROUGH)" [disabled]="isGoingThrough">{{GO_THROUGH}} weeks</button>
+          </div>
+          <div class="col-3">
+            <button mat-raised-button (click)="goThroughXNextWeeks(43)" [disabled]="isGoingThrough">{{43}} weeks</button>
+          </div>
+          <div class="col-3">
             <button mat-raised-button (click)="showState()">state</button>
           </div>
         </div>

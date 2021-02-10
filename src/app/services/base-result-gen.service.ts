@@ -63,39 +63,15 @@ export class BaseResultGenService implements ResultGenerator {
   }
 
   generateWeekResults(): Observable<CurrentWeekSchedule[]> {
-    const a$ = this.store.select(selectCurrentWeekSchedule).pipe(take(1), filter((value: CurrentWeekSchedule[]) => {
-        console.error('LUL searching', value);
-        const lastSchedule = value[value.length - 1];
-        const lastMatchInLastSchedule = lastSchedule.matches[lastSchedule.matches.length - 1];
-        console.error('LUL searching 1', lastSchedule, lastMatchInLastSchedule);
-        return true;
-        /*if (lastMatchInLastSchedule.result) {
-          // this.inProgress = false;
-          console.log('Lul next', [...value]);
-          // gotta use lul$ cause of strange behaviour of a$ observable(in subscription - new value, then, for some reason old)
-          // TODO check if lul is still needed
-          this.lul$.next([...value]);
-        }
-        return (!this.inProgress && !lastMatchInLastSchedule.result) || (this.inProgress && !!lastMatchInLastSchedule.result);*/
-      }),
+    const a$ = this.store.select(selectCurrentWeekSchedule).pipe(take(1),
       map((value: CurrentWeekSchedule[]) => {
         console.warn(`Current Week Schedule`, value, value.length);
-
         if (!this.inProgress) {
           const allMatches = [];
           value.forEach((value1: CurrentWeekSchedule) => {
             allMatches.push(...value1.matches);
-            /* value1.matches.forEach((value2: Match) => {
-               if (!value2.result) {
-                 this.generateResult(value2);
-               }
-             });*/
           });
-
           this.generateResultsForWholeWeek(allMatches);
-
-          // generate attendance and income
-          // update tables, stat boards, transfer market, progress players and update schedule (if cup?)
         }
         this.inProgress = false;
         return value;

@@ -7,11 +7,17 @@ import {MatDialog} from '@angular/material/dialog';
 import {InfoDialogComponent} from '../../../shared/info-dialog/info-dialog.component';
 import {Store} from '@ngrx/store';
 import {CurrentGameState} from '../../../store/reducers/current-game.reducer';
-import {getBaseData, getClub} from '../../../store/actions/current-game.actions';
-import {AppState, curGameLoading, selectCurrentClub, selectCurrentWeek} from '../../../store/selectors/current-game.selectors';
-import {Observable, of, Subscription} from 'rxjs';
+import {getBaseData, getClub, gotPlayers} from '../../../store/actions/current-game.actions';
+import {
+  AppState,
+  curGameLoading,
+  selectCurrentClub, selectCurrentPlayers,
+  selectCurrentSeason,
+  selectCurrentWeek
+} from '../../../store/selectors/current-game.selectors';
+import {combineLatest, Observable, of, Subscription} from 'rxjs';
 import {Club} from '../../../interfaces/club';
-import {switchMap} from 'rxjs/operators';
+import {switchMap, take} from 'rxjs/operators';
 import {CleanSubscriptions} from '../../../utils/clean-subscriptions';
 
 @CleanSubscriptions()
@@ -70,10 +76,16 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     console.log('OFFICE COMPONENTN');
-    this._initStoreSub = this.store.select(selectCurrentWeek).subscribe(currentWeek => {
+    this._initStoreSub = combineLatest([
+      this.store.select(selectCurrentWeek),
+      this.store.select(selectCurrentSeason),
+      this.store.select(selectCurrentPlayers)
+    ]).pipe(take(1)).subscribe(([currentWeek, curSeason, curPlayers]) => {
       console.log('Cur week', currentWeek);
-      if (currentWeek === 1) {
+      if (currentWeek === 1 && curSeason === 1) {
         this.store.dispatch(getBaseData());
+      } else if (currentWeek === 1 && curSeason > 1) {
+        this.store.dispatch(gotPlayers({players: curPlayers}));
       }
     });
 

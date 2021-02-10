@@ -22,7 +22,7 @@ import {LeagueTable} from '../../interfaces/league-table';
 import {BASE_POWER_TICKET_PRICES_COEF, CUP_INTERVAL} from '../../constants/general';
 import {Match} from '../../interfaces/match';
 import {MatchStats} from '../../interfaces/match-stats';
-import {getLeagueWeek, resultSplitter, sortClubsRoster, sortStarters} from '../../utils/sort-roster';
+import {getLeagueWeek, isCupWeek, resultSplitter, sortClubsRoster, sortStarters} from '../../utils/sort-roster';
 import {round} from 'lodash';
 import {closest} from '../../utils/helpers';
 import {FinanceRecord} from '../../interfaces/finance-record';
@@ -32,6 +32,7 @@ import {Transfer} from '../../interfaces/transfer';
 export interface CurrentGameState {
   currentWeek: number;
   currentSeason: number;
+  weeksInASeason: number;
   currentClub: Club;
   currentPlayers: Player[];
   // data: {     // loaded from b/e
@@ -66,6 +67,7 @@ export interface CurrentGameState {
 export const currentGameInitState: CurrentGameState = {
   currentWeek: 0,
   currentSeason: 0,
+  weeksInASeason: 43,
   currentClub: null,
   currentPlayers: null,
   // data: null,
@@ -298,223 +300,109 @@ const _currentGameReducer = createReducer(currentGameInitState,
     // const curWeek = state.currentWeek;
     const newState = produce(state, draft => {
       const curWeek = draft.currentWeek;
-      if (!!curWeek && curWeek % CUP_INTERVAL === 0) {     // cup       CUP_INTERVAL = 5
+      const curClub = draft.currentClub;
+      const curLeague = draft.leagues.find(value => value.nameEn === curClub.leagueNameEn);
+      const country = draft.countries.find(value => value.nameEn === curLeague.countryNameEn);
+      const cupRounds = draft.schedule[country.id].length;
+      console.warn(`STARTING UPDATING TABLES WEEK ${curWeek}`);
+      if (isCupWeek(curWeek, cupRounds)) {     // cup       CUP_INTERVAL = 5
         console.warn(`UPDATING TABLES FOR CUP IN WEEK ${curWeek}`);
-        const curClub = draft.currentClub;
-        const league = draft.leagues.find(value => value.nameEn === curClub.leagueNameEn);
-        const country = draft.countries.find(value => value.nameEn === league.countryNameEn);
         const cupRound = (curWeek / CUP_INTERVAL) - 1;
         const cupSchedule: WeekSchedule[] = draft.schedule[country.id][cupRound];
         const cupScheduleNext: WeekSchedule[] = draft.schedule[country.id][cupRound + 1];
-        const cupMatches: Match[] = cupSchedule.map(value => draft.matches[value.matchId]);
-        const cupMatchesNext: Match[] = cupScheduleNext.map(value => draft.matches[value.matchId]);
-        const newSchedule: WeekSchedule[][] = draft.schedule[country.id];
-        newSchedule[cupRound + 1] = [];       // обнуляем след раунд
-        const newMatches: { [id: number]: Match } = {};
-        let nextRoundMatch: Match = {
-          awayNameEn: undefined,
-          homeNameEn: undefined,
-          id: undefined,
-          tournament: {nameRu: `Кубок ${country.nameRu}`, nameEn: `Cup of ${country.nameEn}`},
-          isCupMatch: true
-        };
-        cupMatches.forEach((match: Match, index) => {
-          const matchStats: MatchStats = draft.stats[match.id];
-          const newId = (+Object.keys(draft.matches)[Object.keys(draft.matches).length - 1]) + 1;
-          const nextRoundMatchIndex = Math.floor(index / 2);
-          let isHomeAWinner = !!match.homeNameEn;
-          if (matchStats?.result) {
-            const [homeScore, awayScore] = matchStats.result.split(' - ');
-            const [homeGoals, awayGoals] = resultSplitter(matchStats.result);
-            isHomeAWinner = homeScore.includes('e') || homeScore.includes('p') || homeGoals > awayGoals;
-          }
-          const nextId = cupScheduleNext[nextRoundMatchIndex]?.matchId ? cupScheduleNext[nextRoundMatchIndex].matchId : newId;
-          if (index % 2 === 0) {      // first match (decides homeNameEn for next)
-            nextRoundMatch.homeNameEn = isHomeAWinner ? match.homeNameEn : match.awayNameEn;
-          } else if (index % 2 === 1) {      // second match (decides awayNameEn for next)
-            nextRoundMatch.awayNameEn = isHomeAWinner ? match.homeNameEn : match.awayNameEn;
-            nextRoundMatch.id = nextId;
-            newSchedule[cupRound + 1] = [...newSchedule[cupRound + 1], {matchId: nextRoundMatch.id}];
-            newMatches[nextRoundMatch.id] = nextRoundMatch;
-            nextRoundMatch = {      // reset
-              awayNameEn: undefined,
-              homeNameEn: undefined,
-              id: undefined,
-              tournament: {nameRu: `Кубок ${country.nameRu}`, nameEn: `Cup of ${country.nameEn}`},
-              isCupMatch: true
-            };
-          }
-        });
-        draft.matches = {...draft.matches, ...newMatches};
+        if (!!cupScheduleNext) {    // if not final round of the cup
+          const cupMatches: Match[] = cupSchedule.map(value => draft.matches[value.matchId]);
+          const cupMatchesNext: Match[] = cupScheduleNext.map(value => draft.matches[value.matchId]);
+          const newSchedule: WeekSchedule[][] = draft.schedule[country.id];
+          newSchedule[cupRound + 1] = [];       // обнуляем след раунд
+          const newMatches: { [id: number]: Match } = {};
+          let nextRoundMatch: Match = {
+            awayNameEn: undefined,
+            homeNameEn: undefined,
+            id: undefined,
+            tournament: {nameRu: `Кубок ${country.nameRu}`, nameEn: `Cup of ${country.nameEn}`},
+            isCupMatch: true
+          };
+          cupMatches.forEach((match: Match, index) => {
+            const matchStats: MatchStats = draft.stats[match.id];
+            const newId = (+Object.keys(draft.matches)[Object.keys(draft.matches).length - 1]) + 1;
+            const nextRoundMatchIndex = Math.floor(index / 2);
+            let isHomeAWinner = !!match.homeNameEn;
+            if (matchStats?.result) {
+              const [homeScore, awayScore] = matchStats.result.split(' - ');
+              const [homeGoals, awayGoals] = resultSplitter(matchStats.result);
+              isHomeAWinner = homeScore.includes('e') || homeScore.includes('p') || homeGoals > awayGoals;
+            }
+            const nextId = cupScheduleNext[nextRoundMatchIndex]?.matchId ? cupScheduleNext[nextRoundMatchIndex].matchId : newId;
+            if (index % 2 === 0) {      // first match (decides homeNameEn for next)
+              nextRoundMatch.homeNameEn = isHomeAWinner ? match.homeNameEn : match.awayNameEn;
+            } else if (index % 2 === 1) {      // second match (decides awayNameEn for next)
+              nextRoundMatch.awayNameEn = isHomeAWinner ? match.homeNameEn : match.awayNameEn;
+              nextRoundMatch.id = nextId;
+              newSchedule[cupRound + 1] = [...newSchedule[cupRound + 1], {matchId: nextRoundMatch.id}];
+              newMatches[nextRoundMatch.id] = nextRoundMatch;
+              nextRoundMatch = {      // reset
+                awayNameEn: undefined,
+                homeNameEn: undefined,
+                id: undefined,
+                tournament: {nameRu: `Кубок ${country.nameRu}`, nameEn: `Cup of ${country.nameEn}`},
+                isCupMatch: true
+              };
+            }
+          });
+          draft.matches = {...draft.matches, ...newMatches};
+        }
+
       } else {                                // league
         const leagues: League[] = draft.leagues;
         leagues.forEach((league: League) => {
           console.warn(`UPDATING TABLES FOR ${league.nameRu} LEAGUE IN WEEK ${curWeek}`);
           const tableRecords: LeagueTable[] = draft.tables[league.id] ? draft.tables[league.id] : [];
-          const curWeekSchedule: WeekSchedule[] = draft.schedule[league.id] ? draft.schedule[league.id][getLeagueWeek(curWeek)] : [];
-          const curWeekMatches: Match[] = curWeekSchedule.map((value: WeekSchedule) => draft.matches[value.matchId]);
-          console.log(`curWeekSchedule IN WEEK ${curWeek}`, curWeekSchedule, curWeekMatches);
-          curWeekMatches.forEach((match: Match) => {
-            console.log(`MATCH ${match.homeNameEn} - ${match.awayNameEn}`);
-            const matchStats = draft.stats[match.id];
-            console.log(`RESULT ${matchStats.result}`);
-            const home: Club = draft.clubs.find(value => value.nameEn === match.homeNameEn);
-            const away: Club = draft.clubs.find(value => value.nameEn === match.awayNameEn);
-            if (matchStats?.result && !match.isCupMatch) {      // если есть result и матч не кубковый
-              const homeRecord: LeagueTable = tableRecords.find(record =>
-                home.nameEn === record.clubName || home.nameRu === record.clubName);
-              console.log(`homeRecord ${homeRecord.clubName} ${homeRecord.points} points`);
-              const awayRecord: LeagueTable = tableRecords.find(record =>
-                away.nameEn === record.clubName || away.nameRu === record.clubName);
-              console.log(`awayRecord ${awayRecord.clubName} ${awayRecord.points} points`);
-              if (homeRecord && awayRecord) {
-                const [homeGoals, awayGoals] = resultSplitter(matchStats.result);
-                if (homeGoals > awayGoals) {
-                  homeRecord.wins++;
-                  awayRecord.loses++;
-                  homeRecord.points += 3;
-                } else if (homeGoals < awayGoals) {
-                  homeRecord.loses++;
-                  awayRecord.wins++;
-                  awayRecord.points += 3;
-                } else if (homeGoals === awayGoals) {
-                  homeRecord.draws++;
-                  awayRecord.draws++;
-                  homeRecord.points += 1;
-                  awayRecord.points += 1;
+          const curWeekSchedule: WeekSchedule[] = draft.schedule[league.id] ?
+            draft.schedule[league.id][getLeagueWeek(curWeek, cupRounds)] : [];
+          if (curWeekSchedule?.length) {      // check for league not finished
+            const curWeekMatches: Match[] = curWeekSchedule.map((value: WeekSchedule) => draft.matches[value.matchId]);
+            curWeekMatches.forEach((match: Match) => {
+              const matchStats = draft.stats[match.id];
+              const home: Club = draft.clubs.find(value => value.nameEn === match.homeNameEn);
+              const away: Club = draft.clubs.find(value => value.nameEn === match.awayNameEn);
+              if (matchStats?.result && !match.isCupMatch) {      // если есть result и матч не кубковый
+                const homeRecord: LeagueTable = tableRecords.find(record =>
+                  home.nameEn === record.clubName || home.nameRu === record.clubName);
+                const awayRecord: LeagueTable = tableRecords.find(record =>
+                  away.nameEn === record.clubName || away.nameRu === record.clubName);
+                if (homeRecord && awayRecord) {
+                  const [homeGoals, awayGoals] = resultSplitter(matchStats.result);
+                  if (homeGoals > awayGoals) {
+                    homeRecord.wins++;
+                    awayRecord.loses++;
+                    homeRecord.points += 3;
+                  } else if (homeGoals < awayGoals) {
+                    homeRecord.loses++;
+                    awayRecord.wins++;
+                    awayRecord.points += 3;
+                  } else if (homeGoals === awayGoals) {
+                    homeRecord.draws++;
+                    awayRecord.draws++;
+                    homeRecord.points += 1;
+                    awayRecord.points += 1;
+                  }
+                  homeRecord.gf += homeGoals;
+                  homeRecord.ga += awayGoals;
+                  awayRecord.gf += awayGoals;
+                  awayRecord.ga += homeGoals;
+                  homeRecord.games++;
+                  awayRecord.games++;
+                  homeRecord.gd = homeRecord.gf - homeRecord.ga;
+                  awayRecord.gd = awayRecord.gf - awayRecord.ga;
                 }
-                homeRecord.gf += homeGoals;
-                homeRecord.ga += awayGoals;
-                awayRecord.gf += awayGoals;
-                awayRecord.ga += homeGoals;
-                homeRecord.games++;
-                awayRecord.games++;
-                homeRecord.gd = homeRecord.gf - homeRecord.ga;
-                awayRecord.gd = awayRecord.gf - awayRecord.ga;
-                console.log(`homeRecord updated ${homeRecord.clubName} ${homeRecord.points} points`);
-                console.log(`awayRecord updated ${awayRecord.clubName} ${awayRecord.points} points`);
               }
-            }
-          });
+            });
+          }
         });
       }
     });
     return newState;
-    /*if (!!curWeek && curWeek % CUP_INTERVAL === 0) {     // cup
-      console.warn('UpdateTables for CUP', curWeek);
-      const curClub = state.currentClub;
-      const league = state.leagues.find(value => value.nameEn === curClub.leagueNameEn);
-      const country = state.countries.find(value => value.nameEn === league.countryNameEn);
-      const cupRound = (curWeek / CUP_INTERVAL) - 1;
-      const cupSchedule: WeekSchedule[] = state.schedule[country.id][cupRound];
-      const cupScheduleNext: WeekSchedule[] = state.schedule[country.id][cupRound + 1];
-      const cupMatches: Match[] = cupSchedule.map(value => state.matches[value.matchId]);
-      const cupMatchesNext: Match[] = cupScheduleNext.map(value => state.matches[value.matchId]);
-      const newSchedule: WeekSchedule[][] = [...state.schedule[country.id]];
-      newSchedule[cupRound + 1] = [];       // обнуляем след раунд
-      const newMatches: { [id: number]: Match } = {};
-      let nextRoundMatch: Match = {
-        awayNameEn: undefined,
-        homeNameEn: undefined,
-        id: undefined,
-        tournament: {nameRu: `Кубок ${country.nameRu}`, nameEn: `Cup of ${country.nameEn}`},
-        isCupMatch: true
-      };
-      cupMatches.forEach((match: Match, index) => {
-        console.log(`Match ${index}`, match);
-        const matchStats = state.stats[match.id];
-        if (1) {
-          const newId = (+Object.keys(newState.matches)[Object.keys(newState.matches).length - 1]) + 1;
-          const nextRoundMatchIndex = Math.floor(index / 2);
-          let isHomeAWinner = !!match.homeNameEn;
-          if (matchStats?.result) {
-            const [homeScore, awayScore] = matchStats.result.split(' - ');
-            const [homeGoals, awayGoals] = resultSplitter(matchStats.result);
-            isHomeAWinner = homeScore.includes('e') || homeScore.includes('p') || homeGoals > awayGoals;
-          }
-          const nextId = cupScheduleNext[nextRoundMatchIndex]?.matchId ? cupScheduleNext[nextRoundMatchIndex].matchId : newId;
-          if (index % 2 === 0) {      // first match (decides homeNameEn for next)
-            nextRoundMatch.homeNameEn = isHomeAWinner ? match.homeNameEn : match.awayNameEn;
-          }
-          if (index % 2 === 1) {      // second match (decides awayNameEn for next)
-            nextRoundMatch.awayNameEn = isHomeAWinner ? match.homeNameEn : match.awayNameEn;
-            nextRoundMatch.id = nextId;
-            newSchedule[cupRound + 1] = [...newSchedule[cupRound + 1], {matchId: nextRoundMatch.id}];
-            newMatches[nextRoundMatch.id] = nextRoundMatch;
-            console.log('newSchedule', newSchedule);
-            console.log('newMatches', newMatches);
-            nextRoundMatch = {      // reset
-              awayNameEn: undefined,
-              homeNameEn: undefined,
-              id: undefined,
-              tournament: {nameRu: `Кубок ${country.nameRu}`, nameEn: `Cup of ${country.nameEn}`},
-              isCupMatch: true
-            };
-          }
-        }
-        newState = {...state, matches: {...state.matches, ...newMatches}, schedule: {...state.schedule, [country.id]: newSchedule}};
-        console.log('newState', newState);
-      });
-
-    } else {                                // league
-      const leagues: League[] = state.leagues;
-      const newTables = {...state.tables};
-      console.warn('UpdateTables for LEAGUE', curWeek);
-      leagues.forEach((league: League) => {
-        console.warn('League', league);
-        const tableRecords: LeagueTable[] = state.tables[league.id] ? [...state.tables[league.id]] : [];
-        const schedule: WeekSchedule[] = state.schedule[league.id] ? state.schedule[league.id][curWeek] : [];
-        const matches: Match[] = schedule.map((value: WeekSchedule) => state.matches[value.matchId]);
-        console.warn('MatchES', matches);
-        let newTableRecords = [];
-        matches.forEach((match: Match) => {
-          const matchStats = state.stats[match.id];
-          const home: Club = state.clubs.find(value => value.nameEn === match.homeNameEn);
-          const away: Club = state.clubs.find(value => value.nameEn === match.awayNameEn);
-          console.warn('Match', match);
-          if (matchStats?.result && !match.isCupMatch) {      // если есть result и матч не кубковый
-            const homeRecord: LeagueTable = tableRecords.find(record =>
-              home.nameEn === record.clubName || home.nameRu === record.clubName);
-            const awayRecord: LeagueTable = tableRecords.find(record =>
-              away.nameEn === record.clubName || away.nameRu === record.clubName);
-            console.log('homeRecord - awayRecord', homeRecord, awayRecord);
-            if (homeRecord && awayRecord) {
-              const homeRecordCopy = {...homeRecord};
-              const awayRecordCopy = {...awayRecord};
-              const [homeGoals, awayGoals] = resultSplitter(matchStats.result);
-              if (homeGoals > awayGoals) {
-                homeRecordCopy.wins++;
-                awayRecordCopy.loses++;
-                homeRecordCopy.points += 3;
-              } else if (homeGoals < awayGoals) {
-                homeRecordCopy.loses++;
-                awayRecordCopy.wins++;
-                awayRecordCopy.points += 3;
-              } else if (homeGoals === awayGoals) {
-                homeRecordCopy.draws++;
-                awayRecordCopy.draws++;
-                homeRecordCopy.points += 1;
-                awayRecordCopy.points += 1;
-              }
-              homeRecordCopy.gf += homeGoals;
-              homeRecordCopy.ga += awayGoals;
-              awayRecordCopy.gf += awayGoals;
-              awayRecordCopy.ga += homeGoals;
-              homeRecordCopy.games++;
-              awayRecordCopy.games++;
-              homeRecordCopy.gd = homeRecordCopy.gf - homeRecordCopy.ga;
-              awayRecordCopy.gd = awayRecordCopy.gf - awayRecordCopy.ga;
-              newTableRecords = [...newTableRecords, homeRecordCopy, awayRecordCopy];
-            }
-            newTables[league.id] = newTableRecords;
-            newState = {...state, tables: newTables};
-          }
-        });
-      });
-    }
-
-    console.log('UpdatingTables', curWeek, newState);
-    return newState;*/
   }),
   on(playersListedOnTransfer, (state, {listedPlayers}) => {
     return produce (state, draft => {

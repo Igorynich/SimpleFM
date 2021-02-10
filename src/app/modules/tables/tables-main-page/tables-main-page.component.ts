@@ -1,20 +1,20 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {
-  AppState,
+  AppState, getCupRoundsNum,
   selectCupScheduleByLeaguesNameEn,
   selectCurrentClub, selectCurrentWeek,
   selectLeagueScheduleByLeaguesNameEn, selectLeagueTableByLeaguesNameEn, selectMatchStatsByMatchId
 } from '../../../store/selectors/current-game.selectors';
-import {map, switchMap, tap} from 'rxjs/operators';
+import {map, switchMap, take, tap} from 'rxjs/operators';
 import {WeekSchedule} from '../../../interfaces/league-schedule';
-import {Observable, Subscription} from 'rxjs';
+import {combineLatest, Observable, Subscription} from 'rxjs';
 import {LeagueTable} from '../../../interfaces/league-table';
 import {CleanSubscriptions} from '../../../utils/clean-subscriptions';
 import {Match} from '../../../interfaces/match';
 import {Club} from '../../../interfaces/club';
 import {CUP_INTERVAL} from '../../../constants/general';
-import {getLeagueWeek} from '../../../utils/sort-roster';
+import {getLeagueWeek, leagueTourToWeek} from '../../../utils/sort-roster';
 import {Match1} from '../../../interfaces/match1';
 import {MatchStats} from '../../../interfaces/match-stats';
 
@@ -45,8 +45,12 @@ export class TablesMainPageComponent implements OnInit, OnDestroy {
   constructor(private store: Store<AppState>) { }
 
   ngOnInit(): void {
-    this._curWeekSub = this.store.select(selectCurrentWeek).subscribe(value => {
-      this.selectedWeek.num = getLeagueWeek(value - 1);
+    this._curWeekSub =
+      combineLatest([
+        this.store.select(selectCurrentWeek),
+        this.store.select(getCupRoundsNum)
+      ]).pipe(take(1)).subscribe(([curWeek, cupRounds]) => {
+      this.selectedWeek.num = getLeagueWeek(curWeek - 1, cupRounds);
     });
     this.curClub$ = this.store.select(selectCurrentClub);
     this.schedule$ = this.curClub$.pipe(switchMap(curClub =>
@@ -100,8 +104,9 @@ export class TablesMainPageComponent implements OnInit, OnDestroy {
   }
 
   leagueTourToWeek(tour: number): number {
-    const add = Math.floor(tour / CUP_INTERVAL);
-    return tour + add;
+    let cupRounds;
+    this.store.select(getCupRoundsNum).pipe(take(1)).subscribe(value => cupRounds = value);
+    return leagueTourToWeek(tour, cupRounds);
   }
 
   cupRoundToWeek(round: number): number {

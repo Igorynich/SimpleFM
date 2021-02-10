@@ -1,9 +1,15 @@
 import {Component, Injector, OnDestroy, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
+import {Event, NavigationStart, Router} from '@angular/router';
 import {IpcRendererService} from './services/ipc-renderer.service';
 import {environment} from '../environments/environment';
 import {ROUTES} from './constants/routes';
+import {LocationStrategy} from '@angular/common';
+import {filter} from 'rxjs/operators';
+import {UserService} from './services/user.service';
+import {Subscription} from 'rxjs';
+import {CleanSubscriptions} from './utils/clean-subscriptions';
 
+@CleanSubscriptions()
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -14,12 +20,26 @@ export class AppComponent implements OnInit, OnDestroy {
   env = environment;
   ipc = null;
 
-  constructor(private router: Router, private injector: Injector) {
+  private _trackNavEventsSub: Subscription
+
+  constructor(private router: Router, private injector: Injector, private userService: UserService) {
+    /*history.pushState(null, null, window.location.href);
+    this.location.onPopState(() => {
+      history.pushState(null, null, window.location.href);
+    });*/
   }
 
   ngOnInit(): void {
-    /*this.router.events.subscribe(value => {
+    this._trackNavEventsSub = this.userService.trackNavigationStartEvents().subscribe();
+    /*this.router.events.pipe(filter(
+      (event: Event) => {
+        return(event instanceof NavigationStart);
+      }
+    )).subscribe((value: NavigationStart) => {
       console.log(value);
+      if (value.navigationTrigger !== 'imperative') {
+
+      }
     });*/
 
     if (this.env.electron) {

@@ -4,6 +4,9 @@ import {environment} from '../../environments/environment';
 import {Store} from '@ngrx/store';
 import {AppState} from '../store/selectors/current-game.selectors';
 import { logOut } from '../store/actions/current-game.actions';
+import {Event, NavigationStart, Router} from '@angular/router';
+import {Observable} from 'rxjs';
+import {filter, map} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +20,9 @@ export class UserService {
   env = environment;
   private ipcRenderer = null;
 
-  constructor(private injector: Injector, private store: Store<AppState>) {
+  lastNavigationStart: NavigationStart;
+
+  constructor(private injector: Injector, private store: Store<AppState>, private router: Router) {
     if (this.env.electron) {
       this.ipcRenderer = this.injector.get(IpcRendererService) as IpcRendererService;
     }
@@ -46,5 +51,21 @@ export class UserService {
   logOut() {
     this.userName = '';
     this.store.dispatch(logOut());
+  }
+
+  trackNavigationStartEvents(): Observable<NavigationStart> {
+    return this.router.events.pipe(filter(
+      (event: Event) => {
+        return (event instanceof NavigationStart);
+      }
+    ), map((value: NavigationStart) => {
+      console.log(value);
+      this.lastNavigationStart = value;
+      return value;
+    }));
+  }
+
+  isLastNavigationImperative(): boolean {
+    return this.lastNavigationStart?.navigationTrigger === 'imperative';
   }
 }

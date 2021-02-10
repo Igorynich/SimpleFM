@@ -8,5 +8,6 @@ export const ROUTES = {
   FINANCE: 'finance',
   STADIUM: 'stadium',
   TRANSFER_MARKET: 'transfer_market',
-  NEW_JOB: 'new_job'
+  NEW_JOB: 'new_job',
+  SEASON_END: 'season_end'
 };

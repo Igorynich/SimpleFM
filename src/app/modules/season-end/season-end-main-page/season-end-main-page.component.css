@@ -1,0 +1,19 @@
+.season-end-main-container {
+  /*background-color: black;*/
+  height: 95%;
+}
+
+.season-end-card--main {
+  margin: 25px;
+  background-color: black;
+  /*position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;*/
+  opacity: 95%;
+}
+
+.white {
+  color: white;
+}
