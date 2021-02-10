@@ -7,6 +7,7 @@ import {OrganizationChartModule} from 'primeng';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatTableModule} from '@angular/material/table';
+import {MatListModule} from '@angular/material/list';
 
 const routes = [
   {
@@ -25,6 +26,7 @@ const routes = [
     MatDividerModule,
     MatTabsModule,
     MatTableModule,
+    MatListModule,
   ]
 })
 export class TablesModule { }

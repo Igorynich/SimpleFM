@@ -53,28 +53,28 @@ export const selectPlayersByClubsNameEn = createSelector(selectCurrentGameState,
   return sortClubsRoster(teamRoster);
 });
 
-export const selectLeagueScheduleByLeaguesNameEn: MemoizedSelectorWithProps<AppState, {leaguesNameEn: string}, Match1[][]> =
+export const selectLeagueScheduleByLeaguesNameEn: MemoizedSelectorWithProps<AppState, { leaguesNameEn: string }, Match1[][]> =
   createSelector(selectCurrentGameState, (state, {leaguesNameEn}) => {
-  const league = state.leagues.find(value => value.nameEn === leaguesNameEn);
-  return state.schedule[league.id].map((value: WeekSchedule[]) => value.map(value1 => {
-    const match: Match = state.matches[value1.matchId];
-    const home: Club = state.clubs.find(value2 => value2.nameEn === match.homeNameEn);
-    const away: Club = state.clubs.find(value2 => value2.nameEn === match.awayNameEn);
-    return matchToMatch1(match, home, away);
-  }));
-});
+    const league = state.leagues.find(value => value.nameEn === leaguesNameEn);
+    return state.schedule[league.id].map((value: WeekSchedule[]) => value.map(value1 => {
+      const match: Match = state.matches[value1.matchId];
+      const home: Club = state.clubs.find(value2 => value2.nameEn === match.homeNameEn);
+      const away: Club = state.clubs.find(value2 => value2.nameEn === match.awayNameEn);
+      return matchToMatch1(match, home, away);
+    }));
+  });
 
-export const selectCupScheduleByLeaguesNameEn: MemoizedSelectorWithProps<AppState, {leaguesNameEn: string}, Match1[][]> =
+export const selectCupScheduleByLeaguesNameEn: MemoizedSelectorWithProps<AppState, { leaguesNameEn: string }, Match1[][]> =
   createSelector(selectCurrentGameState, (state, {leaguesNameEn}) => {
-  const league = state.leagues.find(value => value.nameEn === leaguesNameEn);
-  const country = state.countries.find(value => value.nameEn === league.countryNameEn);
-  return state.schedule[country.id].map((value: WeekSchedule[]) => value.map(value1 => {
-    const match: Match = state.matches[value1.matchId];
-    const home: Club = state.clubs.find(value2 => value2.nameEn === match.homeNameEn);
-    const away: Club = state.clubs.find(value2 => value2.nameEn === match.awayNameEn);
-    return matchToMatch1(match, home, away);
-  }));
-});
+    const league = state.leagues.find(value => value.nameEn === leaguesNameEn);
+    const country = state.countries.find(value => value.nameEn === league.countryNameEn);
+    return state.schedule[country.id].map((value: WeekSchedule[]) => value.map(value1 => {
+      const match: Match = state.matches[value1.matchId];
+      const home: Club = state.clubs.find(value2 => value2.nameEn === match.homeNameEn);
+      const away: Club = state.clubs.find(value2 => value2.nameEn === match.awayNameEn);
+      return matchToMatch1(match, home, away);
+    }));
+  });
 
 export const selectLeagueTableByLeaguesNameEn = createSelector(selectCurrentGameState, (state, {leaguesNameEn}) => {
   // console.log('selectLeagueTableByLeaguesNameEn', leaguesNameEn);
@@ -283,7 +283,7 @@ export const selectClubsRosterLastMatchStats = createSelector(selectCurrentGameS
     console.log('Last Match for selectClubsRosterLastMatchStats', lastMatch, state);
     if (!!lastMatch) {
       const lastMatchStats: MatchStats = state.stats[lastMatch?.id];
-      const lastMatchGains: {gains: Player[], losses: Player[]} = state.gainsAndLosses[lastMatch?.id];
+      const lastMatchGains: { gains: Player[], losses: Player[] } = state.gainsAndLosses[lastMatch?.id];
       console.log('Last Match Stats and Gains', lastMatchStats, lastMatchGains);
       const clubsRoster: Player[] = state.players.filter((value: Player) => value.clubNameEn === clubsNameEn);
       clubsRoster.forEach((player: Player) => {
@@ -338,3 +338,65 @@ export const getGeneratedForWeekNum = createSelector(selectCurrentGameState,
 
 export const getAlreadySoldAPlayerThisWeekNum = createSelector(selectCurrentGameState,
   (state: CurrentGameState) => state.transferData.alreadySoldAPlayerThisWeekNum);
+
+export const getLeaguePlayersStats = createSelector(selectCurrentGameState,
+  (state: CurrentGameState) => {
+    const curClub = state.currentClub;
+    const curLeague = state.leagues.find(value => value.nameEn === curClub.leagueNameEn);
+    const allMatches: Match[] = Object.values(state.matches);
+    const curLeagueMatches: Match[] = allMatches.filter(value => value.tournament.nameEn === curClub.leagueNameEn);
+    const curLeagueMatchesStats: MatchStats[] = curLeagueMatches.map(value => state.stats[value.id]);
+    const goalScorers = new Map<string, { goals?: number, assists?: number, 'g+a'?: number }>();
+    curLeagueMatchesStats.forEach((matchStats: MatchStats) => {
+      if (matchStats?.homeGoals) {
+        Object.values(matchStats.homeGoals).forEach((gscorer: Player) => {
+          if (gscorer) {
+            const mapRec = goalScorers.get(gscorer?.nameEn);
+            const curGoalsForPlayer = mapRec?.goals || 0;
+            const curAssistsForPlayer = mapRec?.assists || 0;
+            goalScorers.set(gscorer.nameEn, {goals: curGoalsForPlayer + 1, assists: curAssistsForPlayer});
+          }
+        });
+      }
+      if (matchStats?.awayGoals) {
+        Object.values(matchStats.awayGoals).forEach(gscorer => {
+          if (gscorer) {
+            const mapRec = goalScorers.get(gscorer?.nameEn);
+            const curGoalsForPlayer = mapRec?.goals || 0;
+            const curAssistsForPlayer = mapRec?.assists || 0;
+            goalScorers.set(gscorer.nameEn, {goals: curGoalsForPlayer + 1, assists: curAssistsForPlayer});
+          }
+        });
+      }
+      if (matchStats?.homeAssists) {
+        Object.values(matchStats.homeAssists).forEach(assistant => {
+          if (assistant) {
+            const mapRec = goalScorers.get(assistant?.nameEn);
+            const curAssistsForPlayer = mapRec?.assists || 0;
+            const curGoalsForPlayer = mapRec?.goals || 0;
+            goalScorers.set(assistant.nameEn, {assists: curAssistsForPlayer + 1, goals: curGoalsForPlayer});
+          }
+        });
+      }
+      if (matchStats?.awayAssists) {
+        Object.values(matchStats.awayAssists).forEach(assistant => {
+          if (assistant) {
+            const mapRec = goalScorers.get(assistant?.nameEn);
+            const curAssistsForPlayer = mapRec?.assists || 0;
+            const curGoalsForPlayer = mapRec?.goals || 0;
+            goalScorers.set(assistant.nameEn, {assists: curAssistsForPlayer + 1, goals: curGoalsForPlayer});
+          }
+        });
+      }
+    });
+    goalScorers.forEach((value, key) => {
+      value['g+a'] = (value.goals || 0) + (value.assists || 0);
+    });
+    const entries = [...goalScorers.entries()].map(([key, value]) => {
+      // console.log('goalScorers.entries()', key, value);
+      const player: Player = state.players.find(value1 => value1.nameEn === key);
+      return [player, value];
+    });
+    // @ts-ignore
+    return new Map<Player, { goals?: number, assists?: number, 'g+a'?: number }>(entries);
+  });

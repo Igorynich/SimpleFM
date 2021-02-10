@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {
-  AppState, getCupRoundsNum,
+  AppState, getCupRoundsNum, getLeaguePlayersStats,
   selectCupScheduleByLeaguesNameEn,
   selectCurrentClub, selectCurrentWeek,
   selectLeagueScheduleByLeaguesNameEn, selectLeagueTableByLeaguesNameEn, selectMatchStatsByMatchId
@@ -17,6 +17,7 @@ import {CUP_INTERVAL} from '../../../constants/general';
 import {getLeagueWeek, leagueTourToWeek} from '../../../utils/sort-roster';
 import {Match1} from '../../../interfaces/match1';
 import {MatchStats} from '../../../interfaces/match-stats';
+import {Player} from '../../../interfaces/player';
 
 @CleanSubscriptions()
 @Component({
@@ -39,10 +40,13 @@ export class TablesMainPageComponent implements OnInit, OnDestroy {
   table$: Observable<LeagueTable[]>;
   table: LeagueTable[];
   displayedColumns: string[] = ['position', 'clubName', 'games', 'wins', 'draws', 'loses', 'gf', 'ga', 'gd', 'points'];
+  leaguePlayersStats$;
+  selectedLeagueTab;
 
   private _curWeekSub: Subscription;
 
-  constructor(private store: Store<AppState>) { }
+  constructor(private store: Store<AppState>) {
+  }
 
   ngOnInit(): void {
     this._curWeekSub =
@@ -50,8 +54,8 @@ export class TablesMainPageComponent implements OnInit, OnDestroy {
         this.store.select(selectCurrentWeek),
         this.store.select(getCupRoundsNum)
       ]).pipe(take(1)).subscribe(([curWeek, cupRounds]) => {
-      this.selectedWeek.num = getLeagueWeek(curWeek - 1, cupRounds);
-    });
+        this.selectedWeek.num = getLeagueWeek(curWeek - 1, cupRounds);
+      });
     this.curClub$ = this.store.select(selectCurrentClub);
     this.schedule$ = this.curClub$.pipe(switchMap(curClub =>
       this.store.select(selectLeagueScheduleByLeaguesNameEn, {leaguesNameEn: curClub.leagueNameEn})
@@ -72,6 +76,12 @@ export class TablesMainPageComponent implements OnInit, OnDestroy {
       console.log('Table$ curClub', curClub);
       return this.store.select(selectLeagueTableByLeaguesNameEn, {leaguesNameEn: curClub.leagueNameEn});
     }));
+    this.leaguePlayersStats$ = this.store.select(getLeaguePlayersStats)
+      .pipe(map((value: Map<Player, { goals?: number, assists?: number, 'g+a'?: number }>) => {
+        console.log('selectedLeagueTab', this.selectedLeagueTab, value);
+        const sortedEntries = [...value.entries()].sort((a, b) => b[1].goals - a[1].goals);
+        return value;
+      }));
   }
 
   ngOnDestroy(): void {
@@ -88,7 +98,7 @@ export class TablesMainPageComponent implements OnInit, OnDestroy {
     return this.store.select(selectMatchStatsByMatchId, {matchId: match.id});
   }
 
-  isMyClub$(match: Match1): {home: Observable<boolean>, away: Observable<boolean>} {
+  isMyClub$(match: Match1): { home: Observable<boolean>, away: Observable<boolean> } {
     return {
       home: this.curClub$.pipe(map(value => value.nameEn === match.home?.nameEn)),
       away: this.curClub$.pipe(map(value => value.nameEn === match.away?.nameEn))
@@ -111,5 +121,17 @@ export class TablesMainPageComponent implements OnInit, OnDestroy {
 
   cupRoundToWeek(round: number): number {
     return round * CUP_INTERVAL + 1;
+  }
+
+  compareByGoals(a, b) {
+    return (b.value.goals || 0) - (a.value.goals || 0);
+  }
+
+  compareByAssists(a, b) {
+    return (b.value.assists || 0) - (a.value.assists || 0);
+  }
+
+  compareByGP(a, b) {
+    return (b.value['g+a'] || 0) - (a.value['g+a'] || 0);
   }
 }

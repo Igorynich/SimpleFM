@@ -2,7 +2,7 @@
 
   <mat-tab-group mat-align-tabs="start" [(selectedIndex)]="leagueOrCupTab">
     <mat-tab label="Лига">
-      <mat-tab-group mat-align-tabs="center">
+      <mat-tab-group mat-align-tabs="center" [(selectedIndex)]="selectedLeagueTab">
         <mat-tab label="Таблица">
           <mat-table [dataSource]="table$ | async" class="w-100">
             <!-- Position Column -->
@@ -103,6 +103,78 @@
               {{match.away.nameRu}}
             </div>
           </div>
+        </mat-tab>
+        <mat-tab label="Голеадоры">
+          <mat-list>
+            <mat-list-item *ngFor="let goalscorersRecord of leaguePlayersStats$ | async | keyvalue: compareByGoals; let i = index;"
+                           [ngClass]="{'h-0': i >= 10}">
+              <div class="row w-100" *ngIf="i < 10"
+                   [ngClass]="{'my-club': goalscorersRecord.key.clubNameEn === (curClub$ | async).nameEn}">
+                <div class="col-1">
+                  {{i + 1}}
+                </div>
+                <div class="col-3">
+                  {{goalscorersRecord.key.nameRu}}
+                </div>
+                <div class="col-3">
+                  {{goalscorersRecord.key.clubNameRu}}
+                </div>
+                <div class="col-1">
+                  {{goalscorersRecord.value.goals}}
+                </div>
+              </div>
+              <mat-divider *ngIf="i === 0"></mat-divider>
+            </mat-list-item>
+          </mat-list>
+          <p *ngIf="!(leaguePlayersStats$ | async)?.size">Нет записей</p>
+        </mat-tab>
+        <mat-tab label="Ассистенты">
+          <mat-list>
+            <mat-list-item *ngFor="let goalscorersRecord of leaguePlayersStats$ | async | keyvalue: compareByAssists; let i = index;"
+                           [ngClass]="{'h-0': i >= 10}">
+              <div class="row w-100" *ngIf="i < 10"
+                   [ngClass]="{'my-club': goalscorersRecord.key.clubNameEn === (curClub$ | async).nameEn}">
+                <div class="col-1">
+                  {{i + 1}}
+                </div>
+                <div class="col-3">
+                  {{goalscorersRecord.key.nameRu}}
+                </div>
+                <div class="col-3">
+                  {{goalscorersRecord.key.clubNameRu}}
+                </div>
+                <div class="col-1">
+                  {{goalscorersRecord.value.assists}}
+                </div>
+              </div>
+              <mat-divider *ngIf="i === 0"></mat-divider>
+            </mat-list-item>
+          </mat-list>
+          <p *ngIf="!(leaguePlayersStats$ | async)?.size">Нет записей</p>
+        </mat-tab>
+        <mat-tab label="Г+П">
+          <mat-list>
+            <mat-list-item *ngFor="let goalscorersRecord of leaguePlayersStats$ | async | keyvalue: compareByGP; let i = index;"
+                           [ngClass]="{'h-0': i >= 10}">
+              <div class="row w-100" *ngIf="i < 10"
+                   [ngClass]="{'my-club': goalscorersRecord.key.clubNameEn === (curClub$ | async).nameEn}">
+                <div class="col-1">
+                  {{i + 1}}
+                </div>
+                <div class="col-3">
+                  {{goalscorersRecord.key.nameRu}}
+                </div>
+                <div class="col-3">
+                  {{goalscorersRecord.key.clubNameRu}}
+                </div>
+                <div class="col-2">
+                  {{goalscorersRecord.value['g+a']}} ({{goalscorersRecord.value.goals}}+{{goalscorersRecord.value.assists}})
+                </div>
+              </div>
+              <mat-divider *ngIf="i === 0"></mat-divider>
+            </mat-list-item>
+          </mat-list>
+          <p *ngIf="!(leaguePlayersStats$ | async)?.size">Нет записей</p>
         </mat-tab>
       </mat-tab-group>
     </mat-tab>

@@ -76,6 +76,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   height:5% !important
 }
 
+.h-0{
+  height:0 !important
+}
+
 .min-vh-90 {
   min-height: 90vh !important;
 }
