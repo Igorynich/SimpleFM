@@ -3,7 +3,7 @@ import {createSelector, MemoizedSelectorWithProps, State} from '@ngrx/store';
 import {WeekSchedule} from '../../interfaces/league-schedule';
 import {CUP_INTERVAL} from '../../constants/general';
 import {Match} from '../../interfaces/match';
-import {getLeagueWeek, isCupWeek, matchToMatch1, resultSplitter, sortClubsRoster, sortTable} from '../../utils/sort-roster';
+import {decideWinner, getLeagueWeek, isCupWeek, matchToMatch1, resultSplitter, sortClubsRoster, sortTable} from '../../utils/sort-roster';
 import {Player} from '../../interfaces/player';
 import {round} from 'lodash';
 import {PlayerStats} from '../../interfaces/player-stats';
@@ -35,6 +35,12 @@ export const getAllClubs = createSelector(selectCurrentGameState, (state: Curren
 export const getAllLeagues = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.leagues || []);
 export const getAllCountries = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.countries || []);
 export const getAllPlayers = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.players || []);
+
+export const getCurrentCountryLeagues = createSelector(selectCurrentGameState, (state: CurrentGameState) => {
+  const curClub = state.currentClub;
+  const curLeague = state.leagues.find(value => value.nameEn === curClub.leagueNameEn);
+  return state.leagues.filter(value => value.countryNameEn === curLeague.countryNameEn);
+});
 
 export const getLeagueTierHigher = createSelector(selectCurrentGameState, (state: CurrentGameState, {leaguesNameEn}) => {
   const league = state.leagues.find(value => value.nameEn === leaguesNameEn);
@@ -79,8 +85,11 @@ export const selectCupScheduleByLeaguesNameEn: MemoizedSelectorWithProps<AppStat
 export const selectLeagueTableByLeaguesNameEn = createSelector(selectCurrentGameState, (state, {leaguesNameEn}) => {
   // console.log('selectLeagueTableByLeaguesNameEn', leaguesNameEn);
   const league = state.leagues.find(value => value.nameEn === leaguesNameEn);
-  // console.log('selectLeagueTableByLeaguesNameEn1', league);
-  return [...state.tables[league.id]].sort(sortTable);
+  console.log('selectLeagueTableByLeaguesNameEn1', league);
+  if (state.tables[league.id]?.length) {
+    return [...state.tables[league.id]].sort(sortTable);
+  }
+  return [];
 });
 
 export const selectClubPowersByLeaguesNameEn = createSelector(selectCurrentGameState, (state, {leaguesNameEn}) => {
@@ -132,7 +141,7 @@ export const selectCurrentWeekSchedule = createSelector(selectCurrentGameState, 
   } else {
     const countryLeagues = state.leagues.filter(value => value.countryNameEn === country.nameEn);
     const index = getLeagueWeek(curWeek, cupRounds);     // index учитывает кубковые недели
-    console.log('leagueWeek', index);
+    // console.log('leagueWeek', index);
     countryLeagues.forEach(value => {
       const leagueSchedule = state.schedule[value.id] ? state.schedule[value.id][index] : null;
       if (leagueSchedule) {
@@ -144,7 +153,7 @@ export const selectCurrentWeekSchedule = createSelector(selectCurrentGameState, 
       }
     });
   }
-  console.warn('SELECT WEEK SCHEDULE', curWeek, schedule);
+  // console.warn('SELECT WEEK SCHEDULE', curWeek, schedule);
   return schedule;
 });
 
@@ -165,7 +174,7 @@ export const selectScheduleByClubsNameEn = createSelector(selectCurrentGameState
       const realMatch: Match = state.matches[match.matchId];
       return realMatch.homeNameEn === club.nameEn || realMatch.awayNameEn === club.nameEn;
     }));
-  console.log('clubsCupSchedule', clubsCupSchedule);
+  // console.log('clubsCupSchedule', clubsCupSchedule);
   clubsCupSchedule.forEach((value, index) => {
     clubsLeagueSchedule.splice(CUP_INTERVAL * (index + 1), 0, value);
   });
@@ -204,7 +213,7 @@ export const selectNextOpponent = createSelector(selectCurrentGameState, selectS
     const nextWeeksMatchAwayClub: Club = state.clubs.find(value => value.nameEn === nextWeeksMatch?.awayNameEn);
     const nextOpp: Club = nextWeeksMatch?.homeNameEn === curClub.nameEn ? nextWeeksMatchAwayClub : nextWeeksMatchHomeClub;
     const field = nextWeeksMatch?.homeNameEn === curClub.nameEn ? 'H' : 'A';
-    console.log('selectNextOpponent schedule', clubsSchedule);
+    // console.log('selectNextOpponent schedule', clubsSchedule);
     return {opponent: nextOpp, field};
   });
 
@@ -280,11 +289,11 @@ export const selectClubsRosterLastMatchStats = createSelector(selectCurrentGameS
     const map = new Map<string, PlayerStats>();
     const lastMatch: Match = state.currentWeek === 0 ?
       null : (clubsSchedule[state.currentWeek - 1] || clubsSchedule[state.currentWeek - 2]);
-    console.log('Last Match for selectClubsRosterLastMatchStats', lastMatch, state);
+    // console.log('Last Match for selectClubsRosterLastMatchStats', lastMatch, state);
     if (!!lastMatch) {
       const lastMatchStats: MatchStats = state.stats[lastMatch?.id];
       const lastMatchGains: { gains: Player[], losses: Player[] } = state.gainsAndLosses[lastMatch?.id];
-      console.log('Last Match Stats and Gains', lastMatchStats, lastMatchGains);
+      // console.log('Last Match Stats and Gains', lastMatchStats, lastMatchGains);
       const clubsRoster: Player[] = state.players.filter((value: Player) => value.clubNameEn === clubsNameEn);
       clubsRoster.forEach((player: Player) => {
         const playerStats: PlayerStats = {
@@ -400,3 +409,43 @@ export const getLeaguePlayersStats = createSelector(selectCurrentGameState,
     // @ts-ignore
     return new Map<Player, { goals?: number, assists?: number, 'g+a'?: number }>(entries);
   });
+
+export const getClubsCupResultByClubsNameEn = createSelector(selectCurrentGameState,
+  (state: CurrentGameState, {clubsNameEn}) => {
+    const club = state.clubs.find(value => value.nameEn === clubsNameEn);
+    const league = state.leagues.find(value => value.nameEn === club.leagueNameEn);
+    const country = state.countries.find(value => value.nameEn === league.countryNameEn);
+    const cupSchedule: WeekSchedule[][] = state.schedule[country.id];
+    const cupMatches: Match[][] = cupSchedule.map((value: WeekSchedule[]) => value.map((value1: WeekSchedule) =>
+      state.matches[value1.matchId]));
+    const finalMatch: Match = cupMatches[cupMatches.length - 1][0];
+    const finalMatchStats: MatchStats = state.stats[finalMatch.id];
+    const winner = decideWinner(finalMatchStats.result);
+    if (winner === 'draw') {
+      console.error('Cup final is DRAW?', finalMatch, finalMatchStats);
+    }
+    if ((finalMatch.homeNameEn === clubsNameEn && winner === 'home') || (finalMatch.awayNameEn === clubsNameEn && winner === 'away')) {
+      // if won the cup
+      return {
+        clubNameEn: clubsNameEn,
+        eliminated: null,
+        total: cupSchedule.length
+      };
+    } else {
+      // if didn't win
+      const roundsOfParticipation = cupMatches.filter((matchArr: Match[]) => !!matchArr.find((match: Match) =>
+        match.homeNameEn === clubsNameEn || match.awayNameEn === clubsNameEn));
+      /*console.log('clubs cup result', {
+        clubNameEn: clubsNameEn,
+        eliminated: roundsOfParticipation.length,
+        total: cupSchedule.length
+      });*/
+      return {
+        clubNameEn: clubsNameEn,
+        eliminated: roundsOfParticipation.length,
+        total: cupSchedule.length
+      };
+    }
+  });
+
+

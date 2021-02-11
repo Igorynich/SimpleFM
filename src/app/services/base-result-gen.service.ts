@@ -65,7 +65,7 @@ export class BaseResultGenService implements ResultGenerator {
   generateWeekResults(): Observable<CurrentWeekSchedule[]> {
     const a$ = this.store.select(selectCurrentWeekSchedule).pipe(take(1),
       map((value: CurrentWeekSchedule[]) => {
-        console.warn(`Current Week Schedule`, value, value.length);
+        // console.warn(`Current Week Schedule`, value, value.length);
         if (!this.inProgress) {
           const allMatches = [];
           value.forEach((value1: CurrentWeekSchedule) => {
@@ -83,7 +83,7 @@ export class BaseResultGenService implements ResultGenerator {
   }
 
   private generateResultsForWholeWeek(matches: Match[]) {
-    console.log('Generating res for whole week ', matches);
+    // console.log('Generating res for whole week ', matches);
     this.inProgress = true;
     const results = [];
     matches.forEach((value: Match) => {
@@ -93,7 +93,7 @@ export class BaseResultGenService implements ResultGenerator {
   }
 
   private generateResult(match: Match): string {
-    console.warn(`Generating for ${match.homeNameEn} - ${match.awayNameEn} ---- START`, match);
+    // console.warn(`Generating for ${match.homeNameEn} - ${match.awayNameEn} ---- START`, match);
     const {homeNameEn, awayNameEn} = match;
     let result;
     clearSubscription(this._selectSub);
@@ -108,7 +108,7 @@ export class BaseResultGenService implements ResultGenerator {
         result = this.calculateResult(homePower, awayPower, match);
         this.generateMatchStats(homeRoster, awayRoster, result, match);
         this.generateAttendancesAndIncome(homeRoster, awayRoster, result, match);
-        console.warn(`Generating for ${match.homeNameEn} - ${match.awayNameEn} ---- FINISH`, match);
+        // console.warn(`Generating for ${match.homeNameEn} - ${match.awayNameEn} ---- FINISH`, match);
       });
     return result;
   }

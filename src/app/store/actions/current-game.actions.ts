@@ -73,3 +73,5 @@ export const newJobTaken = createAction('New job taken', props<{clubsNameEn: str
 
 export const oneMoreWeekOnCurrentJob = createAction('Adds one more week to weeksOnCurrentJob counter');
 
+export const giveSeasonalPrizeMoney = createAction('Giving prize money when season ends');
+

@@ -7,7 +7,7 @@ import {
   addGoalScorersForMatch,
   addMatch,
   advanceAWeek, expandStadium,
-  getClub,
+  getClub, giveSeasonalPrizeMoney,
   gotBaseData,
   gotClub,
   gotPlayers, logOut, newJobTaken, oneMoreWeekOnCurrentJob, playersListedOnTransfer, playerTransferToAClub, playerTransferToCurClub,
@@ -110,15 +110,15 @@ const _currentGameReducer = createReducer(currentGameInitState,
     };
   }),
   on(gotClub, (state, {club}) => {
-    console.log('gotClub', {...state, currentClub: club});
+    // console.log('gotClub', {...state, currentClub: club});
     return {...state, currentClub: club};
   }),
   on(gotPlayers, (state, {players}) => {
-    console.log('gotPlayers', {...state, currentPlayers: players});
+    // console.log('gotPlayers', {...state, currentPlayers: players});
     return {...state, currentPlayers: players, loading: false};
   }),
   on(updatePlayers, (state, {newPlayers}) => {
-    console.log('updatePlayers', {...state, currentPlayers: newPlayers});
+    // console.log('updatePlayers', {...state, currentPlayers: newPlayers});
     return {...state, currentPlayers: newPlayers};
   }),
   on(scheduleGenerated, (state, {schedule}) => {
@@ -139,15 +139,15 @@ const _currentGameReducer = createReducer(currentGameInitState,
       const thresholds = Object.keys(BASE_POWER_TICKET_PRICES_COEF);
       ticketPrices.set(clubNameEn, BASE_POWER_TICKET_PRICES_COEF[closest(power, thresholds)]);
     });
-    console.log('scheduleGenerated', {...state, schedule, seasonData: {clubPowers: map, ticketPrices}});
+    // console.log('scheduleGenerated', {...state, schedule, seasonData: {clubPowers: map, ticketPrices}});
     return {...state, schedule, seasonData: {clubPowers: map, ticketPrices}};
   }),
   on(tablesGenerated, (state, {tables}) => {
-    console.log('tablesGenerated', {...state, tables});
+    // console.log('tablesGenerated', {...state, tables});
     return {...state, tables};
   }),
   on(advanceAWeek, state => {
-    console.log('advanceAWeek', {...state, currentWeek: state.currentWeek + 1});
+    // console.log('advanceAWeek', {...state, currentWeek: state.currentWeek + 1});
     return {...state, currentWeek: state.currentWeek + 1};
   }),
   on(addMatch, (state, {match}) => {
@@ -178,7 +178,6 @@ const _currentGameReducer = createReducer(currentGameInitState,
         draft.currentClub.budget = draft.currentClub.budget + (income / 1000000 || 0) - (expense / 1000000 || 0);
       }
     });
-    console.log('addFinanceRecord newState', newState);
     return newState;
     // return {...state, finances};
   }),
@@ -197,14 +196,12 @@ const _currentGameReducer = createReducer(currentGameInitState,
     return newState;
   }),
   on(setResult, (state, {result, match}) => {
-    console.log('Setting Result', result, match);
     let matchId;
     if ('matchId' in match) {       // match is WeekSchedule
       matchId = match.matchId;
     } else {                        // match is Match
       matchId = match.id;
     }
-    console.log('setResult', {...state, matches: {...state.matches, matchId: {...state.matches[matchId], result}}});
     return {...state, matches: {...state.matches, [matchId]: {...state.matches[matchId], result}}};
   }),
   on(setABunchOfResult, (state, {results, matches}) => {
@@ -224,12 +221,10 @@ const _currentGameReducer = createReducer(currentGameInitState,
       }
       matchesWithAddedResults[matchId] = {...state.matches[matchId], result: results[index]};
     });
-    console.log('setResult', {...state, matches: {...state.matches, ...matchesWithAddedResults}});
     return {...state, matches: {...state.matches, ...matchesWithAddedResults}};
     // return {...state};
   }),
   on(addGoalScorersForMatch, (state, {matchId, goals, result}) => {
-    console.log('addGoalScorersForMatch', {...state, stats: {...state.stats, [matchId]: {...state.stats[matchId], ...goals, result}}});
     return {...state, stats: {...state.stats, [matchId]: {...state.stats[matchId], ...goals, result}}};
   }),
   on(addGainsAndLossesForMatch, (state, {matchId, gains, losses}) => {
@@ -283,10 +278,6 @@ const _currentGameReducer = createReducer(currentGameInitState,
     return newState;
   }),
   on(addAttendanceForMatch, (state, {matchId, attendance}) => {
-    console.log('addAttendanceForMatch', {
-      ...state,
-      stats: {...state.stats, [matchId]: {...state.stats[matchId], attendance}}
-    });
     return {
       ...state,
       stats: {...state.stats, [matchId]: {...state.stats[matchId], attendance}}
@@ -463,6 +454,18 @@ const _currentGameReducer = createReducer(currentGameInitState,
     });
     return newState;
   }),
+  /*on(giveSeasonalPrizeMoney, (state) => {
+    const newState = produce(state, (draft: CurrentGameState) => {
+      const curClub = draft.currentClub;
+      const curLeague = draft.leagues.find(value => value.nameEn === curClub.leagueNameEn);
+      const curCountry = draft.countries.find(value => value.nameEn === curLeague.countryNameEn);
+      const countryLeagues = draft.leagues.filter(value => value.countryNameEn === curLeague.countryNameEn);
+      countryLeagues.forEach((league: League) => {
+        const clubs = draft.clubs
+      });
+    });
+    return newState;
+  }),*/
 );
 
 export function currentGameReducer(state: CurrentGameState, action: Action) {

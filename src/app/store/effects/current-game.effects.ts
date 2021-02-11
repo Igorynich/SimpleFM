@@ -5,7 +5,7 @@ import {
   addFinanceRecord,
   expandStadium,
   getBaseData,
-  getClub,
+  getClub, giveSeasonalPrizeMoney,
   gotBaseData,
   gotClub,
   gotPlayers,
@@ -22,8 +22,8 @@ import {
   AppState,
   getAllClubs,
   getAllCountries,
-  getAllLeagues,
-  selectCurrentClub,
+  getAllLeagues, getClubsCupResultByClubsNameEn, getCurrentCountryLeagues, selectClubsByLeagueName,
+  selectCurrentClub, selectLeagueTableByLeaguesNameEn,
   selectPlayersByClubsNameEn
 } from '../selectors/current-game.selectors';
 import {MatDialog} from '@angular/material/dialog';
@@ -32,6 +32,9 @@ import {CurrentGameService} from '../../services/current-game.service';
 import {sortClubsRoster} from '../../utils/sort-roster';
 import {UserService} from '../../services/user.service';
 import {TransferService} from '../../services/transfer.service';
+import {League} from '../../interfaces/league';
+import {LeagueTable} from '../../interfaces/league-table';
+import {FinanceService} from '../../services/finance.service';
 
 @Injectable()
 export class CurrentGameEffects {
@@ -194,13 +197,80 @@ export class CurrentGameEffects {
       })
     ));
 
+  seasonalPrizeMoney$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(giveSeasonalPrizeMoney),
+      filter(value => !!this.userService.userName),
+      switchMap(() => {
+        return combineLatest([
+          this.store.select(selectCurrentClub),
+          this.store.select(getCurrentCountryLeagues)
+        ]).pipe(take(1));
+      }),
+      switchMap(([club, leagues]) => {
+        // console.warn('LEAGUES?', leagues);
+        const leagueClubsSelects$: Observable<Club[]>[] =
+          leagues.map(l => this.store.select(selectClubsByLeagueName, {leaguesNameEn: l.nameEn}));
+        return combineLatest(leagueClubsSelects$).pipe(take(1), map((clubsArr: Club[][]) => {
+          // console.log('CLUBS', clubsArr, leagues);
+          return [clubsArr, leagues];
+        }));
+      }),
+      switchMap(([clubArrays, leagues]: [Club[][], League[]]) => {
+        console.warn('BIG clubArrays', clubArrays, leagues);
+        const clubs: Club[] = [];
+        // @ts-ignore
+        clubArrays.forEach((clubArr: Club[]) => clubs.push(...clubArr));
+        const cupResultSelects$: Observable<{clubNameEn: string, eliminated: number | null, total: number}>[] = clubs.map(cl =>
+          this.store.select(getClubsCupResultByClubsNameEn, {clubsNameEn: cl.nameEn}));
+        // @ts-ignore
+        const tableSelects$: Observable<LeagueTable[]>[] = leagues.map((l: League) =>
+          this.store.select(selectLeagueTableByLeaguesNameEn, {leaguesNameEn: l.nameEn}));
+        return combineLatest([
+          combineLatest(cupResultSelects$),
+          combineLatest(tableSelects$)
+          ]).pipe(take(1), map(value => {
+            // console.warn('Big', value, leagues, clubArrays);
+            return [...value, leagues, clubArrays];
+        }));
+      }),
+      switchMap(([cupResults, tableArrays, leagues, clubArrays]:
+                   [{clubNameEn: string, eliminated: number | null, total: number}[], LeagueTable[][], League[], Club[][]]) => {
+        // console.warn('BIG cupResults', cupResults, tableArrays, leagues, clubArrays);
+        const financeRecords = [];
+        leagues.forEach((league, index) => {
+          clubArrays[index].forEach((club: Club) => {
+            const leaguePosIndex = tableArrays[index].findIndex((tableRec: LeagueTable) => tableRec.clubName === club.nameEn
+              || tableRec.clubName === club.nameRu);
+            financeRecords.push(addFinanceRecord({
+              clubNameEn: club.nameEn,
+              description: `Призовые за ${leaguePosIndex + 1} место в ${league.nameRu}`,
+              expense: null,
+              income: this.finService.calculateClubsLeaguePrizeMoney(league.tier, leaguePosIndex + 1, tableArrays[index].length) * 1000000
+            }));
+            const clubsCupResult: {clubNameEn: string, eliminated: number | null, total: number} =
+              cupResults.find(results => results.clubNameEn === club.nameEn);
+            const desc = clubsCupResult.eliminated ? `Призовые за ${clubsCupResult.eliminated} раунд кубка` : `Призовые за победу в кубке`;
+            financeRecords.push(addFinanceRecord({
+              clubNameEn: club.nameEn,
+              description: desc,
+              expense: null,
+              income: this.finService.calculateClubsCupPrizeMoney(clubsCupResult.eliminated, clubsCupResult.total) * 1000000
+            }));
+          });
+        });
+        return financeRecords;
+      })
+    ));
+
   constructor(private actions$: Actions,
               private fs: FirebaseService,
               private store: Store<AppState>,
               private dialog: MatDialog,
               private game: CurrentGameService,
               private userService: UserService,
-              private transferService: TransferService) {
+              private transferService: TransferService,
+              private finService: FinanceService) {
   }
 
 }

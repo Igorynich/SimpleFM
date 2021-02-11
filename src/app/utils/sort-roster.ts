@@ -32,7 +32,7 @@ export function sortStarters(roster: Player[]): Player[] {
 
 export function getStarters(roster: Player[]): Starters {
   const starters = roster.filter((value, index) => index < 11);
-  console.log('Starters', starters);
+  // console.log('Starters', starters);
   return {
     gk: starters.filter((value) => value.position === 'GK').sort((a, b) => b.power - a.power),
     d: starters.filter(value => value.position === 'D').sort((a, b) => b.power - a.power),
@@ -67,6 +67,20 @@ export function sortTable(a: LeagueTable, b: LeagueTable) {
 
 export function resultSplitter(result: string): number[] {
   return result ? result.split(' - ').map(value => parseInt(value, 10)) : [0, 0];
+}
+
+export function decideWinner(result: string): 'home' | 'away' | 'draw' {
+  const [homeScore, awayScore] = result.split(' - ');
+  const [homeGoals, awayGoals] = resultSplitter(result);
+  const isHomeAWinner = homeScore.includes('e') || homeScore.includes('p') || homeGoals > awayGoals;
+  const isAwayAWinner = awayScore.includes('e') || awayScore.includes('p') || awayGoals > homeGoals;
+  if (isHomeAWinner) {
+    return 'home';
+  }
+  if (isAwayAWinner) {
+    return 'away';
+  }
+  return 'draw';
 }
 
 export function isCupWeek(curWeek: number, cupRounds: number): boolean {
