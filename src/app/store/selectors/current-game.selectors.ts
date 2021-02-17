@@ -12,6 +12,7 @@ import {values} from '../../utils/helpers';
 import {Club} from '../../interfaces/club';
 import {Match1} from '../../interfaces/match1';
 import {Props} from '@ngrx/store/src/models';
+import {League} from '../../interfaces/league';
 
 export interface AppState {
   currentGame: CurrentGameState;
@@ -36,6 +37,10 @@ export const getAllLeagues = createSelector(selectCurrentGameState, (state: Curr
 export const getAllCountries = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.countries || []);
 export const getAllPlayers = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.players || []);
 
+export const getLeagueByLeagueNameEn = createSelector(selectCurrentGameState, (state: CurrentGameState, {leaguesNameEn}) => {
+  return state.leagues.find(value => value.nameEn === leaguesNameEn);
+});
+
 export const getCurrentCountryLeagues = createSelector(selectCurrentGameState, (state: CurrentGameState) => {
   const curClub = state.currentClub;
   const curLeague = state.leagues.find(value => value.nameEn === curClub.leagueNameEn);
@@ -49,6 +54,10 @@ export const getLeagueTierHigher = createSelector(selectCurrentGameState, (state
 
 export const selectClubByClubsNameEn = createSelector(selectCurrentGameState, (state: CurrentGameState, {clubsNameEn}) => {
   return state.clubs.find(value => value.nameEn === clubsNameEn);
+});
+
+export const selectClubByClubsName = createSelector(selectCurrentGameState, (state: CurrentGameState, {clubsName}) => {
+  return state.clubs.find(value => value.nameEn === clubsName || value.nameRu === clubsName);
 });
 
 export const selectPlayersByClubsNameEn = createSelector(selectCurrentGameState, (state, {clubsNameEn}) => {
@@ -185,7 +194,9 @@ export const selectScheduleByClubsNameEn = createSelector(selectCurrentGameState
 });
 
 export const selectCupScheduleByCountryNameEn = createSelector(selectCurrentGameState, (state, {countryNameEn}) => {
-  const country = state.countries.find(value => value.nameEn === countryNameEn);
+  const curClub = state.currentClub;
+  const curLeague = state.leagues.find(value => value.nameEn === curClub.leagueNameEn);
+  const country = state.countries.find(value => value.nameEn === countryNameEn || value.nameEn === curLeague.countryNameEn);
   return state.schedule[country.id];
 });
 
@@ -349,11 +360,18 @@ export const getAlreadySoldAPlayerThisWeekNum = createSelector(selectCurrentGame
   (state: CurrentGameState) => state.transferData.alreadySoldAPlayerThisWeekNum);
 
 export const getLeaguePlayersStats = createSelector(selectCurrentGameState,
-  (state: CurrentGameState) => {
-    const curClub = state.currentClub;
-    const curLeague = state.leagues.find(value => value.nameEn === curClub.leagueNameEn);
+  (state: CurrentGameState, props?: {leagueName: string}) => {
+    // console.warn('PROPS', props);
+    let league: League;
+    if (!props?.leagueName) {
+      const curClub = state.currentClub;
+      league = state.leagues.find(value => value.nameEn === curClub.leagueNameEn);
+    } else {
+      league = state.leagues.find(value =>
+        value.nameEn === props.leagueName || value.nameRu === props.leagueName);
+    }
     const allMatches: Match[] = Object.values(state.matches);
-    const curLeagueMatches: Match[] = allMatches.filter(value => value.tournament.nameEn === curClub.leagueNameEn);
+    const curLeagueMatches: Match[] = allMatches.filter(value => value?.tournament?.nameEn === league.nameEn);
     const curLeagueMatchesStats: MatchStats[] = curLeagueMatches.map(value => state.stats[value.id]);
     const goalScorers = new Map<string, { goals?: number, assists?: number, 'g+a'?: number }>();
     curLeagueMatchesStats.forEach((matchStats: MatchStats) => {

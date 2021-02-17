@@ -1,9 +1,231 @@
 <div class="row season-end-main-container">
   <div class="col">
-    <mat-card class="new-job-card--main h-100">
+    <mat-card class="season-end-card--main h-100 white">
       <div class="row h-100">
         <div class="col d-flex flex-column">
-          blala
+          <mat-tab-group [selectedIndex]="selectedTab" (selectedIndexChange)="selectedTab = $event;"
+                         mat-align-tabs="center">
+            <mat-tab>
+              <ng-template mat-tab-label class="white">Итоги сезона игрока</ng-template>
+              <div class="row">
+                <div class="col">
+                  <h4>{{(playersLeague$ | async).nameRu}}</h4>
+                  <mat-table [dataSource]="playersLeagueTable$ | async" class="w-50">
+                    <!-- Position Column -->
+                    <ng-container matColumnDef="position">
+                      <mat-header-cell *matHeaderCellDef class=""> Поз</mat-header-cell>
+                      <mat-cell *matCellDef="let element; let i = index" class=""
+                                [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{i + 1}} </mat-cell>
+                    </ng-container>
+
+                    <!-- ClubName Column -->
+                    <ng-container matColumnDef="clubName">
+                      <mat-header-cell *matHeaderCellDef class=""> Клуб</mat-header-cell>
+                      <mat-cell *matCellDef="let element" class=""
+                                [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.clubName}} </mat-cell>
+                    </ng-container>
+
+                    <!-- games Column -->
+                    <ng-container matColumnDef="games">
+                      <mat-header-cell *matHeaderCellDef class=""> И</mat-header-cell>
+                      <mat-cell *matCellDef="let element" class=""
+                                [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.games}} </mat-cell>
+                    </ng-container>
+
+                    <!-- wins Column -->
+                    <ng-container matColumnDef="wins">
+                      <mat-header-cell *matHeaderCellDef class=""> В</mat-header-cell>
+                      <mat-cell *matCellDef="let element" class=""
+                                [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.wins}} </mat-cell>
+                    </ng-container>
+
+                    <!-- draws Column -->
+                    <ng-container matColumnDef="draws">
+                      <mat-header-cell *matHeaderCellDef class=""> Н</mat-header-cell>
+                      <mat-cell *matCellDef="let element" class=""
+                                [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.draws}} </mat-cell>
+                    </ng-container>
+
+                    <!-- loses Column -->
+                    <ng-container matColumnDef="loses">
+                      <mat-header-cell *matHeaderCellDef class=""> П</mat-header-cell>
+                      <mat-cell *matCellDef="let element" class=""
+                                [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.loses}} </mat-cell>
+                    </ng-container>
+
+                    <!-- gf Column -->
+                    <ng-container matColumnDef="gf">
+                      <mat-header-cell *matHeaderCellDef class=""> ЗМ</mat-header-cell>
+                      <mat-cell *matCellDef="let element" class=""
+                                [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.gf}} </mat-cell>
+                    </ng-container>
+
+                    <!-- ga Column -->
+                    <ng-container matColumnDef="ga">
+                      <mat-header-cell *matHeaderCellDef class=""> ПМ</mat-header-cell>
+                      <mat-cell *matCellDef="let element" class=""
+                                [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.ga}} </mat-cell>
+                    </ng-container>
+
+                    <!-- gd Column -->
+                    <ng-container matColumnDef="gd">
+                      <mat-header-cell *matHeaderCellDef class=""> РМ</mat-header-cell>
+                      <mat-cell *matCellDef="let element" class=""
+                                [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.gd}} </mat-cell>
+                    </ng-container>
+
+                    <!-- points Column -->
+                    <ng-container matColumnDef="points">
+                      <mat-header-cell *matHeaderCellDef class=""> О</mat-header-cell>
+                      <mat-cell *matCellDef="let element" class=""
+                                [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.points}} </mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns1"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns1;"></mat-row>
+                  </mat-table>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  Призовые за выступление в лиге составили {{playersLeaguePrizeMoney$ | async | currency}}
+                </div>
+              </div>
+              <div class="row" *ngIf="!(playersCupResult$ | async).eliminated">
+                <div class="col">
+                  {{(curClub$ | async).nameRu}} под руководством {{userService.userName}} выиграл Кубок!
+                </div>
+              </div>
+              <div class="row" *ngIf="(playersCupResult$ | async).eliminated">
+                <div class="col">
+                  {{(curClub$ | async).nameRu}} под руководством {{userService.userName}} добрался до
+                  {{(playersCupResult$ | async).eliminated}} раунда кубка!
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  Призовые за выступление в кубке составили {{playersCupPrizeMoney$ | async | currency}}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <button mat-raised-button color="primary" (click)="selectedTab = 1;">Далее</button>
+                </div>
+              </div>
+            </mat-tab>
+            <mat-tab>
+              <ng-template mat-tab-label>Итоги сезона чемпионата</ng-template>
+              <div class="row">
+                <div class="col">
+                  <h3>Победитель лиги: {{(leagueWinner$ | async).nameRu}}</h3>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <h3>Победитель кубка: {{(cupWinner$ | async).nameRu}}</h3>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-3" *ngFor="let leagueTable of allLeagueTables$ | async; let i = index">
+                  <h4>{{(allLeagues$ | async)[i].nameRu}}</h4>
+                  <mat-table [dataSource]="leagueTable" class="">
+                    <!-- Position Column -->
+                    <ng-container matColumnDef="position">
+                      <mat-header-cell *matHeaderCellDef class=""> Поз</mat-header-cell>
+                      <mat-cell *matCellDef="let element; let i = index" class=""
+                                [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{i + 1}} </mat-cell>
+                    </ng-container>
+
+                    <!-- ClubName Column -->
+                    <ng-container matColumnDef="clubName">
+                      <mat-header-cell *matHeaderCellDef class=""> Клуб</mat-header-cell>
+                      <mat-cell *matCellDef="let element" class=""
+                                [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.clubName}} </mat-cell>
+                    </ng-container>
+
+                    <!-- games Column -->
+                    <ng-container matColumnDef="games">
+                      <mat-header-cell *matHeaderCellDef class=""> И</mat-header-cell>
+                      <mat-cell *matCellDef="let element" class=""
+                                [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.games}} </mat-cell>
+                    </ng-container>
+
+                    <!-- wins Column -->
+                    <ng-container matColumnDef="wins">
+                      <mat-header-cell *matHeaderCellDef class=""> В</mat-header-cell>
+                      <mat-cell *matCellDef="let element" class=""
+                                [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.wins}} </mat-cell>
+                    </ng-container>
+
+                    <!-- draws Column -->
+                    <ng-container matColumnDef="draws">
+                      <mat-header-cell *matHeaderCellDef class=""> Н</mat-header-cell>
+                      <mat-cell *matCellDef="let element" class=""
+                                [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.draws}} </mat-cell>
+                    </ng-container>
+
+                    <!-- loses Column -->
+                    <ng-container matColumnDef="loses">
+                      <mat-header-cell *matHeaderCellDef class=""> П</mat-header-cell>
+                      <mat-cell *matCellDef="let element" class=""
+                                [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.loses}} </mat-cell>
+                    </ng-container>
+
+                    <!-- gf Column -->
+                    <ng-container matColumnDef="gf">
+                      <mat-header-cell *matHeaderCellDef class=""> ЗМ</mat-header-cell>
+                      <mat-cell *matCellDef="let element" class=""
+                                [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.gf}} </mat-cell>
+                    </ng-container>
+
+                    <!-- ga Column -->
+                    <ng-container matColumnDef="ga">
+                      <mat-header-cell *matHeaderCellDef class=""> ПМ</mat-header-cell>
+                      <mat-cell *matCellDef="let element" class=""
+                                [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.ga}} </mat-cell>
+                    </ng-container>
+
+                    <!-- gd Column -->
+                    <ng-container matColumnDef="gd">
+                      <mat-header-cell *matHeaderCellDef class=""> РМ</mat-header-cell>
+                      <mat-cell *matCellDef="let element" class=""
+                                [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.gd}} </mat-cell>
+                    </ng-container>
+
+                    <!-- points Column -->
+                    <ng-container matColumnDef="points">
+                      <mat-header-cell *matHeaderCellDef class=""> О</mat-header-cell>
+                      <mat-cell *matCellDef="let element" class=""
+                                [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.points}} </mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns2"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns2;"></mat-row>
+                  </mat-table>
+                  <p *ngIf="(bestScorersForEachLeague$ | async)">
+                    Бомбардиры:
+                    <span *ngFor="let pl of (bestScorersForEachLeague$ | async)[i].goals.players">{{pl.nameRu}} </span>
+                    - {{(bestScorersForEachLeague$ | async)[i].goals.q}} голов
+                  </p>
+                  <p *ngIf="(bestScorersForEachLeague$ | async)">
+                    Ассистенты:
+                    <span *ngFor="let pl of (bestScorersForEachLeague$ | async)[i].assists.players">{{pl.nameRu}} </span>
+                    - {{(bestScorersForEachLeague$ | async)[i].assists.q}} пасов
+                  </p>
+                  <p *ngIf="(bestScorersForEachLeague$ | async)">
+                    Г+П:
+                    <span *ngFor="let pl of (bestScorersForEachLeague$ | async)[i].ga.players; let i1 = index">{{pl.nameRu}}({{(bestScorersForEachLeague$ | async)[i].ga.sum[i1]}}) </span>
+                    - {{(bestScorersForEachLeague$ | async)[i].ga.q}} балов
+                  </p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <button mat-raised-button color="accent" (click)="startNewSeason()">К новому сезону</button>
+                </div>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
         </div>
       </div>
       <div class="row justify-content-end">

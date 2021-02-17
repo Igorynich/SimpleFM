@@ -15,5 +15,9 @@
 }
 
 .white {
+  color: white !important;
+}
+
+.mat-tab-label-content {
   color: white;
 }

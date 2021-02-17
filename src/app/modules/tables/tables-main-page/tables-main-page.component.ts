@@ -76,7 +76,7 @@ export class TablesMainPageComponent implements OnInit, OnDestroy {
       console.log('Table$ curClub', curClub);
       return this.store.select(selectLeagueTableByLeaguesNameEn, {leaguesNameEn: curClub.leagueNameEn});
     }));
-    this.leaguePlayersStats$ = this.store.select(getLeaguePlayersStats)
+    this.leaguePlayersStats$ = this.store.select(getLeaguePlayersStats, {leagueName: null})
       .pipe(map((value: Map<Player, { goals?: number, assists?: number, 'g+a'?: number }>) => {
         console.log('selectedLeagueTab', this.selectedLeagueTab, value);
         const sortedEntries = [...value.entries()].sort((a, b) => b[1].goals - a[1].goals);

@@ -2,14 +2,14 @@ import {Injectable} from '@angular/core';
 import {Actions, createEffect, EffectNotification, ofType, OnRunEffects} from '@ngrx/effects';
 import {FirebaseService} from '../../services/firebase.service';
 import {
-  addFinanceRecord,
-  expandStadium,
+  addFinanceRecord, advanceASeason, cleanUpBeforeANewSeason,
+  expandStadium, generateStuffForANewSeason,
   getBaseData,
   getClub, giveSeasonalPrizeMoney,
   gotBaseData,
   gotClub,
   gotPlayers,
-  logOut, playerTransferToAClub, playerTransferToCurClub,
+  logOut, makeDivisionRotations, playerTransferToAClub, playerTransferToCurClub, rotateClubs,
   scheduleGenerated,
   tablesGenerated
 } from '../actions/current-game.actions';
@@ -23,7 +23,7 @@ import {
   getAllClubs,
   getAllCountries,
   getAllLeagues, getClubsCupResultByClubsNameEn, getCurrentCountryLeagues, selectClubsByLeagueName,
-  selectCurrentClub, selectLeagueTableByLeaguesNameEn,
+  selectCurrentClub, selectCurrentPlayers, selectLeagueTableByLeaguesNameEn,
   selectPlayersByClubsNameEn
 } from '../selectors/current-game.selectors';
 import {MatDialog} from '@angular/material/dialog';
@@ -35,6 +35,9 @@ import {TransferService} from '../../services/transfer.service';
 import {League} from '../../interfaces/league';
 import {LeagueTable} from '../../interfaces/league-table';
 import {FinanceService} from '../../services/finance.service';
+import {NUM_OF_CLUBS_IN_DIVISION_ROTATION} from '../../constants/general';
+import {CupResult} from '../../interfaces/cup-result';
+import {Player} from '../../interfaces/player';
 
 @Injectable()
 export class CurrentGameEffects {
@@ -100,6 +103,7 @@ export class CurrentGameEffects {
           this.store.pipe(select(getAllClubs), take(1))]).pipe(
           filter(value => !!this.userService.userName),
           map(([countries, leagues, clubs]) => {
+            console.warn('GotPlayers generating schedules NOW');
             const leagueSchedules = this.game.generateLeagueSchedules(leagues, clubs);
             const cupSchedules = this.game.generateCupSchedules(countries, leagues, clubs);
             return scheduleGenerated({schedule: {...leagueSchedules, ...cupSchedules}});
@@ -219,11 +223,9 @@ export class CurrentGameEffects {
       switchMap(([clubArrays, leagues]: [Club[][], League[]]) => {
         console.warn('BIG clubArrays', clubArrays, leagues);
         const clubs: Club[] = [];
-        // @ts-ignore
         clubArrays.forEach((clubArr: Club[]) => clubs.push(...clubArr));
         const cupResultSelects$: Observable<{clubNameEn: string, eliminated: number | null, total: number}>[] = clubs.map(cl =>
           this.store.select(getClubsCupResultByClubsNameEn, {clubsNameEn: cl.nameEn}));
-        // @ts-ignore
         const tableSelects$: Observable<LeagueTable[]>[] = leagues.map((l: League) =>
           this.store.select(selectLeagueTableByLeaguesNameEn, {leaguesNameEn: l.nameEn}));
         return combineLatest([
@@ -235,7 +237,7 @@ export class CurrentGameEffects {
         }));
       }),
       switchMap(([cupResults, tableArrays, leagues, clubArrays]:
-                   [{clubNameEn: string, eliminated: number | null, total: number}[], LeagueTable[][], League[], Club[][]]) => {
+                   [CupResult[], LeagueTable[][], League[], Club[][]]) => {
         // console.warn('BIG cupResults', cupResults, tableArrays, leagues, clubArrays);
         const financeRecords = [];
         leagues.forEach((league, index) => {
@@ -248,7 +250,7 @@ export class CurrentGameEffects {
               expense: null,
               income: this.finService.calculateClubsLeaguePrizeMoney(league.tier, leaguePosIndex + 1, tableArrays[index].length) * 1000000
             }));
-            const clubsCupResult: {clubNameEn: string, eliminated: number | null, total: number} =
+            const clubsCupResult: CupResult =
               cupResults.find(results => results.clubNameEn === club.nameEn);
             const desc = clubsCupResult.eliminated ? `Призовые за ${clubsCupResult.eliminated} раунд кубка` : `Призовые за победу в кубке`;
             financeRecords.push(addFinanceRecord({
@@ -260,6 +262,47 @@ export class CurrentGameEffects {
           });
         });
         return financeRecords;
+      })
+    ));
+
+  divisionRotations$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(makeDivisionRotations),
+      filter(value => !!this.userService.userName),
+      switchMap(() => {
+        return this.store.select(getCurrentCountryLeagues).pipe(take(1));
+      }),
+      switchMap((leagues: League[]) => {
+        const tableSelects$: Observable<LeagueTable[]>[] = leagues.map((l: League) =>
+          this.store.select(selectLeagueTableByLeaguesNameEn, {leaguesNameEn: l.nameEn}));
+        return combineLatest(tableSelects$).pipe(take(1), map((tables: LeagueTable[][]) => [tables, leagues]));
+      }),
+      switchMap(([tables, leagues]: [LeagueTable[][], League[]]) => {
+        const rotationActions = [];
+        leagues.forEach((l: League, index) => {
+          const table: LeagueTable[] = tables[index];
+          if (table.length) {
+            const topClubNames: string[] = table.filter((value: LeagueTable, place) => place < NUM_OF_CLUBS_IN_DIVISION_ROTATION)
+              .map((value: LeagueTable) => value.clubName);
+            const bottomClubNames: string[] = table.filter((value: LeagueTable, place) =>
+              place >= (table.length - NUM_OF_CLUBS_IN_DIVISION_ROTATION)).map((value: LeagueTable) => value.clubName);
+            rotationActions.push(rotateClubs({clubNames: topClubNames, direction: 'up'}));
+            rotationActions.push(rotateClubs({clubNames: bottomClubNames, direction: 'down'}));
+          }
+        });
+        return rotationActions;
+      })
+    ));
+
+  generateStuffForANewSeason$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(generateStuffForANewSeason),
+      filter(value => !!this.userService.userName),
+      switchMap(actions => {
+        return this.store.select(selectCurrentPlayers).pipe(take(1));
+      }),
+      map((curPlayers: Player[]) => {
+        return gotPlayers({players: curPlayers});
       })
     ));
 

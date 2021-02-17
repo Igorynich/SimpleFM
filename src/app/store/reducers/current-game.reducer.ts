@@ -2,29 +2,43 @@ import {Club} from '../../interfaces/club';
 import {Player} from '../../interfaces/player';
 import {Action, ActionCreator, ActionType, createReducer, On, on} from '@ngrx/store';
 import {
-  addAttendanceForMatch, addFinanceRecord,
+  addAttendanceForMatch,
+  addFinanceRecord,
   addGainsAndLossesForMatch,
   addGoalScorersForMatch,
-  addMatch,
-  advanceAWeek, expandStadium,
-  getClub, giveSeasonalPrizeMoney,
+  addMatch, advanceASeason,
+  advanceAWeek, cleanUpBeforeANewSeason,
+  expandStadium,
+  getClub,
+  giveSeasonalPrizeMoney,
   gotBaseData,
   gotClub,
-  gotPlayers, logOut, newJobTaken, oneMoreWeekOnCurrentJob, playersListedOnTransfer, playerTransferToAClub, playerTransferToCurClub,
-  scheduleGenerated, setABunchOfResult, setResult,
+  gotPlayers,
+  logOut,
+  newJobTaken,
+  oneMoreWeekOnCurrentJob,
+  playersListedOnTransfer,
+  playerTransferToAClub,
+  playerTransferToCurClub,
+  rotateClubs,
+  scheduleGenerated,
+  seasonalChangeOfPlayersPowers,
+  setABunchOfResult,
+  setResult,
   tablesGenerated,
-  updatePlayers, updateTables
+  updatePlayers,
+  updateTables
 } from '../actions/current-game.actions';
 import {Country} from '../../interfaces/country';
 import {League} from '../../interfaces/league';
 import {WeekSchedule} from '../../interfaces/league-schedule';
 import {LeagueTable} from '../../interfaces/league-table';
-import {BASE_POWER_TICKET_PRICES_COEF, CUP_INTERVAL} from '../../constants/general';
+import {BASE_POWER_TICKET_PRICES_COEF, CUP_INTERVAL, SEASONAL_POWER_CHANGE_RANGE} from '../../constants/general';
 import {Match} from '../../interfaces/match';
 import {MatchStats} from '../../interfaces/match-stats';
 import {getLeagueWeek, isCupWeek, resultSplitter, sortClubsRoster, sortStarters} from '../../utils/sort-roster';
 import {round} from 'lodash';
-import {closest} from '../../utils/helpers';
+import {closest, randomInteger} from '../../utils/helpers';
 import {FinanceRecord} from '../../interfaces/finance-record';
 import produce, {Draft, enableMapSet} from 'immer';
 import {Transfer} from '../../interfaces/transfer';
@@ -150,12 +164,26 @@ const _currentGameReducer = createReducer(currentGameInitState,
     // console.log('advanceAWeek', {...state, currentWeek: state.currentWeek + 1});
     return {...state, currentWeek: state.currentWeek + 1};
   }),
+  on(advanceASeason, state => {
+    const newState = produce(state, draft => {
+      draft.currentSeason++;
+      draft.currentWeek = 0;
+      draft.finances = null;
+      draft.gainsAndLosses = null;
+      draft.matches = {};
+      draft.stats = {};
+      draft.players.forEach(pl => pl.gain = 0);
+      draft.currentPlayers.forEach(pl => pl.gain = 0);
+    });
+    console.warn('advanceASeason');
+    return newState;
+  }),
   on(addMatch, (state, {match}) => {
     // console.log('addMatch', match); // {...state, matches: {...state.matches, ...match}});
     return {...state, matches: {...state.matches, ...match}};
   }),
   on(addFinanceRecord, (state, {clubNameEn, description, expense, income}) => {
-    console.log('addFinanceRecord', clubNameEn, description, expense, income);
+    // console.log('addFinanceRecord', clubNameEn, description, expense, income);
     const newState = produce(state, draft => {
       // old
       const map = new Map<string, { [week: number]: FinanceRecord[] }>();
@@ -454,18 +482,60 @@ const _currentGameReducer = createReducer(currentGameInitState,
     });
     return newState;
   }),
-  /*on(giveSeasonalPrizeMoney, (state) => {
+  on(seasonalChangeOfPlayersPowers, (state) => {
     const newState = produce(state, (draft: CurrentGameState) => {
-      const curClub = draft.currentClub;
-      const curLeague = draft.leagues.find(value => value.nameEn === curClub.leagueNameEn);
-      const curCountry = draft.countries.find(value => value.nameEn === curLeague.countryNameEn);
-      const countryLeagues = draft.leagues.filter(value => value.countryNameEn === curLeague.countryNameEn);
-      countryLeagues.forEach((league: League) => {
-        const clubs = draft.clubs
+      draft.players.forEach((pl: Player) => {
+        if (pl.power > 9) {
+          pl.power = 9;
+        }
+        if (pl.power < 1) {
+          pl.power = 1;
+        }
+        const negRange = SEASONAL_POWER_CHANGE_RANGE >= pl.power ? (pl.power - 0.1) : SEASONAL_POWER_CHANGE_RANGE;
+        const posRange = SEASONAL_POWER_CHANGE_RANGE >= (10 - pl.power) ? (10 - pl.power - 0.1) : SEASONAL_POWER_CHANGE_RANGE;
+        const add = randomInteger(-(negRange * 10), posRange * 10) / 10;
+        pl.power = round(pl.power + add, 1);
+        if (pl.power > 9.9 || pl.power < 0.1) {
+          console.error('Player Power out of range', pl.power, pl.nameEn, pl.clubNameEn);
+        }
+        const currPlayer = draft.currentPlayers.find(value => value.nameEn === pl.nameEn);
+        if (!!currPlayer) {
+          currPlayer.power = pl.power;
+        }
       });
     });
     return newState;
-  }),*/
+  }),
+  on(rotateClubs, (state, {clubNames, direction}: {clubNames: string[], direction: 'up' | 'down'}) => {
+    console.log('Rotating', clubNames, direction);
+    const newState = produce(state, (draft: CurrentGameState) => {
+      const clubs: Club[] = draft.clubs.filter((cl: Club) => clubNames.includes(cl.nameEn) || clubNames.includes(cl.nameRu));
+      const isCurrClubInvolved: boolean = !!clubNames.find(clubName => draft.currentClub.nameEn === clubName
+        || draft.currentClub.nameRu === clubName);
+      if (clubs.length !== clubNames.length) {
+        console.error('Could not find all the clubs to rotate', clubNames, clubs);
+      }
+      const league = draft.leagues.find((l: League) => l.nameEn === clubs[0].leagueNameEn);
+      let newLeague: League;
+      if (direction === 'up') {
+       newLeague = draft.leagues.find((l: League) => l.tier === league.tier + 1);
+      }
+      if (direction === 'down') {
+        newLeague = draft.leagues.find((l: League) => l.tier === league.tier - 1);
+      }
+      if (!!newLeague) {
+        clubs.forEach((cl: Club) => {
+          cl.leagueNameEn = newLeague.nameEn;
+          cl.leagueNameRu = newLeague.nameRu;
+        });
+        if (isCurrClubInvolved) {
+          draft.currentClub.leagueNameEn = newLeague.nameEn;
+          draft.currentClub.leagueNameRu = newLeague.nameRu;
+        }
+      }
+    });
+    return newState;
+  }),
 );
 
 export function currentGameReducer(state: CurrentGameState, action: Action) {

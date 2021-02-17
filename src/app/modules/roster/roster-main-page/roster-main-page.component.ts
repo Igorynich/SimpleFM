@@ -42,18 +42,18 @@ export class RosterMainPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // this.players = this.game.currentPlayers;
-    this._playersSub = this.store.select(selectCurrentPlayers).subscribe((value: Player[]) => {
+    this._playersSub = this.store.select(selectCurrentPlayers).pipe(take(1)).subscribe((value: Player[]) => {
       console.log('Players', value);
       this.players = [...value];
     });
-    this._statsSub = this.store.select(selectCurrentClub).pipe(switchMap(curClub =>
-      this.store.select(selectClubsRosterStats, {clubsNameEn: curClub.nameEn})))
+    this._statsSub = this.store.select(selectCurrentClub).pipe(take(1), switchMap(curClub =>
+      this.store.select(selectClubsRosterStats, {clubsNameEn: curClub.nameEn}).pipe(take(1))))
       .subscribe((value: Map<string, PlayerStats>) => {
         this.stats = value;
         console.log('Players Stats', value);
       });
-    this._statsLGSub = this.store.select(selectCurrentClub).pipe(switchMap(curClub =>
-      this.store.select(selectClubsRosterLastMatchStats, {clubsNameEn: curClub.nameEn})))
+    this._statsLGSub = this.store.select(selectCurrentClub).pipe(take(1), switchMap(curClub =>
+      this.store.select(selectClubsRosterLastMatchStats, {clubsNameEn: curClub.nameEn}).pipe(take(1))))
       .subscribe((value: Map<string, PlayerStats>) => {
         this.statsLastGame = value;
         console.log('Players Stats Last Game', value);

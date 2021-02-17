@@ -6,7 +6,6 @@ import {League} from '../../interfaces/league';
 import {LeagueTable} from '../../interfaces/league-table';
 import {WeekSchedule} from '../../interfaces/league-schedule';
 import {Match} from '../../interfaces/match';
-import {FinanceRecord} from '../../interfaces/finance-record';
 
 export const getBaseData = createAction('[Initial] data read from Firebase(countries, leagues, clubs, players)');
 export const gotBaseData = createAction('[Initial] data read successful', props<{
@@ -24,6 +23,7 @@ export const scheduleGenerated = createAction('Schedule has been generated', pro
 export const tablesGenerated = createAction('Tables has been generated', props<{ tables: { [leagueId: string]: LeagueTable[] } }>());
 
 export const advanceAWeek = createAction('Go to next Week');
+export const advanceASeason = createAction('Go to next Season (clean up data)');
 
 export const logOut = createAction('Log Out');
 
@@ -75,3 +75,12 @@ export const oneMoreWeekOnCurrentJob = createAction('Adds one more week to weeks
 
 export const giveSeasonalPrizeMoney = createAction('Giving prize money when season ends');
 
+export const seasonalChangeOfPlayersPowers = createAction('Changing players powers at season end');
+
+export const makeDivisionRotations = createAction('Starting effect for division rotations');
+
+export const rotateClubs = createAction('Clubs to rotate between divisions', props<{clubNames: string[], direction: 'up' | 'down'}>());
+
+export const generateStuffForANewSeason = createAction('Starts generation of schedules, power ranks and stuff for next season');
+
+export const cleanUpBeforeANewSeason = createAction('Cleans finances, gainsAndLosses, matches and stats before new season');
