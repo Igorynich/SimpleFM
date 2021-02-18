@@ -273,6 +273,13 @@ export class FirebaseService {
           loaded: true
         });
       }
+      // TODO remove after b/e done
+      playersArray.forEach(pl => {
+        const duplicates = playersArray.filter(value1 => value1.nameRu === pl.nameRu || value1.nameEn === pl.nameEn);
+        if (duplicates.length > 1) {
+          console.error('DUPLICATE PLAYERS', duplicates);
+        }
+      });
       console.log('players with id', playersArray);
       return playersArray;
     }), catchError(err => {

@@ -1,7 +1,7 @@
 import {Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
-import {Observable, of, Subject, Subscription} from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
-import { MatTabChangeEvent } from '@angular/material/tabs';
+import {combineLatest, Observable, of, Subject, Subscription} from 'rxjs';
+import {MatDialog} from '@angular/material/dialog';
+import {MatTabChangeEvent} from '@angular/material/tabs';
 import {Country} from '../../../interfaces/country';
 import {League} from '../../../interfaces/league';
 import {EditCountryDialogComponent} from '../edit-country-dialog/edit-country-dialog.component';
@@ -9,7 +9,7 @@ import {FirebaseService} from '../../../services/firebase.service';
 import {EditLeagueDialogComponent} from '../edit-league-dialog/edit-league-dialog.component';
 import {AddCountryDialogComponent} from '../add-country-dialog/add-country-dialog.component';
 import {ConfirmationDialogComponent} from '../../../shared/confirmation-dialog/confirmation-dialog.component';
-import {debounceTime, distinctUntilChanged, map, switchMap, tap} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, map, startWith, switchMap, take, tap} from 'rxjs/operators';
 import {CleanSubscriptions, clearSubscription} from '../../../utils/clean-subscriptions';
 import {AddLeagueDialogComponent} from '../add-league-dialog/add-league-dialog.component';
 import {Club} from '../../../interfaces/club';
@@ -23,6 +23,8 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {FormControl} from '@angular/forms';
 import {POSITIONS} from '../../../constants/positions';
+import {randomInteger} from '../../../utils/helpers';
+import {round} from 'lodash';
 
 @CleanSubscriptions()
 @Component({
@@ -33,6 +35,7 @@ import {POSITIONS} from '../../../constants/positions';
 export class AdminMainPageComponent implements OnInit, OnDestroy {
 
   clubs: Observable<Club[]>;
+  filteredClubs$: Observable<Club[]>;
   countries: Observable<Country[]>;
   leagues: Observable<League[]>;
   players: Player[];
@@ -52,8 +55,13 @@ export class AdminMainPageComponent implements OnInit, OnDestroy {
   pagePlayers = 0;
 
   clubSearch: FormControl;
+  leagueSearch: FormControl;
+  clubNameSearch: FormControl;
   nameSearch: FormControl;
   positionSearch: FormControl;
+
+  fillPower: {from: FormControl, to: FormControl};
+
 
   private _addDialog: Subscription;
   private _delDialog: Subscription;
@@ -63,16 +71,47 @@ export class AdminMainPageComponent implements OnInit, OnDestroy {
   private _clubSearchSub: Subscription;
   private _nameSearchSub: Subscription;
   private _positionSearchSub: Subscription;
+  private _fillPowerSub: Subscription;
 
-  constructor(public fs: FirebaseService, private dialog: MatDialog) { }
+
+  constructor(public fs: FirebaseService, private dialog: MatDialog) {
+  }
 
   ngOnInit() {
+    this.fillPower = {
+      from: new FormControl(0),
+      to: new FormControl(6)
+    };
+    this.leagueSearch = new FormControl(null);
     this.clubSearch = new FormControl(null);
+    this.clubNameSearch = new FormControl('');
     this.nameSearch = new FormControl('');
     this.positionSearch = new FormControl(null);
     this._nameSearchSub = this.nameSearch.valueChanges.pipe(distinctUntilChanged(), debounceTime(300)).subscribe(value => {
       this.filterPlayers(this.players);
     });
+    this.clubs = this.fs.getClubs();
+    this.filteredClubs$ = combineLatest([
+      this.fs.getClubs(),
+      this.leagueSearch.valueChanges.pipe(startWith(this.leagueSearch.value)),
+      this.clubNameSearch.valueChanges.pipe(startWith(this.clubNameSearch.value))
+    ]).pipe(distinctUntilChanged(), debounceTime(300), map(([clubs, leagueNameEn, clubName]: [Club[], string, string]) => {
+      // console.log('Searching clubs', clubs, leagueNameEn, clubName);
+      // console.log('Searching clubs1', this.leagueSearch.value, this.clubNameSearch.value);
+      const clubNameX = (clubName || this.clubNameSearch.value).toLowerCase();
+      const leagueNameX = leagueNameEn || this.leagueSearch.value;
+      return clubs.filter(cl => {
+        if (!!leagueNameX && !!clubNameX) {
+          return cl.leagueNameEn === leagueNameX &&
+            (cl.nameRu.toLowerCase().includes(clubNameX) || cl.nameEn.toLowerCase().includes(clubNameX));
+        } else if (!!leagueNameX) {
+          return cl.leagueNameEn === leagueNameX;
+        } else if (!!clubNameX) {
+          return (cl.nameRu.toLowerCase().includes(clubNameX) || cl.nameEn.toLowerCase().includes(clubNameX));
+        }
+        return true;
+      });
+    }));
     this._clubSearchSub = this.clubSearch.valueChanges.pipe(distinctUntilChanged(), debounceTime(300)).subscribe(value => {
       this.filterPlayers(this.players);
     });
@@ -80,7 +119,8 @@ export class AdminMainPageComponent implements OnInit, OnDestroy {
       this.filterPlayers(this.players);
     });
     this.countries = this.fs.getCountries();
-    this.clubs = this.fs.getClubs();
+    this.leagues = this.fs.getLeagues();
+
     this._playersDSSub = this.playersChanged$.subscribe((value: Player[]) => {
       this.playersDS = new MatTableDataSource(value);
       this.playersDS.paginator = this.playersPaginator;
@@ -95,9 +135,9 @@ export class AdminMainPageComponent implements OnInit, OnDestroy {
 
   loadAppropriateContent(ev: MatTabChangeEvent) {
     console.log(ev.index);
-    if (ev.index === 1 && !this.leagues) {
+    /*if (ev.index === 1 && !this.leagues) {
       this.leagues = this.fs.getLeagues();
-    }
+    }*/
     /*if (ev.index === 2 && !this.clubs) {
       this.clubs = this.fs.getClubs();
     }*/
@@ -299,10 +339,26 @@ export class AdminMainPageComponent implements OnInit, OnDestroy {
     console.log('Players', this.players);
     const unpoweredPlayers = this.players.filter(value => !value.power);
     unpoweredPlayers.forEach(value => {
-      const randomPower = +(Math.random() * 10).toFixed(1) ;
+      const randomPower = +(Math.random() * 10).toFixed(1);
       console.log(randomPower);
       // value.power = randomPower;
       this.fs.updatePlayer(value.id, {power: randomPower}).subscribe();
     });
+  }
+
+  fillPowersFiltered() {
+    this.playersChanged$.pipe(take(1)).subscribe((players: Player[]) => {
+      players.forEach(pl => {
+        if (!pl.power) {
+          if (this.fillPower.from.value < this.fillPower.to.value) {
+            const random = round(randomInteger(this.fillPower.from.value * 10, this.fillPower.to.value * 10) / 10, 1);
+            this.fs.updatePlayer(pl.id, {power: random}).subscribe();
+          } else {
+            console.error(`${this.fillPower.from.value} >= ${this.fillPower.to.value} - NOT GOOD`);
+          }
+        }
+      });
+    });
+    this.filterPlayers(this.players);
   }
 }

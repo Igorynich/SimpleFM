@@ -5,7 +5,7 @@
         <span class="current-week" >Сезон {{currentSeason$ | async}}
           {{!(currentWeek$ | async) ? 'Межсезонье' : 'Неделя ' + (currentWeek$ | async)}}</span>
       </div>
-      <div class="col-2">
+      <div class="col-3">
         <div class="row">
           <div class="col">
             <p class="text-right">{{userService.userName}} (<span>{{(currentClub$ | async)?.nameRu}}</span>)</p>

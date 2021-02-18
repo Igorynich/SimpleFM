@@ -101,9 +101,31 @@
     <ng-template matTabContent>
       <ng-container *ngTemplateOutlet="error; context: {$implicit: countries}"></ng-container>
       <ng-container *ngTemplateOutlet="loading"></ng-container>
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="w-100">
+            <mat-label>Поиск по имени</mat-label>
+            <input matInput type="text" [formControl]="clubNameSearch">
+            <button mat-button *ngIf="clubNameSearch.value" matSuffix mat-icon-button aria-label="Clear" (click)="clubNameSearch.setValue('')">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+        <div class="col">
+          <ng-select class="w-100" [items]="leagues | async"
+                     [formControl]="leagueSearch"
+                     bindLabel="nameRu"
+                     bindValue="nameEn"
+                     [virtualScroll]="true"
+                     [selectOnTab]="true"
+                     placeholder="Поиск по лиге"
+                     (clear)="leagueSearch.setValue(null)">
+          </ng-select>
+        </div>
+      </div>
       <div class="row w-100" *ngIf="(fs.progress | async).loaded">
         <div class="col">
-          <table mat-table [dataSource]="clubs | async | paginate: { itemsPerPage: 10, currentPage: pageClubs }">
+          <table mat-table [dataSource]="filteredClubs$ | async | paginate: { itemsPerPage: 10, currentPage: pageClubs }">
 
             <ng-container matColumnDef="index">
               <th mat-header-cell *matHeaderCellDef class="pl-0 pr-4">#</th>
@@ -268,12 +290,17 @@
               <button mat-raised-button color="primary" (click)="addNewPlayer()" class="float-left mt-5">
                 Добавить игрока
               </button>
-              <button mat-raised-button color="warn" (click)="createRandomPlayer()" class="float-left mt-5 ml-5">
-                Создать рандомного игрока
+              <button mat-raised-button color="accent" (click)="fillPowersFiltered()" class="float-left mt-5 ml-5">
+                Заполнить powers у отфильтрованных в промежутке
               </button>
-              <button mat-raised-button color="warn" (click)="fillPowers()" class="float-left mt-5 ml-5">
-                Заполнить powers
-              </button>
+              <mat-form-field class="w-5">
+                <mat-label>from</mat-label>
+                <input matInput type="number" [formControl]="fillPower.from" max="10" min="0">
+              </mat-form-field>
+              <mat-form-field class="w-5">
+                <mat-label>to</mat-label>
+                <input matInput type="number" [formControl]="fillPower.to" max="10" min="0">
+              </mat-form-field>
             </div>
           </div>
         </div>
