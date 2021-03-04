@@ -279,6 +279,9 @@ export class FirebaseService {
         if (duplicates.length > 1) {
           console.error('DUPLICATE PLAYERS', duplicates);
         }
+        if (pl.power <= 0) {
+          console.error('PLAYER POWER 0', pl);
+        }
       });
       console.log('players with id', playersArray);
       return playersArray;

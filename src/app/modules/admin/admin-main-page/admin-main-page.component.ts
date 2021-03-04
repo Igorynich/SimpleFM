@@ -24,7 +24,7 @@ import {MatSort} from '@angular/material/sort';
 import {FormControl} from '@angular/forms';
 import {POSITIONS} from '../../../constants/positions';
 import {randomInteger} from '../../../utils/helpers';
-import {round} from 'lodash';
+import {round, meanBy} from 'lodash';
 
 @CleanSubscriptions()
 @Component({
@@ -61,6 +61,7 @@ export class AdminMainPageComponent implements OnInit, OnDestroy {
   positionSearch: FormControl;
 
   fillPower: {from: FormControl, to: FormControl};
+  averagePower = 0;
 
 
   private _addDialog: Subscription;
@@ -122,6 +123,7 @@ export class AdminMainPageComponent implements OnInit, OnDestroy {
     this.leagues = this.fs.getLeagues();
 
     this._playersDSSub = this.playersChanged$.subscribe((value: Player[]) => {
+      this.averagePower = round(meanBy(value, 'power'), 2);
       this.playersDS = new MatTableDataSource(value);
       this.playersDS.paginator = this.playersPaginator;
       this.playersDS.sort = this.playersSort;
