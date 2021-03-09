@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Actions, createEffect, EffectNotification, ofType, OnRunEffects} from '@ngrx/effects';
 import {FirebaseService} from '../../services/firebase.service';
 import {
-  addFinanceRecord, advanceASeason, cleanUpBeforeANewSeason,
+  addFinanceRecord, advanceASeason, advanceAWeek, cleanUpBeforeANewSeason,
   expandStadium, generateStuffForANewSeason,
   getBaseData,
   getClub, giveSeasonalPrizeMoney,
@@ -19,7 +19,7 @@ import {CurrentGameState} from '../reducers/current-game.reducer';
 import {combineLatest, Observable, of} from 'rxjs';
 import {Club} from '../../interfaces/club';
 import {
-  AppState,
+  AppState, getAllAvailableClubs,
   getAllClubs,
   getAllCountries,
   getAllLeagues, getClubsCupResultByClubsNameEn, getCurrentCountryLeagues, selectClubsByLeagueName,
@@ -38,6 +38,8 @@ import {FinanceService} from '../../services/finance.service';
 import {NUM_OF_CLUBS_IN_DIVISION_ROTATION} from '../../constants/general';
 import {CupResult} from '../../interfaces/cup-result';
 import {Player} from '../../interfaces/player';
+import {randomInteger} from '../../utils/helpers';
+import {StorageService} from '../../services/storage.service';
 
 @Injectable()
 export class CurrentGameEffects {
@@ -65,9 +67,9 @@ export class CurrentGameEffects {
     this.actions$.pipe(
       ofType(gotBaseData),
       filter(value => !!this.userService.userName),
-      switchMap(action => this.store.pipe(select(getAllClubs)).pipe(take(1), map(clubs => {
-        const randomNum = Math.ceil(Math.random() * 19).toFixed(0);
-        console.log(randomNum);
+      switchMap(action => this.store.pipe(select(getAllAvailableClubs)).pipe(take(1), map(clubs => {
+        const randomNum = randomInteger(0, clubs.length - 1);
+        console.log('Got Club', randomNum, clubs.length);
         const dialogRef = this.dialog.open(InfoDialogComponent, {
           width: '550px',
           data: clubs[randomNum]

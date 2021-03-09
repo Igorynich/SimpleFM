@@ -2,6 +2,7 @@
 after a JS engine turn */
 import {defer, Observable} from 'rxjs';
 import {round} from 'lodash';
+import {tap} from 'rxjs/operators';
 
 export function asyncData<T>(data: T): Observable<T> {
   return defer(() => Promise.resolve(data));
@@ -52,3 +53,21 @@ export function chooseItemByChance<T>(itemChanceObj: {item: T, chance: number}[]
   const result = multipliedChanceItems.find(value => value.chance === closestChance);
   return result.item;
 }
+
+export function tapOnce<T>(fn: (v: T) => any) {
+  return (source$: Observable<T>) =>
+    defer(() => {
+      let isFirst = true;
+
+      return source$.pipe(
+        tap(v => {
+          if (isFirst) {
+            fn(v);
+            isFirst = false;
+          }
+        })
+      );
+    });
+}
+
+

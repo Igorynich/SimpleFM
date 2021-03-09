@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, HostListener, Inject, OnInit, PLATFORM_ID} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState, isLastWeekOfTheSeason, selectCurrentWeek} from '../../../store/selectors/current-game.selectors';
 import {combineLatest, Observable, of, Subscription} from 'rxjs';
@@ -12,6 +12,8 @@ import {TransferService} from '../../../services/transfer.service';
 import {JobService} from '../../../services/job.service';
 import {clearSubscription} from '../../../utils/clean-subscriptions';
 import {SeasonService} from '../../../services/season.service';
+import {DOCUMENT, isPlatformBrowser, ViewportScroller} from '@angular/common';
+import {StorageService} from '../../../services/storage.service';
 
 @Component({
   selector: 'app-results-main-page',
@@ -25,6 +27,7 @@ export class ResultsMainPageComponent implements OnInit {
   curWeekResults$: Observable<CurrentWeekSchedule[]>;
 
   curWeekResults: CurrentWeekSchedule[];
+  displayedResultsIndex = 0;
 
   private _resultGenSub: Subscription;
   private _resultGenLulSub: Subscription;
@@ -35,7 +38,8 @@ export class ResultsMainPageComponent implements OnInit {
               private transferService: TransferService,
               private jobService: JobService,
               private route: ActivatedRoute,
-              private seasonService: SeasonService) { }
+              private seasonService: SeasonService,
+              private storage: StorageService) { }
 
   ngOnInit(): void {
     this.currentWeek$ = this.store.select(selectCurrentWeek).pipe(take(1));
@@ -52,22 +56,31 @@ export class ResultsMainPageComponent implements OnInit {
     })).subscribe();
   }
 
+  proceed() {
+    if (!!this.curWeekResults[this.displayedResultsIndex + 1]) {
+      this.displayedResultsIndex++;
+    } else {
+      this.advanceThroughWeek();
+    }
+  }
 
   advanceThroughWeek(noJobs = false) {
 
     clearSubscription(this._resultGenSub);
-    this.store.dispatch(updateTables());
-    this.store.dispatch(advanceAWeek());
+    this.store.dispatch(updateTables());        // updating Tables
+    this.store.dispatch(advanceAWeek());        // weekNum++
+
+    this.storage.saveStore().subscribe();       // saving game
 
     let isLastWeekOfTheSeas;
     this.store.select(isLastWeekOfTheSeason).pipe(take(1)).subscribe(value => isLastWeekOfTheSeas = value);
-    if (!isLastWeekOfTheSeas) {
+    if (!isLastWeekOfTheSeas) {       // NOT the end of the season
 
 
       // this.store.dispatch(advanceAWeek());
       // generate new transfer list if needed
-      this.transferService.generateTransferList();
-      // TODO random transfers
+      this.transferService.generateTransferList();          // generate new transfer list (if needed - every 2 weeks for now)
+      this.transferService.makeRandomTransfers();
 
       // get new job offer
       if (!noJobs && this.jobService.gotNewJobOffer()) {
@@ -80,7 +93,7 @@ export class ResultsMainPageComponent implements OnInit {
           console.error(reason);
         });
       }
-    } else {      // end of the season
+    } else {                          // end of the season
       this.jobService.oneMoreWeekOnCurrentJob();
       this.router.navigate([this.ROUTES.SEASON_END]).catch(reason => {
         console.error(reason);

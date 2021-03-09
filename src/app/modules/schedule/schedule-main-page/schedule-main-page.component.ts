@@ -29,9 +29,6 @@ export class ScheduleMainPageComponent implements OnInit {
       this.store.select(selectScheduleByClubsNameEn, {clubsNameEn: curClub.nameEn})), map(schedule => {
       return schedule;
     }));
-    this.curClubsSchedule$.subscribe(value => {
-      console.log('Cur club schedule', value);
-    });
   }
 
   getMatchStats(match: Match): Observable<MatchStats> {

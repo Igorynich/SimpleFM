@@ -24,11 +24,12 @@
           Неделя {{i + 1}}
         </div>
         <div class="col-2">
-          {{match.isCupMatch ? 'Кубок' : 'Лига'}}
+          {{match.isCupMatch ? 'Кубок Англии' : currentClub.leagueNameRu}}
         </div>
         <ng-container *ngIf="getMatchOpponent(match)?.club | async">
           <div class="col-5">
             {{(getMatchOpponent(match)?.club | async)?.nameRu}}
+            <span *ngIf="match.isCupMatch">({{(getMatchOpponent(match)?.club | async)?.leagueNameRu}})</span>
           </div>
           <div class="col-1 text-center">
             {{getMatchOpponent(match).field}}
@@ -44,6 +45,11 @@
             Прошел в след. раунд
           </div>
         </ng-container>
+      </ng-container>
+      <ng-container *ngIf="!match">
+        <div class="col-2">
+          Неделя {{i + 1}}
+        </div>
       </ng-container>
     </div>
   </div>

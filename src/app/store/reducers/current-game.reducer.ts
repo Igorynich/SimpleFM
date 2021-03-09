@@ -13,7 +13,7 @@ import {
   giveSeasonalPrizeMoney,
   gotBaseData,
   gotClub,
-  gotPlayers,
+  gotPlayers, loadSavedGame,
   logOut,
   newJobTaken,
   oneMoreWeekOnCurrentJob,
@@ -24,7 +24,7 @@ import {
   scheduleGenerated,
   seasonalChangeOfPlayersPowers,
   setABunchOfResult,
-  setResult,
+  setResult, setUserName,
   tablesGenerated,
   updatePlayers,
   updateTables
@@ -33,15 +33,21 @@ import {Country} from '../../interfaces/country';
 import {League} from '../../interfaces/league';
 import {WeekSchedule} from '../../interfaces/league-schedule';
 import {LeagueTable} from '../../interfaces/league-table';
-import {BASE_POWER_TICKET_PRICES_COEF, CUP_INTERVAL, SEASONAL_POWER_CHANGE_RANGE} from '../../constants/general';
+import {
+  BASE_LEAGUE_TIER_TICKET_PRICES_COEF,
+  BASE_POWER_TICKET_PRICES_COEF,
+  CUP_INTERVAL,
+  SEASONAL_POWER_CHANGE_RANGE
+} from '../../constants/general';
 import {Match} from '../../interfaces/match';
 import {MatchStats} from '../../interfaces/match-stats';
 import {getLeagueWeek, isCupWeek, resultSplitter, sortClubsRoster, sortStarters} from '../../utils/sort-roster';
-import {round} from 'lodash';
+import {round, cloneDeep} from 'lodash';
 import {closest, randomInteger} from '../../utils/helpers';
 import {FinanceRecord} from '../../interfaces/finance-record';
 import produce, {Draft, enableMapSet} from 'immer';
 import {Transfer} from '../../interfaces/transfer';
+import {keyframes} from '@angular/animations';
 
 export interface CurrentGameState {
   currentWeek: number;
@@ -76,6 +82,7 @@ export interface CurrentGameState {
   };
   transferListedPlayers: Player[];
   transfers: Transfer[];
+  userName: string;
 }
 
 export const currentGameInitState: CurrentGameState = {
@@ -109,12 +116,57 @@ export const currentGameInitState: CurrentGameState = {
     alreadySoldAPlayerThisWeekNum: 0,
   },
   transferListedPlayers: [],
-  transfers: []
+  transfers: [],
+  userName: ''
 };
 
 enableMapSet();
 
 const _currentGameReducer = createReducer(currentGameInitState,
+  on(loadSavedGame, (state, {data}) => {
+    console.warn('LOADED DATA', data);
+    const newState = produce(state, (draft: CurrentGameState) => {
+      const objToArr = (obj) => Object.keys(obj).map(key => obj[key]);
+      draft.currentWeek = data.currentWeek;
+      draft.currentSeason = data.currentSeason;
+      draft.weeksInASeason = data.weeksInASeason;
+      draft.currentClub = data.currentClub;
+      // draft.currentClub = {...data.currentClub};
+      draft.currentPlayers = objToArr(data.currentPlayers);
+      draft.countries = objToArr(data.countries);
+      draft.leagues = objToArr(data.leagues);
+      draft.clubs = objToArr(data.clubs);
+      draft.players = objToArr(data.players);
+      draft.scheduleShells = data.scheduleShells;
+      // draft.scheduleShells = {...data.scheduleShells};
+      draft.finances = data.finances;
+      draft.gainsAndLosses = data.gainsAndLosses;
+      // draft.gainsAndLosses = {...data.gainsAndLosses};
+      draft.jobData.weeksOnCurrentJob = data.jobData.weeksOnCurrentJob;
+      draft.loading = data.loading;
+      draft.matches = data.matches;
+      draft.schedule = data.schedule;
+      // draft.matches = {...data.matches};
+      // draft.schedule = {...data.schedule};
+      draft.seasonData.clubPowers = data.seasonData.clubPowers;
+      draft.seasonData.ticketPrices = data.seasonData.ticketPrices;
+      draft.stats = data.stats;
+      draft.tables = data.tables;
+      draft.transferData = data.transferData;
+      /*draft.stats = {...data.stats};
+      draft.tables = {...data.tables};
+      draft.transferData = {...data.transferData};*/
+      draft.transferListedPlayers = objToArr(data.transferListedPlayers);
+      draft.transfers = objToArr(data.transfers);
+      draft.userName = data.userName;
+    });
+    return newState;
+  }),
+  on(setUserName, (state, {userName}) => {
+    return {
+      ...state, userName
+    };
+  }),
   on(gotBaseData, (state, {countries, leagues, clubs, players, scheduleShells}) => {
     console.log('gotBase Data', {
       ...state, countries, leagues, clubs, players, scheduleShells
@@ -149,9 +201,14 @@ const _currentGameReducer = createReducer(currentGameInitState,
     //
     // generating ticketPrices
     const ticketPrices = new Map<string, number>();
-    map.forEach((power, clubNameEn) => {
-      const thresholds = Object.keys(BASE_POWER_TICKET_PRICES_COEF);
-      ticketPrices.set(clubNameEn, BASE_POWER_TICKET_PRICES_COEF[closest(power, thresholds)]);
+    const thresholds = Object.keys(BASE_POWER_TICKET_PRICES_COEF);
+    state.leagues.forEach(league => {
+      const clubs = state.clubs.filter(value => value.leagueNameEn === league.nameEn);
+      const multi = BASE_LEAGUE_TIER_TICKET_PRICES_COEF[league.tier];
+      clubs.forEach(club => {
+        const power = map.get(club.nameEn);
+        ticketPrices.set(club.nameEn, BASE_POWER_TICKET_PRICES_COEF[closest(power, thresholds)] * multi);
+      });
     });
     // console.log('scheduleGenerated', {...state, schedule, seasonData: {clubPowers: map, ticketPrices}});
     return {...state, schedule, seasonData: {clubPowers: map, ticketPrices}};
@@ -464,6 +521,8 @@ const _currentGameReducer = createReducer(currentGameInitState,
         draft.currentPlayers = draft.currentPlayers.filter(value => value.nameEn !== player.nameEn);
         // sorting
         draft.currentPlayers = sortClubsRoster(draft.currentPlayers);
+        // remove player from transferList
+        draft.transferListedPlayers = draft.transferListedPlayers.filter(pl => pl.nameEn !== player.nameEn);
       }
     });
     return newState;

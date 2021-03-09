@@ -1,7 +1,8 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Inject, Input, OnInit, Output, PLATFORM_ID, ViewChild} from '@angular/core';
 import {CurrentWeekSchedule} from '../../../interfaces/current-week-schedule';
 import {AppState} from '../../../store/selectors/current-game.selectors';
 import {Store} from '@ngrx/store';
+import {DOCUMENT, isPlatformBrowser, ViewportScroller} from '@angular/common';
 
 @Component({
   selector: 'app-results-card',
@@ -12,9 +13,11 @@ export class ResultsCardComponent implements OnInit {
 
   @Input() currentWeek: number;
 
-  @Input() curWeekResults: CurrentWeekSchedule[] = [];
+  @Input() leagueResults: CurrentWeekSchedule;
 
   @Output() continue = new EventEmitter();
+
+  @ViewChild('scrollAnchor') scrollAnchor: ElementRef;
 
   // curClub$: Observable<Club>;
 
@@ -26,5 +29,10 @@ export class ResultsCardComponent implements OnInit {
 
   onContinueClick() {
     this.continue.emit();
+    this.scrollToTop();
+  }
+
+  scrollToTop() {
+    this.scrollAnchor.nativeElement.scrollIntoView({block: 'nearest', behavior: 'smooth'});
   }
 }

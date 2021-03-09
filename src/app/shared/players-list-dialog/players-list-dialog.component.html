@@ -1,0 +1,42 @@
+<div class="row justify-content-center">
+  <div class="col text-center">
+    <h4>{{data.clubName}}</h4>
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    <mat-list role="list">
+      <mat-list-item role="listitem" *ngFor="let player of players$ | async" class="list-item">
+        <div class="row w-100 pos-{{player.position.toLowerCase()}}">
+          <div class="col">
+            <div class="row w-100">
+              <div class="col-1">
+                {{player.position}}
+              </div>
+              <div class="col-7">
+                {{player.nameRu}}
+              </div>
+              <div class="col-2">
+                {{player.power}}
+              </div>
+              <div class="col-1">
+                {{(stats$ | async).get(player.nameEn).games}}
+              </div>
+              <div class="col-1">
+                <span *ngIf="player.position !== 'GK'">{{(stats$ | async).get(player.nameEn).goals}}+{{(stats$ | async).get(player.nameEn).assists}}</span>
+                <span *ngIf="player.position === 'GK'">{{(stats$ | async).get(player.nameEn).conceded}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-list-item>
+    </mat-list>
+  </div>
+</div>
+<div class="row justify-content-center">
+  <div class="col-1">
+    <button mat-raised-button color="primary" [mat-dialog-close]="null">Закрыть</button>
+  </div>
+</div>
+
+

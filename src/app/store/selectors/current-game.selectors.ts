@@ -37,6 +37,16 @@ export const getAllLeagues = createSelector(selectCurrentGameState, (state: Curr
 export const getAllCountries = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.countries || []);
 export const getAllPlayers = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.players || []);
 
+export const getAllAvailableClubs = createSelector(selectCurrentGameState, getAllLeagues,  (state: CurrentGameState, leagues) => {
+  let lowestTierLeague = leagues[0];
+  leagues.forEach(value => {
+    if (value.tier > lowestTierLeague.tier) {
+      lowestTierLeague = value;
+    }
+  });
+  return state.clubs.filter(cl => cl.leagueNameEn === lowestTierLeague.nameEn);
+});
+
 export const getLeagueByLeagueNameEn = createSelector(selectCurrentGameState, (state: CurrentGameState, {leaguesNameEn}) => {
   return state.leagues.find(value => value.nameEn === leaguesNameEn);
 });
@@ -65,6 +75,14 @@ export const selectPlayersByClubsNameEn = createSelector(selectCurrentGameState,
     return state.currentPlayers || state.players.filter(value => value.clubNameEn === clubsNameEn);
   }
   const teamRoster: Player[] = state.players.filter(value => value.clubNameEn === clubsNameEn);
+  return sortClubsRoster(teamRoster);
+});
+
+export const selectPlayersByClubsName = createSelector(selectCurrentGameState, (state, {clubsName}) => {
+  if (clubsName === state.currentClub.nameEn || clubsName === state.currentClub.nameRu) {
+    return state.currentPlayers || state.players.filter(value => value.clubNameEn === clubsName || value.clubNameRu === clubsName);
+  }
+  const teamRoster: Player[] = state.players.filter(value => value.clubNameEn === clubsName || value.clubNameRu === clubsName);
   return sortClubsRoster(teamRoster);
 });
 

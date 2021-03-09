@@ -122,12 +122,15 @@ export class CurrentGameService {
         real: true
       });
     }
-    for (let i = teams.length; i < numOfClubsToGenSchedule; i++) {
-      teams.push({
-        num: i + 1,
-        real: false
-      });
+    if (teams.length < numOfClubsToGenSchedule) {
+      for (let i = teams.length; i < numOfClubsToGenSchedule; i++) {
+        teams.push({
+          num: i + 1,
+          real: false
+        });
+      }
     }
+
     // num of rounds = Math.ceil(Math.log2(clubs.length))
     const numOfRounds = Math.ceil(Math.log2(clubs.length));
     const numOfRealMatchesInR1 = clubs.length - (teams.length / 2);

@@ -40,6 +40,22 @@
           <span class="hover" (click)="login()">Войти с учеткой Google</span>
         </div>
       </div>
+
+      <div class="row justify-content-center" *ngIf="!!savedGameData">
+        <div class="col-6">
+          <h5 class="text-center">Или продолжить прошлую игру?</h5>
+          <div class="row">
+            <div class="col-11">
+              <button mat-flat-button class="w-100 text-center" (click)="loadSavedGame()">
+                {{savedGameData.userName}}({{savedGameData.club.nameRu}}) - сезон {{savedGameData.season + 1}}, неделя {{savedGameData.week + 1}}
+              </button>
+            </div>
+            <div class="col-1" (click)="deleteSavedGame()">
+              <button mat-mini-fab><mat-icon>menu</mat-icon></button>
+            </div>
+          </div>
+        </div>
+      </div>
     </mat-card>
   </div>
 </div>

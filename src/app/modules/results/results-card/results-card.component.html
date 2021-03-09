@@ -1,25 +1,35 @@
-<div class="row h-100 min-vh-88 main" *ngFor="let league of curWeekResults">
+<div class="scroll-anchor" style="height: 1px" #scrollAnchor></div>
+<div class="row h-100 min-vh-88 main">
   <div class="col h-100">
-    <div class="row justify-content-center h-5">
+    <div class="row justify-content-center h-5 sticky-header background-black">
       <div class="col-2">
-        <h3 class="main-header text-center">Неделя {{currentWeek}}</h3>
-      </div>
-    </div>
-    <div class="row justify-content-center white h-70 results-list">
-      <div class="col">
-        <div class="row justify-content-center league-name mb-3">
-          <div class="col-2 text-center">
-            {{league.tournament.nameRu}}
+        <div class="row">
+          <div class="col">
+            <h3 class="main-header text-center">Неделя {{currentWeek}}</h3>
           </div>
         </div>
-        <div class="row justify-content-center mt-3" *ngFor="let match of league.matches; let i = index">
+        <div class="row league-name mb-3">
+          <div class="col text-center">
+            {{leagueResults.tournament.nameRu}}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-center white results-list">
+      <div class="col">
+        <!--<div class="row justify-content-center league-name mb-3">
+          <div class="col-2 text-center">
+            {{leagueResults.tournament.nameRu}}
+          </div>
+        </div>-->
+        <div class="row justify-content-center mt-3" *ngFor="let match of leagueResults.matches; let i = index">
           <div class="col-8">
             <app-match-result [match]="match" [showGains]="true"></app-match-result>
           </div>
         </div>
       </div>
     </div>
-    <div class="row justify-content-center align-items-end h-25 pt-5 continue-button">
+    <div class="row justify-content-center align-items-end py-3 continue-button background-black">
       <div class="col-3">
         <button class="w-100" mat-raised-button color="primary" (click)="onContinueClick()">Продолжить</button>
       </div>

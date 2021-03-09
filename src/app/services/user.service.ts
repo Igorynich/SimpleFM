@@ -3,7 +3,7 @@ import {IpcRendererService} from './ipc-renderer.service';
 import {environment} from '../../environments/environment';
 import {Store} from '@ngrx/store';
 import {AppState} from '../store/selectors/current-game.selectors';
-import { logOut } from '../store/actions/current-game.actions';
+import {logOut, setUserName} from '../store/actions/current-game.actions';
 import {Event, NavigationStart, Router} from '@angular/router';
 import {Observable} from 'rxjs';
 import {filter, map} from 'rxjs/operators';
@@ -30,6 +30,7 @@ export class UserService {
 
   set userName(value: string) {
     this._userName = value.trim();
+    this.store.dispatch(setUserName({userName: this._userName}));
     if (this.ipcRenderer) {
       this.ipcRenderer.showAdminTrayIcon(this.isAdmin());
     }

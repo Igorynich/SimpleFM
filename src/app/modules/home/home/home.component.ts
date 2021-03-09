@@ -6,6 +6,12 @@ import {UserService} from '../../../services/user.service';
 import {ROUTES} from '../../../constants/routes';
 import {FirebaseService} from '../../../services/firebase.service';
 import {User} from 'firebase';
+import {StorageService} from '../../../services/storage.service';
+import {Club} from '../../../interfaces/club';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../store/selectors/current-game.selectors';
+import { loadSavedGame } from 'src/app/store/actions/current-game.actions';
+import {CurrentGameState} from '../../../store/reducers/current-game.reducer';
 
 @Component({
   selector: 'app-home',
@@ -19,8 +25,11 @@ export class HomeComponent implements OnInit {
   // googleForm: FormGroup;
   isGoogleLogin = false;
   userName: FormControl;
+  savedGame: CurrentGameState | null;
+  savedGameData: {club: Club, season: number, week: number, userName: string};
 
-  constructor(private router: Router, private userService: UserService, private fs: FirebaseService, private fb: FormBuilder) { }
+  constructor(private router: Router, private userService: UserService, private fs: FirebaseService, private fb: FormBuilder,
+              private storage: StorageService, private store: Store<AppState>) { }
 
   ngOnInit() {
     this.userName = new FormControl('', [Validators.required, Validators.maxLength(20)]);
@@ -28,6 +37,16 @@ export class HomeComponent implements OnInit {
       email: ['', Validators.email],
       password: ['']
     });*/
+    this.savedGame = this.storage.getStore();
+    console.warn('savedGame', this.savedGame);
+    if (!!this.savedGame) {
+      this.savedGameData = {
+        club: this.savedGame.currentClub,
+        season: this.savedGame.currentSeason,
+        week: this.savedGame.currentWeek,
+        userName: this.savedGame.userName
+      };
+    }
   }
 
   submitName() {
@@ -62,5 +81,18 @@ export class HomeComponent implements OnInit {
 
   printError(event) {
     console.error(event);
+  }
+
+  deleteSavedGame() {
+    this.storage.clearStorage();
+    this.savedGame = null;
+    this.savedGameData = null;
+  }
+
+  loadSavedGame() {
+    this.store.dispatch(loadSavedGame({data: this.savedGame}));
+    this.userName.setValue(this.savedGame.userName);
+    // TODO make better
+    this.submitName();
   }
 }

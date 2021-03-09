@@ -11,7 +11,7 @@ import {
 import {combineLatest, Observable, of} from 'rxjs';
 import {switchMap, take} from 'rxjs/operators';
 import {randomInteger} from '../utils/helpers';
-import {playersListedOnTransfer} from '../store/actions/current-game.actions';
+import {playersListedOnTransfer, playerTransferToAClub} from '../store/actions/current-game.actions';
 import {round} from 'lodash';
 import {Club} from '../interfaces/club';
 
@@ -30,6 +30,8 @@ export class TransferService {
     M: 5,
     F: 3
   };
+
+  readonly RANDOM_TRANSFER_CHANCE_PCT_BY_PLAYER = 10;
 
   constructor(private store: Store<AppState>) {
   }
@@ -91,9 +93,15 @@ export class TransferService {
 
   findABuyerForAPlayer(player: Player): Club {
     let theClub: Club;
-    this.store.select(getAllClubs).pipe(take(1)).subscribe(clubs => {
-      const clubsWithMoney = clubs.filter(club => club.budget >= player.price);
-      // const powerDifMap = new Map<string, number>();    // clubsNameEn, powerDif
+    combineLatest([
+      this.store.select(getAllClubs),
+      this.store.select(selectCurrentClub)
+    ]).pipe(take(1)).subscribe(([clubs, curClub]) => {
+      // not players' club and not current club
+      const eligibleClubs = clubs.filter(club => club.nameEn !== player.clubNameEn && club.nameEn !== curClub.nameEn);
+      // clubs that have money for transfer
+      const clubsWithMoney = eligibleClubs.filter(club => club.budget >= player.price);
+      // looking for power dif need of the player (which club gets the most of the transfer)
       const biggestPowerDif = {
         club: null,
         powerDif: -10
@@ -113,15 +121,24 @@ export class TransferService {
             biggestPowerDif.club = club;
             biggestPowerDif.powerDif = powerDif;
           }
-          // powerDifMap.set(club.nameEn, powerDif);
         });
       });
-      // powerDifMap.forEach().
       theClub = biggestPowerDif.club;
-      /*const random = randomInteger(0, clubsWithMoney.length - 1);
-      theClub = clubsWithMoney[random];*/
     });
     return theClub;
+  }
+
+  makeRandomTransfers() {
+    this.store.select(selectTransferListedPlayers).pipe(take(1)).subscribe((listedPlayers: Player[]) => {
+      listedPlayers.forEach(player => {
+        const random = randomInteger(1, 100);
+        if (random <= this.RANDOM_TRANSFER_CHANCE_PCT_BY_PLAYER) {
+          const buyerClub = this.findABuyerForAPlayer(player);
+          console.warn(`${player.nameEn} random transfer ${player.clubNameEn} => ${buyerClub.nameEn}`);
+          this.store.dispatch(playerTransferToAClub({player, clubsNameEn: buyerClub.nameEn}));
+        }
+      });
+    });
   }
 
   isClubHaveEnoughPlayersOfThatPosition(player: Player): boolean {

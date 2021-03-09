@@ -9,6 +9,8 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { MatchTooltipComponent } from './match-tooltip/match-tooltip.component';
 import {MatchTooltipDirective} from '../directives/match-tooltip.directive';
 import { MatchResultComponent } from './match-result/match-result.component';
+import { PlayersListDialogComponent } from './players-list-dialog/players-list-dialog.component';
+import {MatListModule} from '@angular/material/list';
 
 
 
@@ -19,13 +21,15 @@ import { MatchResultComponent } from './match-result/match-result.component';
     NavigateToOfficeComponent,
     MatchTooltipComponent,
     MatchTooltipDirective,
-    MatchResultComponent
+    MatchResultComponent,
+    PlayersListDialogComponent
   ],
   imports: [
     CommonModule,
     MatButtonModule,
     MatDialogModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatListModule
   ],
   exports: [
     NavigateToOfficeComponent,

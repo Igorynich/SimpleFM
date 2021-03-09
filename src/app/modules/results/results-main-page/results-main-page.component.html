@@ -1,8 +1,8 @@
 <div class="row results-main-container">
   <div class="col">
         <mat-card class="result-card--main">
-          <app-results-card [curWeekResults]="curWeekResults" [currentWeek]="currentWeek$ | async"
-                            (continue)="advanceThroughWeek()">
+          <app-results-card [leagueResults]="curWeekResults[displayedResultsIndex]" [currentWeek]="currentWeek$ | async"
+                            (continue)="proceed()">
           </app-results-card>
         </mat-card>
   </div>

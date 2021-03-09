@@ -8,6 +8,10 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatTableModule} from '@angular/material/table';
 import {MatListModule} from '@angular/material/list';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatSelectModule} from '@angular/material/select';
+import {ReactiveFormsModule} from '@angular/forms';
+import {NgSelectModule} from '@ng-select/ng-select';
 
 const routes = [
   {
@@ -27,6 +31,10 @@ const routes = [
     MatTabsModule,
     MatTableModule,
     MatListModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    ReactiveFormsModule,
+    NgSelectModule,
   ]
 })
 export class TablesModule { }

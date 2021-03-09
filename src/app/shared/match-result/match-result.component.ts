@@ -12,7 +12,6 @@ import {Store} from '@ngrx/store';
 import {Club} from '../../interfaces/club';
 import {MatchStats} from '../../interfaces/match-stats';
 import {Player} from '../../interfaces/player';
-import {Match1} from '../../interfaces/match1';
 
 @Component({
   selector: 'app-match-result',

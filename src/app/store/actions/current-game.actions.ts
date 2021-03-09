@@ -6,6 +6,9 @@ import {League} from '../../interfaces/league';
 import {LeagueTable} from '../../interfaces/league-table';
 import {WeekSchedule} from '../../interfaces/league-schedule';
 import {Match} from '../../interfaces/match';
+import {CurrentGameState} from '../reducers/current-game.reducer';
+
+export const setUserName = createAction('Setting UserName', props<{userName: string}>());
 
 export const getBaseData = createAction('[Initial] data read from Firebase(countries, leagues, clubs, players)');
 export const gotBaseData = createAction('[Initial] data read successful', props<{
@@ -84,3 +87,5 @@ export const rotateClubs = createAction('Clubs to rotate between divisions', pro
 export const generateStuffForANewSeason = createAction('Starts generation of schedules, power ranks and stuff for next season');
 
 export const cleanUpBeforeANewSeason = createAction('Cleans finances, gainsAndLosses, matches and stats before new season');
+
+export const loadSavedGame = createAction('Loads saved store', props<{data: CurrentGameState}>());

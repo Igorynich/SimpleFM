@@ -65,7 +65,7 @@ export class BaseResultGenService implements ResultGenerator {
   generateWeekResults(): Observable<CurrentWeekSchedule[]> {
     const a$ = this.store.select(selectCurrentWeekSchedule).pipe(take(1),
       map((value: CurrentWeekSchedule[]) => {
-        // console.warn(`Current Week Schedule`, value, value.length);
+        console.warn(`Current Week Schedule`, value);
         if (!this.inProgress) {
           const allMatches = [];
           value.forEach((value1: CurrentWeekSchedule) => {
@@ -83,7 +83,7 @@ export class BaseResultGenService implements ResultGenerator {
   }
 
   private generateResultsForWholeWeek(matches: Match[]) {
-    // console.log('Generating res for whole week ', matches);
+    console.log('Generating res for whole week ', matches);
     this.inProgress = true;
     const results = [];
     matches.forEach((value: Match) => {
@@ -169,7 +169,7 @@ export class BaseResultGenService implements ResultGenerator {
   }
 
   private generateMatchStats(homeRoster: Player[], awayRoster: Player[], result: string, match: Match) {
-    // console.warn(`Generating Match Stats for ${match.homeNameEn} - ${match.awayNameEn} ---- START`, match);
+    console.warn(`Generating Match Stats for ${match.homeNameEn} - ${match.awayNameEn} ---- START`, match);
     const [homeGoals, awayGoals] = resultSplitter(result);
     const cupDecider = result.includes('e') ? 'e' : '';
     const homeScorers: { goals: { [minute: number]: Player }, assists: { [minute: number]: Player | null } } =
