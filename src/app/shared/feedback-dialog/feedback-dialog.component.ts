@@ -3,13 +3,11 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {StorageService} from '../../services/storage.service';
 import {FirebaseService} from '../../services/firebase.service';
-import {mapReplacer} from '../../utils/local-storage';
+import {mapReplacer, mapReviver} from '../../utils/local-storage';
 import {Store} from '@ngrx/store';
 import {AppState, selectCurrentGameState} from '../../store/selectors/current-game.selectors';
 import {switchMap, take} from 'rxjs/operators';
-import lzwCompress from 'lzwcompress';
-import {mapValues} from 'lodash';
-import {Player} from '../../interfaces/player';
+import {LZString} from '../../utils/lz-string';
 
 @Component({
   selector: 'app-feedback-dialog',
@@ -36,7 +34,7 @@ export class FeedbackDialogComponent implements OnInit {
   send() {
     if (this.data.type === 'bug') {
       this.store.select(selectCurrentGameState).pipe(take(1), switchMap(state => {
-        const {countries, leagues, players, clubs, scheduleShells, gainsAndLosses, stats, ...dataToSend} = state;
+        const {countries, leagues, players, clubs, scheduleShells, stats, ...dataToSend} = state;
         const mapReplacedData = {
           ...dataToSend,
           finances: Array.from(dataToSend.finances.entries()),
@@ -45,11 +43,17 @@ export class FeedbackDialogComponent implements OnInit {
             ticketPrices: Array.from(dataToSend.seasonData.ticketPrices.entries())
           }
         };
-        const compressed = lzwCompress.pack(mapReplacedData);
-        console.warn('LZW', compressed);
-        console.warn('LZW 2', lzwCompress.unpack(compressed));
+        // const compressed = lzwCompress.pack(mapReplacedData);
+        const compressedData = LZString.compressToBase64(JSON.stringify(dataToSend, mapReplacer));
+        const compressedStat = LZString.compressToBase64(JSON.stringify(stats, mapReplacer));
+        console.warn('LZW DATA', compressedData);
+        console.warn('LZW STATS', compressedStat);
+        // console.warn('LZW 2', lzwCompress.unpack(compressed));
+        // console.warn('LZW 2', JSON.parse(this.lz.decompress(compressed), mapReviver));
         // console.warn('LZW1', lzwCompress.pack(JSON.stringify(dataToSend, mapReplacer)));
-        return this.firebase.addBugReport({text: this.form.get('text').value, save: compressed});
+        console.warn('LZW 2 DATA', JSON.parse(LZString.decompressFromBase64(compressedData), mapReviver));
+        console.warn('LZW 2 STATS', JSON.parse(LZString.decompressFromBase64(compressedStat), mapReviver));
+        return this.firebase.addBugReport({text: this.form.get('text').value, save: {data: compressedData, stats: compressedStat}});
       })).subscribe();
     } else if (this.data.type === 'feedback') {
       this.firebase.addFeedback({text: this.form.get('text').value}).subscribe();

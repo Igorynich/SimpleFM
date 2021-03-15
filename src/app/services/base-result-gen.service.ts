@@ -176,7 +176,7 @@ export class BaseResultGenService implements ResultGenerator {
       this.generateGoalScorers(homeGoals, homeRoster, homeGoals > awayGoals ? cupDecider : '');
     const awayScorers: { goals: { [minute: number]: Player }, assists: { [minute: number]: Player | null } } =
       this.generateGoalScorers(awayGoals, awayRoster, homeGoals < awayGoals ? cupDecider : '');
-    // console.warn(`Goalscorers pre dispatch`);
+    console.warn(`Goalscorers pre dispatch`, homeScorers, awayScorers);
     this.store.dispatch(addGoalScorersForMatch({
       matchId: match.id,
       goals: {
@@ -189,7 +189,7 @@ export class BaseResultGenService implements ResultGenerator {
       },
       result
     }));
-    // console.warn(`Goalscorers post dispatch`);
+    console.warn(`Goalscorers post dispatch`);
     const {gains, losses} = this.gainsService.generateGainsAndLosses(homeRoster, awayRoster, result, match, homeScorers, awayScorers);
     // console.warn(`GainsLosses pre dispatch`);
     this.store.dispatch(addGainsAndLossesForMatch({

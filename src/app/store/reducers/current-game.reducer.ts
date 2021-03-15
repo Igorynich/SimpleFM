@@ -47,7 +47,7 @@ import {closest, objToArr, randomInteger} from '../../utils/helpers';
 import {FinanceRecord} from '../../interfaces/finance-record';
 import produce, {Draft, enableMapSet} from 'immer';
 import {Transfer} from '../../interfaces/transfer';
-import {keyframes} from '@angular/animations';
+import {mapValues} from 'lodash';
 
 export interface CurrentGameState {
   currentWeek: number;
@@ -310,7 +310,17 @@ const _currentGameReducer = createReducer(currentGameInitState,
     // return {...state};
   }),
   on(addGoalScorersForMatch, (state, {matchId, goals, result}) => {
-    return {...state, stats: {...state.stats, [matchId]: {...state.stats[matchId], ...goals, result}}};
+    // console.warn(`REDUCER ADD MATCH STATS FOR ${matchId} START`);
+    const mapped = {
+      homeRoster: goals.homeRoster.map(value => value.nameEn),
+      awayRoster: goals.awayRoster.map(value => value.nameEn),
+      homeGoals: mapValues(goals.homeGoals, (obj) => obj.nameEn),
+      homeAssists: goals.homeAssists ? mapValues(goals.homeAssists, (obj) => obj?.nameEn) : null,
+      awayGoals: mapValues(goals.awayGoals, (obj) => obj.nameEn),
+      awayAssists: goals.awayAssists ? mapValues(goals.awayAssists, (obj) => obj?.nameEn) : null
+    };
+    // console.warn(`REDUCER ADD MATCH STATS FOR ${matchId} FINISH`, mapped);
+    return {...state, stats: {...state.stats, [matchId]: {...state.stats[matchId], ...mapped, result}}};
   }),
   on(addGainsAndLossesForMatch, (state, {matchId, gains, losses}) => {
     const newState = produce(state, (draft: CurrentGameState) => {
@@ -481,7 +491,7 @@ const _currentGameReducer = createReducer(currentGameInitState,
     return newState;
   }),
   on(playersListedOnTransfer, (state, {listedPlayers}) => {
-    return produce (state, draft => {
+    return produce(state, draft => {
       draft.transferData.generatedForWeekNum = draft.currentWeek;
       draft.transferListedPlayers = listedPlayers;
     });
@@ -565,7 +575,7 @@ const _currentGameReducer = createReducer(currentGameInitState,
     });
     return newState;
   }),
-  on(rotateClubs, (state, {clubNames, direction}: {clubNames: string[], direction: 'up' | 'down'}) => {
+  on(rotateClubs, (state, {clubNames, direction}: { clubNames: string[], direction: 'up' | 'down' }) => {
     console.log('Rotating', clubNames, direction);
     const newState = produce(state, (draft: CurrentGameState) => {
       const clubs: Club[] = draft.clubs.filter((cl: Club) => clubNames.includes(cl.nameEn) || clubNames.includes(cl.nameRu));
@@ -577,7 +587,7 @@ const _currentGameReducer = createReducer(currentGameInitState,
       const league = draft.leagues.find((l: League) => l.nameEn === clubs[0].leagueNameEn);
       let newLeague: League;
       if (direction === 'up') {
-       newLeague = draft.leagues.find((l: League) => l.tier === league.tier + 1);
+        newLeague = draft.leagues.find((l: League) => l.tier === league.tier + 1);
       }
       if (direction === 'down') {
         newLeague = draft.leagues.find((l: League) => l.tier === league.tier - 1);

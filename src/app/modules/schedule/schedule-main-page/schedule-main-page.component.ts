@@ -11,6 +11,7 @@ import {combineLatest, Observable, of} from 'rxjs';
 import {Match} from '../../../interfaces/match';
 import {resultSplitter} from '../../../utils/sort-roster';
 import {MatchStats} from '../../../interfaces/match-stats';
+import {MatchStats1} from '../../../interfaces/match-stats1';
 
 @Component({
   selector: 'app-schedule-main-page',
@@ -31,7 +32,7 @@ export class ScheduleMainPageComponent implements OnInit {
     }));
   }
 
-  getMatchStats(match: Match): Observable<MatchStats> {
+  getMatchStats(match: Match): Observable<MatchStats1> {
     return this.store.select(selectMatchStatsByMatchId, {matchId: match.id});
   }
 
@@ -52,7 +53,7 @@ export class ScheduleMainPageComponent implements OnInit {
     };
   }
 
-  getMatchResultClass(match: Match, stats: MatchStats) {
+  getMatchResultClass(match: Match, stats: MatchStats1) {
     const isHomeMatch = match.homeNameEn === this.currentClub?.nameEn;
     const resClass = {};
     if (stats?.result) {
@@ -69,7 +70,7 @@ export class ScheduleMainPageComponent implements OnInit {
     return resClass;
   }
 
-  getAdjustResult(field: 'H' | 'A', matchStats: MatchStats): string {
+  getAdjustResult(field: 'H' | 'A', matchStats: MatchStats1): string {
     if (!matchStats?.result) {
       return '';
     } else {

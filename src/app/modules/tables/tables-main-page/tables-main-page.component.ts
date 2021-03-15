@@ -21,6 +21,7 @@ import {FormControl} from '@angular/forms';
 import {League} from '../../../interfaces/league';
 import {PlayersListDialogComponent} from '../../../shared/players-list-dialog/players-list-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
+import {MatchStats1} from '../../../interfaces/match-stats1';
 
 @CleanSubscriptions()
 @Component({
@@ -107,7 +108,7 @@ export class TablesMainPageComponent implements OnInit, OnDestroy {
     };
   }
 
-  getMatchStats(match: Match1): Observable<MatchStats> {
+  getMatchStats(match: Match1): Observable<MatchStats1> {
     return this.store.select(selectMatchStatsByMatchId, {matchId: match.id});
   }
 

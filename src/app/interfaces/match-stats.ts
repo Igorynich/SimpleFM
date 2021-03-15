@@ -2,12 +2,12 @@ import {Player} from './player';
 
 export interface MatchStats {
   matchId: number;
-  homeRoster: Player[],
-  awayRoster: Player[],
-  homeGoals: {[minute: number]: Player};
-  homeAssists: {[minute: number]: Player | null};
-  awayGoals: {[minute: number]: Player};
-  awayAssists: {[minute: number]: Player | null};
+  homeRoster: string[];
+  awayRoster: string[];
+  homeGoals: {[minute: number]: string};
+  homeAssists: {[minute: number]: string | null};
+  awayGoals: {[minute: number]: string};
+  awayAssists: {[minute: number]: string | null};
   attendance: number;
   result?: string;
 }

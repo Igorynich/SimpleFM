@@ -13,6 +13,8 @@ import {Club} from '../../interfaces/club';
 import {Match1} from '../../interfaces/match1';
 import {Props} from '@ngrx/store/src/models';
 import {League} from '../../interfaces/league';
+import {MatchStats1} from '../../interfaces/match-stats1';
+import {mapValues} from 'lodash';
 
 export interface AppState {
   currentGame: CurrentGameState;
@@ -253,7 +255,19 @@ export const selectMatchById = createSelector(selectCurrentGameState, (state, {m
 
 export const selectMatchStatsByMatchId = createSelector(selectCurrentGameState, (state, {matchId}) => {
   // console.log('selectMatchById', matchId, state.matches);
-  return state.stats[matchId];
+  const stats: MatchStats = state.stats[matchId];
+  const res: MatchStats1 = {
+    ...stats,
+    awayAssists: stats?.awayAssists ? mapValues(stats.awayAssists, (obj) => state.players.find(value => value.nameEn === obj)) : null,
+    awayGoals: mapValues(stats?.awayGoals, (obj) => state.players.find(value => value.nameEn === obj)),
+    awayRoster: stats?.awayRoster.map(nameEn => state.players.find(value => value.nameEn === nameEn)),
+    homeAssists: stats?.homeAssists ? mapValues(stats.homeAssists, (obj) => state.players.find(value => value.nameEn === obj)) : null,
+    homeGoals: mapValues(stats?.homeGoals, (obj) => state.players.find(value => value.nameEn === obj)),
+    homeRoster: stats?.homeRoster.map(nameEn => state.players.find(value => value.nameEn === nameEn)),
+  };
+  // console.warn('MATCH STATS SELECTOR', stats);
+  // console.warn('MATCH STATS SELECTOR 111', res);
+  return res;
 });
 
 export const selectMatchGainsByMatchId = createSelector(selectCurrentGameState, (state, {matchId}) => {
@@ -269,22 +283,22 @@ export const selectClubsRosterStats = createSelector(selectCurrentGameState, sel
     clubsRoster.forEach((player: Player) => {
       const games = matchStats.reduce((sum, curMatchStats) => {
         // console.log('curMatchStats', curMatchStats, );
-        return (!!curMatchStats?.homeRoster.find(pl => pl.nameEn === player.nameEn) ||
-          !!curMatchStats?.awayRoster.find(pl => pl.nameEn === player.nameEn)) ? sum + 1 : sum;
+        return (!!curMatchStats?.homeRoster.find(pl => pl === player.nameEn) ||
+          !!curMatchStats?.awayRoster.find(pl => pl === player.nameEn)) ? sum + 1 : sum;
       }, 0);
       const assists = matchStats.reduce((sum, curMatchStats) => {
           const homeAssists = !!curMatchStats?.homeAssists ?
-            Object.values(curMatchStats.homeAssists).filter((pl: Player | null) => pl?.nameEn === player.nameEn).length : 0;
+            Object.values(curMatchStats.homeAssists).filter((pl: string | null) => pl === player.nameEn).length : 0;
           const awayAssists = !!curMatchStats?.awayAssists ?
-            Object.values(curMatchStats.awayAssists).filter((pl: Player | null) => pl?.nameEn === player.nameEn).length : 0;
+            Object.values(curMatchStats.awayAssists).filter((pl: string | null) => pl === player.nameEn).length : 0;
           return sum + homeAssists + awayAssists;
         },
         0);
       const goals = matchStats.reduce((sum, curMatchStats) => {
           const homeGoals = !!curMatchStats?.homeGoals ?
-            Object.values(curMatchStats.homeGoals).filter((pl: Player | null) => pl?.nameEn === player.nameEn).length : 0;
+            Object.values(curMatchStats.homeGoals).filter((pl: string | null) => pl === player.nameEn).length : 0;
           const awayGoals = !!curMatchStats?.awayGoals ?
-            Object.values(curMatchStats.awayGoals).filter((pl: Player | null) => pl?.nameEn === player.nameEn).length : 0;
+            Object.values(curMatchStats.awayGoals).filter((pl: string | null) => pl === player.nameEn).length : 0;
           return sum + homeGoals + awayGoals;
         },
         0);
@@ -295,10 +309,10 @@ export const selectClubsRosterStats = createSelector(selectCurrentGameState, sel
       };
       if (player.position === 'GK') {
         const conceded = clubsSchedule.reduce((sum, curMatch: Match) => {
-          const havePlayedInMatch = !!state.stats[curMatch?.id]?.homeRoster.find(pl => pl.nameEn === player.nameEn) ||
-            !!state.stats[curMatch?.id]?.awayRoster.find(pl => pl.nameEn === player.nameEn);
+          const havePlayedInMatch = !!state.stats[curMatch?.id]?.homeRoster.find(pl => pl === player.nameEn) ||
+            !!state.stats[curMatch?.id]?.awayRoster.find(pl => pl === player.nameEn);
           if (!!curMatch && havePlayedInMatch) {
-            const isHome = !!state.stats[curMatch.id]?.homeRoster.find(pl => pl.nameEn === player.nameEn);
+            const isHome = !!state.stats[curMatch.id]?.homeRoster.find(pl => pl === player.nameEn);
             const curMatchStats = state.stats[curMatch.id];
             const [homeGoals, awayGoals] = resultSplitter(curMatchStats.result);
             const conc = isHome ? awayGoals : homeGoals;
@@ -331,8 +345,8 @@ export const selectClubsRosterLastMatchStats = createSelector(selectCurrentGameS
           goals: 0
         };
         if (lastMatchStats) {
-          const isHome = !!lastMatchStats?.homeRoster.find(pl => pl.nameEn === player.nameEn);
-          const isAway = !!lastMatchStats?.awayRoster.find(pl => pl.nameEn === player.nameEn);
+          const isHome = !!lastMatchStats?.homeRoster.find(pl => pl === player.nameEn);
+          const isAway = !!lastMatchStats?.awayRoster.find(pl => pl === player.nameEn);
           const games = (isHome || isAway) ? 1 : 0;
           let goals = 0;
           let assists = 0;
@@ -394,42 +408,42 @@ export const getLeaguePlayersStats = createSelector(selectCurrentGameState,
     const goalScorers = new Map<string, { goals?: number, assists?: number, 'g+a'?: number }>();
     curLeagueMatchesStats.forEach((matchStats: MatchStats) => {
       if (matchStats?.homeGoals) {
-        Object.values(matchStats.homeGoals).forEach((gscorer: Player) => {
+        Object.values(matchStats.homeGoals).forEach((gscorer: string) => {
           if (gscorer) {
-            const mapRec = goalScorers.get(gscorer?.nameEn);
+            const mapRec = goalScorers.get(gscorer);
             const curGoalsForPlayer = mapRec?.goals || 0;
             const curAssistsForPlayer = mapRec?.assists || 0;
-            goalScorers.set(gscorer.nameEn, {goals: curGoalsForPlayer + 1, assists: curAssistsForPlayer});
+            goalScorers.set(gscorer, {goals: curGoalsForPlayer + 1, assists: curAssistsForPlayer});
           }
         });
       }
       if (matchStats?.awayGoals) {
         Object.values(matchStats.awayGoals).forEach(gscorer => {
           if (gscorer) {
-            const mapRec = goalScorers.get(gscorer?.nameEn);
+            const mapRec = goalScorers.get(gscorer);
             const curGoalsForPlayer = mapRec?.goals || 0;
             const curAssistsForPlayer = mapRec?.assists || 0;
-            goalScorers.set(gscorer.nameEn, {goals: curGoalsForPlayer + 1, assists: curAssistsForPlayer});
+            goalScorers.set(gscorer, {goals: curGoalsForPlayer + 1, assists: curAssistsForPlayer});
           }
         });
       }
       if (matchStats?.homeAssists) {
         Object.values(matchStats.homeAssists).forEach(assistant => {
           if (assistant) {
-            const mapRec = goalScorers.get(assistant?.nameEn);
+            const mapRec = goalScorers.get(assistant);
             const curAssistsForPlayer = mapRec?.assists || 0;
             const curGoalsForPlayer = mapRec?.goals || 0;
-            goalScorers.set(assistant.nameEn, {assists: curAssistsForPlayer + 1, goals: curGoalsForPlayer});
+            goalScorers.set(assistant, {assists: curAssistsForPlayer + 1, goals: curGoalsForPlayer});
           }
         });
       }
       if (matchStats?.awayAssists) {
         Object.values(matchStats.awayAssists).forEach(assistant => {
           if (assistant) {
-            const mapRec = goalScorers.get(assistant?.nameEn);
+            const mapRec = goalScorers.get(assistant);
             const curAssistsForPlayer = mapRec?.assists || 0;
             const curGoalsForPlayer = mapRec?.goals || 0;
-            goalScorers.set(assistant.nameEn, {assists: curAssistsForPlayer + 1, goals: curGoalsForPlayer});
+            goalScorers.set(assistant, {assists: curAssistsForPlayer + 1, goals: curGoalsForPlayer});
           }
         });
       }

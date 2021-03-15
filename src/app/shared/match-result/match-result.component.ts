@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Match} from '../../interfaces/match';
 import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 import {
   AppState, selectClubByClubsNameEn,
   selectCurrentClub,
@@ -12,6 +12,7 @@ import {Store} from '@ngrx/store';
 import {Club} from '../../interfaces/club';
 import {MatchStats} from '../../interfaces/match-stats';
 import {Player} from '../../interfaces/player';
+import {MatchStats1} from '../../interfaces/match-stats1';
 
 @Component({
   selector: 'app-match-result',
@@ -24,7 +25,7 @@ export class MatchResultComponent implements OnInit {
   @Input() showGains = true;
 
   curClub$: Observable<Club>;
-  matchStats$: Observable<MatchStats>;
+  matchStats$: Observable<MatchStats1>;
   matchGaines$: Observable<{gains: Player[], losses: Player[]}>;
 
   homeClub$: Observable<Club>;

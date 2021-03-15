@@ -70,11 +70,12 @@ export class FirebaseService {
     }));
   }
 
-  addBugReport(data: {text: string, save: string}) {
+  addBugReport(data: {text: string, save: {data: any, stats: any}}) {
     // const splitData = data.save.match(/.{1,128}/g);
     // console.log('splitData', splitData, splitData.length, data.save.length, );
-    const collection = this.afs.collection<{text: string, save: any}>('bugs');
-    return from(collection.add({text: data.text, save: data.save})).pipe(map(value => {
+    const collection = this.afs.collection<{text: string, save: {data: any, stats: any}, date: Date}>('bugs');
+    return from(collection.add({text: data.text, save: {data: data.save.data, stats: data.save.stats}, date: new Date()}))
+      .pipe(map(value => {
       console.log(value);
       return value;
     }));

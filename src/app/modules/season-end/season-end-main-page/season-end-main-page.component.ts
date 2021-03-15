@@ -25,6 +25,7 @@ import {decideWinner} from '../../../utils/sort-roster';
 import {Player} from '../../../interfaces/player';
 import {Router} from '@angular/router';
 import { ROUTES } from 'src/app/constants/routes';
+import {MatchStats1} from '../../../interfaces/match-stats1';
 
 @Component({
   selector: 'app-season-end-main-page',
@@ -112,7 +113,7 @@ export class SeasonEndMainPageComponent implements OnInit {
         this.store.select(selectMatchById, {matchId: final.matchId}),
         this.store.select(selectMatchStatsByMatchId, {matchId: final.matchId}),
         ]).pipe(take(1));
-    }), switchMap(([match, stats]: [Match, MatchStats]) => {
+    }), switchMap(([match, stats]: [Match, MatchStats1]) => {
       const winner: 'home' | 'away' | 'draw' = decideWinner(stats.result);
       const clubsNameEn = winner === 'home' ? match.homeNameEn : match.awayNameEn;
       return this.store.select(selectClubByClubsName, {clubsName: clubsNameEn}).pipe(take(1));
