@@ -11,6 +11,11 @@ import {MatchTooltipDirective} from '../directives/match-tooltip.directive';
 import { MatchResultComponent } from './match-result/match-result.component';
 import { PlayersListDialogComponent } from './players-list-dialog/players-list-dialog.component';
 import {MatListModule} from '@angular/material/list';
+import { FeedbackDialogComponent } from './feedback-dialog/feedback-dialog.component';
+import {ReactiveFormsModule} from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatIconModule} from '@angular/material/icon';
 
 
 
@@ -22,14 +27,19 @@ import {MatListModule} from '@angular/material/list';
     MatchTooltipComponent,
     MatchTooltipDirective,
     MatchResultComponent,
-    PlayersListDialogComponent
+    PlayersListDialogComponent,
+    FeedbackDialogComponent
   ],
   imports: [
     CommonModule,
     MatButtonModule,
     MatDialogModule,
     MatSnackBarModule,
-    MatListModule
+    MatListModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule
   ],
   exports: [
     NavigateToOfficeComponent,

@@ -29,7 +29,7 @@ export class AddClubDialogComponent implements OnInit {
       nameRu: ['', Validators.required],
       stadium: [1000, Validators.required],
     });
-    this.fs.getLeagues(false).pipe(take(1)).subscribe(leagues => {
+    this.fs.getLeagues(true, false).pipe(take(1)).subscribe(leagues => {
       this.leagueList = leagues;
       this.clubForm.get('league').setValue(leagues[0]);
     });

@@ -1,0 +1,26 @@
+<div class="row justify-content-end">
+  <div class="col">
+    <button mat-icon-button (click)="close()" class="float-right"><mat-icon>clear</mat-icon></button>
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    <form [formGroup]="form">
+      <mat-form-field *ngIf="data.type === 'feedback'" class="w-100">
+        <mat-label>Ваше замечание (предложение)</mat-label>
+        <textarea matInput placeholder="Напишите, о чем вы хотели сообщить"
+                  formControlName="text" autofocus cdkTextareaAutosize rows="5" cdkAutosizeMaxRows="10"></textarea>
+      </mat-form-field>
+      <mat-form-field *ngIf="data.type === 'bug'" class="w-100">
+        <mat-label>Описание ошибки</mat-label>
+        <textarea matInput placeholder="Напишите, где вы заметили ошибку, как ее можно найти"
+                  formControlName="text" autofocus cdkTextareaAutosize rows="5" cdkAutosizeMaxRows="10"></textarea>
+      </mat-form-field>
+    </form>
+  </div>
+</div>
+<div class="row justify-content-center">
+  <div class="col-4">
+    <button mat-raised-button (click)="send()" class="w-100">Отправить</button>
+  </div>
+</div>

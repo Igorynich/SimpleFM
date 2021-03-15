@@ -30,7 +30,7 @@ export class AddPlayerDialogComponent implements OnInit {
       position: [this.fs.lastCreatedPlayer?.position, Validators.required],
       power: [0]
     });
-    this.fs.getClubs(false).pipe(take(1)).subscribe(clubs => {
+    this.fs.getClubs(true, false).pipe(take(1)).subscribe(clubs => {
       this.clubList = clubs;
       if (this.fs.lastCreatedPlayer) {
         const lastCreatedPlayerClub = this.clubList.find(value => value.nameEn === this.fs.lastCreatedPlayer.clubNameEn)

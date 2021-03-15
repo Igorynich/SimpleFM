@@ -24,7 +24,7 @@ export class EditLeagueDialogComponent implements OnInit {
               private fs: FirebaseService) { }
 
   ngOnInit() {
-    combineLatest([this.fs.getCountries(false), this.fs.getLeague(this.data)]).pipe(take(1)).subscribe(([countries, league]) => {
+    combineLatest([this.fs.getCountries(true, false), this.fs.getLeague(this.data)]).pipe(take(1)).subscribe(([countries, league]) => {
       console.log('-----', countries, league);
       this.countryList = countries;
       const countryValue = countries.find(value => value.nameEn === league.countryNameEn && value.nameRu === league.countryNameRu);

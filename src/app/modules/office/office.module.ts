@@ -5,6 +5,8 @@ import {OfficeRoutingModule} from './office-routing.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { HeaderComponent } from './main-page/header/header.component';
+import {MatIconModule} from '@angular/material/icon';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 
 
@@ -14,7 +16,9 @@ import { HeaderComponent } from './main-page/header/header.component';
     CommonModule,
     OfficeRoutingModule,
     MatCardModule,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule
   ]
 })
 export class OfficeModule { }

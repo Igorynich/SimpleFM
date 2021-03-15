@@ -1,7 +1,15 @@
 <div class="row h-100 align-content-between">
   <div class="col-12">
     <div class="row justify-content-end">
-      <div class="col-8 text-center">
+      <div class="col-2">
+        <button mat-mini-fab color="primary" matTooltip="Замечания и предложения" (click)="supportButtonClick()">
+          <mat-icon>contact_support</mat-icon>
+        </button>
+        <button mat-mini-fab color="primary" matTooltip="Сообщить об ошибке" (click)="bugReportButtonClick()">
+          <mat-icon>bug_report</mat-icon>
+        </button>
+      </div>
+      <div class="col-7 text-center">
         <span class="current-week" >Сезон {{currentSeason$ | async}}
           {{!(currentWeek$ | async) ? 'Межсезонье' : 'Неделя ' + (currentWeek$ | async)}}</span>
       </div>

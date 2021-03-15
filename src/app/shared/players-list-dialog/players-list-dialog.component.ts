@@ -15,8 +15,7 @@ import {PlayerStats} from '../../interfaces/player-stats';
 @Component({
   selector: 'app-players-list-dialog',
   templateUrl: './players-list-dialog.component.html',
-  styleUrls: ['./players-list-dialog.component.css'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./players-list-dialog.component.css']
 })
 export class PlayersListDialogComponent implements OnInit {
 
@@ -25,7 +24,8 @@ export class PlayersListDialogComponent implements OnInit {
 
   constructor(private store: Store<AppState>,
               private dialogRef: MatDialogRef<PlayersListDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: {clubName: string}) { }
+              @Inject(MAT_DIALOG_DATA) public data: { clubName: string }) {
+  }
 
   ngOnInit(): void {
     this.players$ = this.store.select(selectPlayersByClubsName, {clubsName: this.data.clubName});

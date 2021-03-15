@@ -17,3 +17,7 @@
 .selected {
   border-bottom: black solid thin;
 }
+
+.hidden {
+  display: none !important;
+}

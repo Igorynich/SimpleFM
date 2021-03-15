@@ -4,9 +4,9 @@ export const HOME_TEAM_POWER_ADVANTAGE_PCT = 10;
 
 export const BASE_LEAGUE_TIER_TICKET_PRICES_COEF = {
   1: 6,
-  2: 3,
-  3: 2,
-  4: 1
+  2: 3.5,
+  3: 2.5,
+  4: 2
 };
 
 export const BASE_POWER_TICKET_PRICES_COEF = {

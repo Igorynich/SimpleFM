@@ -57,6 +57,7 @@ export class CurrentGameEffects {
           this.fs.getPlayers(),
           this.fs.getScheduleShells()
         ]).pipe(take(1), map(([countries, leagues, clubs, players, scheduleShells]) => {
+          this.storage.saveDBData({countries, leagues, clubs, players, scheduleShells});
           return gotBaseData({countries, leagues, clubs, players, scheduleShells});
         }));
       })
@@ -182,24 +183,19 @@ export class CurrentGameEffects {
       filter(value => !!this.userService.userName),
       mergeMap(({player, clubsNameEn}) => {
         console.warn('playerTransferToAClubFinanceReportGeneration$', player, clubsNameEn);
-        return this.store.pipe(select(selectCurrentClub)).pipe(
-          take(1),
-          switchMap(curClub => {
-            return [
-              addFinanceRecord({
-                clubNameEn: curClub.nameEn,
-                description: `Продажа ${player.nameRu}`,
-                expense: null,
-                income: player.price * 1000000
-              }),
-              addFinanceRecord({
-                clubNameEn: clubsNameEn,
-                description: `Покупка ${player.nameRu}`,
-                expense: player.price * 1000000,
-                income: null
-              })];
+        return [
+          addFinanceRecord({
+            clubNameEn: player.clubNameEn,
+            description: `Продажа ${player.nameRu}`,
+            expense: null,
+            income: player.price * 1000000
           }),
-        );
+          addFinanceRecord({
+            clubNameEn: clubsNameEn,
+            description: `Покупка ${player.nameRu}`,
+            expense: player.price * 1000000,
+            income: null
+          })];
       })
     ));
 
@@ -226,16 +222,16 @@ export class CurrentGameEffects {
         console.warn('BIG clubArrays', clubArrays, leagues);
         const clubs: Club[] = [];
         clubArrays.forEach((clubArr: Club[]) => clubs.push(...clubArr));
-        const cupResultSelects$: Observable<{clubNameEn: string, eliminated: number | null, total: number}>[] = clubs.map(cl =>
+        const cupResultSelects$: Observable<{ clubNameEn: string, eliminated: number | null, total: number }>[] = clubs.map(cl =>
           this.store.select(getClubsCupResultByClubsNameEn, {clubsNameEn: cl.nameEn}));
         const tableSelects$: Observable<LeagueTable[]>[] = leagues.map((l: League) =>
           this.store.select(selectLeagueTableByLeaguesNameEn, {leaguesNameEn: l.nameEn}));
         return combineLatest([
           combineLatest(cupResultSelects$),
           combineLatest(tableSelects$)
-          ]).pipe(take(1), map(value => {
-            // console.warn('Big', value, leagues, clubArrays);
-            return [...value, leagues, clubArrays];
+        ]).pipe(take(1), map(value => {
+          // console.warn('Big', value, leagues, clubArrays);
+          return [...value, leagues, clubArrays];
         }));
       }),
       switchMap(([cupResults, tableArrays, leagues, clubArrays]:
@@ -315,7 +311,8 @@ export class CurrentGameEffects {
               private game: CurrentGameService,
               private userService: UserService,
               private transferService: TransferService,
-              private finService: FinanceService) {
+              private finService: FinanceService,
+              private storage: StorageService) {
   }
 
 }

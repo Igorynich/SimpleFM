@@ -43,7 +43,7 @@ import {Match} from '../../interfaces/match';
 import {MatchStats} from '../../interfaces/match-stats';
 import {getLeagueWeek, isCupWeek, resultSplitter, sortClubsRoster, sortStarters} from '../../utils/sort-roster';
 import {round, cloneDeep} from 'lodash';
-import {closest, randomInteger} from '../../utils/helpers';
+import {closest, objToArr, randomInteger} from '../../utils/helpers';
 import {FinanceRecord} from '../../interfaces/finance-record';
 import produce, {Draft, enableMapSet} from 'immer';
 import {Transfer} from '../../interfaces/transfer';
@@ -126,7 +126,7 @@ const _currentGameReducer = createReducer(currentGameInitState,
   on(loadSavedGame, (state, {data}) => {
     console.warn('LOADED DATA', data);
     const newState = produce(state, (draft: CurrentGameState) => {
-      const objToArr = (obj) => Object.keys(obj).map(key => obj[key]);
+      // const objToArr = (obj) => Object.keys(obj).map(key => obj[key]);
       draft.currentWeek = data.currentWeek;
       draft.currentSeason = data.currentSeason;
       draft.weeksInASeason = data.weeksInASeason;

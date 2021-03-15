@@ -26,7 +26,7 @@ export class EditPlayerDialogComponent implements OnInit {
               @Inject(MAT_DIALOG_DATA) public data: string) { }
 
   ngOnInit(): void {
-    combineLatest([this.fs.getClubs(false), this.fs.getPlayer(this.data)]).pipe(take(1)).subscribe(([clubs, player]) => {
+    combineLatest([this.fs.getClubs(true, false), this.fs.getPlayer(this.data)]).pipe(take(1)).subscribe(([clubs, player]) => {
       console.log('-----', clubs, player);
       this.clubList = clubs;
       const clubValue = clubs.find(value => value.nameEn === player.clubNameEn && value.nameRu === player.clubNameRu);

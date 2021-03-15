@@ -8,6 +8,7 @@ import {Club} from '../interfaces/club';
 import {Player} from '../interfaces/player';
 import {AngularFireAuth} from '@angular/fire/auth';
 import * as firebase from 'firebase';
+import {StorageService} from './storage.service';
 
 export class PlayerQueryObj {
   club?: string;
@@ -27,7 +28,7 @@ export class FirebaseService {
 
   lastCreatedPlayer: Player;
 
-  constructor(private afs: AngularFirestore, private auth: AngularFireAuth) {
+  constructor(private afs: AngularFirestore, private auth: AngularFireAuth, private storage: StorageService) {
   }
 
   login(): Observable<any> {
@@ -39,7 +40,13 @@ export class FirebaseService {
     return from(this.auth.signOut());
   }
 
-  getScheduleShells(): Observable<any> {
+  getScheduleShells(refreshCache = false): Observable<any> {
+    if (!refreshCache) {
+      const storedData = this.storage.getSavedData();
+      if (!!storedData?.scheduleShells) {
+        return of(storedData.scheduleShells);
+      }
+    }
     return this.afs.collection(`schedules`).snapshotChanges().pipe(map(value => {
       console.log('Schedules Collection', value);
       const scheduleEntity = {};
@@ -53,6 +60,24 @@ export class FirebaseService {
 
   getLeagueScheduleShell(numOfTeams: number): Observable<any> {
     return this.afs.doc(`schedules/league_${numOfTeams}`).valueChanges();
+  }
+
+  addFeedback(data: {text: string}) {
+    const collection = this.afs.collection<{text: string}>('feedback');
+    return from(collection.add(data)).pipe(map(value => {
+      console.log(value);
+      return value;
+    }));
+  }
+
+  addBugReport(data: {text: string, save: string}) {
+    // const splitData = data.save.match(/.{1,128}/g);
+    // console.log('splitData', splitData, splitData.length, data.save.length, );
+    const collection = this.afs.collection<{text: string, save: any}>('bugs');
+    return from(collection.add({text: data.text, save: data.save})).pipe(map(value => {
+      console.log(value);
+      return value;
+    }));
   }
 
   addCountry(country: Country): Observable<any> {
@@ -147,13 +172,25 @@ export class FirebaseService {
     return from(playerDoc.update(data));
   }
 
-  getCountries(checkProgress = true): Observable<Country[]> {
+  getCountries(refreshCache = false, checkProgress = true): Observable<Country[]> {
     if (checkProgress) {
       this.progress.next({
         loading: true,
         loaded: false
       });
       console.log('Progress', this.progress);
+    }
+    if (!refreshCache) {
+      const storedData = this.storage.getSavedData();
+      if (!!storedData?.countries) {
+        if (checkProgress) {
+          this.progress.next({
+            loading: false,
+            loaded: true
+          });
+        }
+        return of(storedData.countries);
+      }
     }
 
     return this.afs.collection<Country>('countries', ref => ref.orderBy('nameEn')).snapshotChanges().pipe(map(value => {
@@ -183,12 +220,25 @@ export class FirebaseService {
     }));
   }
 
-  getLeagues(checkProgress = true): Observable<League[]> {
+  getLeagues(refreshCache = false, checkProgress = true): Observable<League[]> {
     if (checkProgress) {
       this.progress.next({
         loading: true,
         loaded: false
       });
+    }
+
+    if (!refreshCache) {
+      const storedData = this.storage.getSavedData();
+      if (!!storedData?.leagues) {
+        if (checkProgress) {
+          this.progress.next({
+            loading: false,
+            loaded: true
+          });
+        }
+        return of(storedData.leagues);
+      }
     }
 
     return this.afs.collection<League>('leagues', ref => ref.orderBy('altNameEn')).snapshotChanges().pipe(map(value => {
@@ -217,12 +267,25 @@ export class FirebaseService {
     }));
   }
 
-  getClubs(checkProgress = true): Observable<Club[]> {
+  getClubs(refreshCache = false, checkProgress = true): Observable<Club[]> {
     if (checkProgress) {
       this.progress.next({
         loading: true,
         loaded: false
       });
+    }
+
+    if (!refreshCache) {
+      const storedData = this.storage.getSavedData();
+      if (!!storedData?.clubs) {
+        if (checkProgress) {
+          this.progress.next({
+            loading: false,
+            loaded: true
+          });
+        }
+        return of(storedData.clubs);
+      }
     }
 
     return this.afs.collection<Club>('clubs', ref => ref.orderBy('nameEn')).snapshotChanges().pipe(map(value => {
@@ -251,13 +314,26 @@ export class FirebaseService {
     }));
   }
 
-  getPlayers(checkProgress = true, query: PlayerQueryObj = {}): Observable<Player[]> {
+  getPlayers(refreshCache = false, checkProgress = true, query: PlayerQueryObj = {}): Observable<Player[]> {
     if (checkProgress) {
       this.progress.next({
         loading: true,
         loaded: false
       });
     }
+    if (!refreshCache) {
+      const storedData = this.storage.getSavedData();
+      if (!!storedData?.players) {
+        if (checkProgress) {
+          this.progress.next({
+            loading: false,
+            loaded: true
+          });
+        }
+        return of(storedData.players);
+      }
+    }
+
     return this.afs.collection<Player>('players', (ref: CollectionReference) => {
       return ref.orderBy('position');
     }).snapshotChanges().pipe(map(value => {

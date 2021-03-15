@@ -40,8 +40,8 @@ export class BaseGainsGenService {
 
   readonly INDIVIDUAL_GAINS = {
     CLEAN_SHEET: 0.1,
-    GOAL: 0.2,
-    ASSIST: 0.2,
+    GOAL: 0.1,
+    ASSIST: 0.1,
     MULTIPLE_GA_MULTI: 1.5      // 3: 0.2 * 1.5 * 1.5 * 3 = 1.35  2: 0.2 * 1.5 * 2 = 0.6
   };
 
@@ -58,11 +58,11 @@ export class BaseGainsGenService {
   };
 
   readonly INDIVIDUAL_LOSSES = {
-    THREE_CONCEDED: 0.5,
-    FOUR_CONCEDED: 0.75,
-    FIVE_CONCEDED: 1,
-    BIG_LOSS: 0.1,
-    NO_GOALS_SCORED: 0.5
+    THREE_CONCEDED: 0.25,
+    FOUR_CONCEDED: 0.4,
+    FIVE_CONCEDED: 0.6,
+    BIG_LOSS: 0.05,
+    NO_GOALS_SCORED: 0.25
   };
 
   readonly INDIVID_LOSSES_RESULT_COEF = {
@@ -91,6 +91,7 @@ export class BaseGainsGenService {
     const homeSumPower = homePower.gk + homePower.d + homePower.m + homePower.f;
     const awaySumPower = awayPower.gk + awayPower.d + awayPower.m + awayPower.f;
     const sumPowerDif = (homeSumPower - awaySumPower) / 11;
+
     const [homeGoals, awayGoals] = resultSplitter(result);
     const resultDif = this.limitTo(homeGoals - awayGoals);
     // console.warn(`${match.homeNameEn} - ${match.awayNameEn}--------------START`);
@@ -101,6 +102,7 @@ export class BaseGainsGenService {
     // console.log('realPowerDifSteps', realPowerDifSteps, homeSumPower, awaySumPower);
     const powerDiscr = this.limitTo(realPowerDifSteps - okPowerDif);
     // console.log('powerDiscr', powerDiscr);
+    console.warn(`${match.homeNameEn} - ${match.awayNameEn} POWER DIFF = ${sumPowerDif}`, powerDiscr);
     const gains = this.GAIN_SCALE[powerDiscr];
     // console.log('gains', gains);
     const indivGainsCoef = this.INDIVID_GAINS_RESULT_COEF[powerDiscr];

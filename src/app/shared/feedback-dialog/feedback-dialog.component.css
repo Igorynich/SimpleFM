@@ -1,0 +1,4 @@
+/*removes angular material autofocus on buttons (only visual of it)*/
+button:focus {
+  outline: none !important;
+}

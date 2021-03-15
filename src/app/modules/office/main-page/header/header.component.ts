@@ -15,6 +15,8 @@ import {interval, Observable, Subscription} from 'rxjs';
 import {filter, map, switchMap, take, tap} from 'rxjs/operators';
 import { logOut } from 'src/app/store/actions/current-game.actions';
 import {clearSubscription} from '../../../../utils/clean-subscriptions';
+import {MatDialog} from '@angular/material/dialog';
+import {FeedbackDialogComponent} from '../../../../shared/feedback-dialog/feedback-dialog.component';
 
 @Component({
   selector: 'app-header',
@@ -37,7 +39,8 @@ export class HeaderComponent implements OnInit {
   constructor(public userService: UserService,
               private store: Store<AppState>,
               private router: Router,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute,
+              private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.currentClub$ = this.store.select(selectCurrentClub);
@@ -85,6 +88,20 @@ export class HeaderComponent implements OnInit {
         console.error(reason);
       });
 
+    });
+  }
+
+  supportButtonClick() {
+    this.dialog.open(FeedbackDialogComponent, {
+      width: '500px',
+      data: {type: 'feedback'}
+    });
+  }
+
+  bugReportButtonClick() {
+    this.dialog.open(FeedbackDialogComponent, {
+      width: '500px',
+      data: {type: 'bug'}
     });
   }
 }

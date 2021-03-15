@@ -29,7 +29,7 @@ export class AddLeagueDialogComponent implements OnInit {
       nameRu: ['', Validators.required],
       tier: [1, Validators.required]
     });
-    this.fs.getCountries(false).pipe(take(1)).subscribe(countries => {
+    this.fs.getCountries(true, false).pipe(take(1)).subscribe(countries => {
       this.countryList = countries;
     });
   }

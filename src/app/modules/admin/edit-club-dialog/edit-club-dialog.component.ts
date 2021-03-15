@@ -28,7 +28,7 @@ export class EditClubDialogComponent implements OnInit, OnDestroy {
               private fs: FirebaseService) { }
 
   ngOnInit() {
-    this._combineSub = combineLatest([this.fs.getLeagues(false), this.fs.getClub(this.data)]).pipe(take(1)).subscribe(([leagues, club]) => {
+    this._combineSub = combineLatest([this.fs.getLeagues(true, false), this.fs.getClub(this.data)]).pipe(take(1)).subscribe(([leagues, club]) => {
       console.log('-----', leagues, club);
       this.leagueList = leagues;
       const leagueValue = leagues.find(value => value.nameEn === club.leagueNameEn && value.nameRu === club.leagueNameRu);

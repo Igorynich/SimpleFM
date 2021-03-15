@@ -118,7 +118,7 @@
         <mat-tab label="Голеадоры">
           <mat-list>
             <mat-list-item *ngFor="let goalscorersRecord of leaguePlayersStats$ | async | keyvalue: compareByGoals; let i = index;"
-                           [ngClass]="{'h-0': i >= 10}">
+                           [ngClass]="{'hidden': i >= 10}">
               <div class="row w-100" *ngIf="i < 10"
                    [ngClass]="{'my-club': goalscorersRecord.key.clubNameEn === (curClub$ | async).nameEn}">
                 <div class="col-1">

@@ -2,6 +2,6 @@
   /*font-size: smaller;*/
 }
 
-.mat-list-item {
+::ng-deep .mat-list-item {
   height: 25px !important;
 }

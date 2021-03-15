@@ -36,7 +36,6 @@ export class CurrentGameService {
   }
 
 
-
   generateLeagueSchedules(leagues: League[] = [], clubs: Club[] = []): { [key: string]: WeekSchedule[][] } {
     const leagueSchedules = {};
     leagues.forEach(league => {
@@ -122,13 +121,11 @@ export class CurrentGameService {
         real: true
       });
     }
-    if (teams.length < numOfClubsToGenSchedule) {
-      for (let i = teams.length; i < numOfClubsToGenSchedule; i++) {
-        teams.push({
-          num: i + 1,
-          real: false
-        });
-      }
+    for (let i = teams.length; i < numOfClubsToGenSchedule; i++) {
+      teams.push({
+        num: i + 1,
+        real: false
+      });
     }
 
     // num of rounds = Math.ceil(Math.log2(clubs.length))
@@ -188,7 +185,7 @@ export class CurrentGameService {
     console.log('cupSchedule', cupSchedule);
     // use this to generate WeekSchedule[][] in existing forEaches, instead of additional one in the end
     // const cupScheduleWithRealClubsAsWeekSchedule: WeekSchedule[][] = [];
-    const cupScheduleWithRealClubs: {home: Club | null, away: Club | null}[][] = cupSchedule.map(value => {
+    const cupScheduleWithRealClubs: { home: Club | null, away: Club | null }[][] = cupSchedule.map(value => {
       return value.map(value1 => {
         const home = value1.home ? clubs[value1.home.num - 1] : null;
         const away = value1.away ? clubs[value1.away.num - 1] : null;
@@ -198,17 +195,17 @@ export class CurrentGameService {
         };
       });
     });
-    cupScheduleWithRealClubs.forEach((value: {home: Club | null, away: Club | null}[], index) => {
+    cupScheduleWithRealClubs.forEach((value: { home: Club | null, away: Club | null }[], index) => {
       // проводим во второй раунд те клубы у которых нет соперников в 1-м - т.о. заполняем 2-й раунд
       if (index === 1) {    // возможно добавить проверку на нынешнюю неделю сезона и генерировать весь оставшийся скедуль исходя из этого
         for (let j = 0; j < cupScheduleWithRealClubs[index - 1].length / 2; j++) {
-            const match1 = cupScheduleWithRealClubs[index - 1][j * 2];
-            const match2 = cupScheduleWithRealClubs[index - 1][j * 2 + 1];
-            const home = (!match1.home || !match1.away) ? (match1.home || match1.away) : null;
-            const away = (!match2.home || !match2.away) ? (match2.home || match2.away) : null;
-            value.push({
-              home, away
-            });
+          const match1 = cupScheduleWithRealClubs[index - 1][j * 2];
+          const match2 = cupScheduleWithRealClubs[index - 1][j * 2 + 1];
+          const home = (!match1.home || !match1.away) ? (match1.home || match1.away) : null;
+          const away = (!match2.home || !match2.away) ? (match2.home || match2.away) : null;
+          value.push({
+            home, away
+          });
         }
       }
       // заполняем оставшиеся раунды пустыми матчами
@@ -223,7 +220,7 @@ export class CurrentGameService {
     });
 
     // that's an additional one
-    const cupMatches: WeekSchedule[][] = cupScheduleWithRealClubs.map((value: {home: Club | null, away: Club | null}[], index) => {
+    const cupMatches: WeekSchedule[][] = cupScheduleWithRealClubs.map((value: { home: Club | null, away: Club | null }[], index) => {
       return value.map(value1 => {
         const match = this.createMatch(value1.home, value1.away, tournament, true);
         return {matchId: match.id};
