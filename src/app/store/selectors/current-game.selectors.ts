@@ -272,7 +272,13 @@ export const selectMatchStatsByMatchId = createSelector(selectCurrentGameState, 
 
 export const selectMatchGainsByMatchId = createSelector(selectCurrentGameState, (state, {matchId}) => {
   // console.log('selectMatchById', matchId, state.matches);
-  return state.gainsAndLosses[matchId];
+  if (!state.gainsAndLosses[matchId]) {
+    return state.gainsAndLosses[matchId];
+  }
+  return {
+    gains: state.gainsAndLosses[matchId]?.gains.map(nameEn => state.players.find(pl => pl.nameEn === nameEn)),
+    losses: state.gainsAndLosses[matchId]?.losses.map(nameEn => state.players.find(pl => pl.nameEn === nameEn)),
+  };
 });
 
 export const selectClubsRosterStats = createSelector(selectCurrentGameState, selectScheduleByClubsNameEn,
@@ -335,7 +341,7 @@ export const selectClubsRosterLastMatchStats = createSelector(selectCurrentGameS
     // console.log('Last Match for selectClubsRosterLastMatchStats', lastMatch, state);
     if (!!lastMatch) {
       const lastMatchStats: MatchStats = state.stats[lastMatch?.id];
-      const lastMatchGains: { gains: Player[], losses: Player[] } = state.gainsAndLosses[lastMatch?.id];
+      const lastMatchGains: { gains: string[], losses: string[] } = state.gainsAndLosses[lastMatch?.id];
       // console.log('Last Match Stats and Gains', lastMatchStats, lastMatchGains);
       const clubsRoster: Player[] = state.players.filter((value: Player) => value.clubNameEn === clubsNameEn);
       clubsRoster.forEach((player: Player) => {
@@ -369,8 +375,8 @@ export const selectClubsRosterLastMatchStats = createSelector(selectCurrentGameS
           }
         }
         if (lastMatchGains) {
-          const gains = lastMatchGains.gains.filter((pl: Player) => pl.nameEn === player.nameEn).length;
-          const losses = lastMatchGains.losses.filter((pl: Player) => pl.nameEn === player.nameEn).length;
+          const gains = lastMatchGains.gains.filter((pl: string) => pl === player.nameEn).length;
+          const losses = lastMatchGains.losses.filter((pl: string) => pl === player.nameEn).length;
           playerStats.gainsLastGame = round((gains - losses) * 0.1, 1);
         }
         map.set(player.nameEn, playerStats);

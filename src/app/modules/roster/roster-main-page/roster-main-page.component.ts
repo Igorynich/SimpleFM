@@ -44,16 +44,18 @@ export class RosterMainPageComponent implements OnInit, OnDestroy {
     // this.players = this.game.currentPlayers;
     this._playersSub = this.store.select(selectCurrentPlayers).subscribe((value: Player[]) => {
       // console.log('Players', value);
-      this.players = [...value];
+      if (value && Array.isArray(value)) {
+        this.players = [...value];
+      }
     });
     this._statsSub = this.store.select(selectCurrentClub).pipe(take(1), switchMap(curClub =>
-      this.store.select(selectClubsRosterStats, {clubsNameEn: curClub.nameEn})))
+      this.store.select(selectClubsRosterStats, {clubsNameEn: curClub.nameEn}).pipe(take(1))))
       .subscribe((value: Map<string, PlayerStats>) => {
         this.stats = value;
         // console.log('Players Stats', value);
       });
     this._statsLGSub = this.store.select(selectCurrentClub).pipe(take(1), switchMap(curClub =>
-      this.store.select(selectClubsRosterLastMatchStats, {clubsNameEn: curClub.nameEn})))
+      this.store.select(selectClubsRosterLastMatchStats, {clubsNameEn: curClub.nameEn}).pipe(take(1))))
       .subscribe((value: Map<string, PlayerStats>) => {
         this.statsLastGame = value;
         // console.log('Players Stats Last Game', value);
@@ -61,6 +63,7 @@ export class RosterMainPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    // console.warn('ROSTER DESTROY');
   }
 
   getListClass(player, index) {

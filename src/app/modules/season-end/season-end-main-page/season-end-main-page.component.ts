@@ -123,7 +123,7 @@ export class SeasonEndMainPageComponent implements OnInit {
       const playerStatsSelects$: Observable<Map<Player, { goals?: number, assists?: number, 'g+a'?: number }>>[] = leagues.map(l => {
         return this.store.select(getLeaguePlayersStats, {leagueName: l.nameEn});
       });
-      console.log('gettin player stats', leagues);
+      // console.log('gettin player stats', leagues);
       return combineLatest(playerStatsSelects$).pipe(take(1));
     }), map((playersStatsArray: Map<Player, { goals?: number, assists?: number, 'g+a'?: number }>[]) => {
       const best: BestScorers[] = [];
@@ -147,7 +147,7 @@ export class SeasonEndMainPageComponent implements OnInit {
         const ga = {q: mostGA, players: bestGA, sum: sumGA};
         best.push({goals, assists, ga});
       });
-      console.warn('BEST', best);
+      // console.warn('BEST', best);
       return best;
     }));
   }

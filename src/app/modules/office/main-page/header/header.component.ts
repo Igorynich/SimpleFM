@@ -47,7 +47,7 @@ export class HeaderComponent implements OnInit {
     this.currentWeek$ = this.store.select(selectCurrentWeek);
     this.currentSeason$ = this.store.select(selectCurrentSeason);
     this.nextOpponent$ = this.store.select(selectCurrentClub).pipe(switchMap(curClub =>
-      this.store.select(selectNextOpponent, {clubsNameEn: curClub.nameEn})), tap(x => console.log('tap', x)));
+      this.store.select(selectNextOpponent, {clubsNameEn: curClub.nameEn})));
   }
 
   // TODO: hide

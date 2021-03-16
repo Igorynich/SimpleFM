@@ -63,7 +63,7 @@ export interface CurrentGameState {
   scheduleShells: { [league_NumOfClubs: string]: any };
   // };
   finances: Map<string, { [week: number]: FinanceRecord[] }>;      // {[week: number]: Map<string, FinanceRecord[]>};
-  gainsAndLosses: { [matchId: number]: { gains: Player[], losses: Player[] } };
+  gainsAndLosses: { [matchId: number]: { gains: string[], losses: string[] } };     // string === playerNameEn[]
   jobData: {
     weeksOnCurrentJob: number
   };
@@ -88,7 +88,7 @@ export interface CurrentGameState {
 export const currentGameInitState: CurrentGameState = {
   currentWeek: 0,
   currentSeason: 0,
-  weeksInASeason: 43,
+  weeksInASeason: 45,
   currentClub: null,
   currentPlayers: null,
   // data: null,
@@ -368,7 +368,10 @@ const _currentGameReducer = createReducer(currentGameInitState,
           }
         }
       });
-      draft.gainsAndLosses = {...draft.gainsAndLosses, [matchId]: {gains, losses}};
+      draft.gainsAndLosses = {...draft.gainsAndLosses, [matchId]: {
+        gains: gains.map(pl => pl.nameEn),
+        losses: losses.map(pl => pl.nameEn)
+      }};
     });
     return newState;
   }),

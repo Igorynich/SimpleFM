@@ -169,14 +169,14 @@ export class BaseResultGenService implements ResultGenerator {
   }
 
   private generateMatchStats(homeRoster: Player[], awayRoster: Player[], result: string, match: Match) {
-    console.warn(`Generating Match Stats for ${match.homeNameEn} - ${match.awayNameEn} ---- START`, match);
+    // console.warn(`Generating Match Stats for ${match.homeNameEn} - ${match.awayNameEn} ---- START`, match);
     const [homeGoals, awayGoals] = resultSplitter(result);
     const cupDecider = result.includes('e') ? 'e' : '';
     const homeScorers: { goals: { [minute: number]: Player }, assists: { [minute: number]: Player | null } } =
       this.generateGoalScorers(homeGoals, homeRoster, homeGoals > awayGoals ? cupDecider : '');
     const awayScorers: { goals: { [minute: number]: Player }, assists: { [minute: number]: Player | null } } =
       this.generateGoalScorers(awayGoals, awayRoster, homeGoals < awayGoals ? cupDecider : '');
-    console.warn(`Goalscorers pre dispatch`, homeScorers, awayScorers);
+    // console.warn(`Goalscorers pre dispatch`, homeScorers, awayScorers);
     this.store.dispatch(addGoalScorersForMatch({
       matchId: match.id,
       goals: {
@@ -189,7 +189,7 @@ export class BaseResultGenService implements ResultGenerator {
       },
       result
     }));
-    console.warn(`Goalscorers post dispatch`);
+    // console.warn(`Goalscorers post dispatch`);
     const {gains, losses} = this.gainsService.generateGainsAndLosses(homeRoster, awayRoster, result, match, homeScorers, awayScorers);
     // console.warn(`GainsLosses pre dispatch`);
     this.store.dispatch(addGainsAndLossesForMatch({
