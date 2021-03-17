@@ -7,6 +7,7 @@ import { MatCardModule } from '@angular/material/card';
 import { HeaderComponent } from './main-page/header/header.component';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 
 
@@ -18,7 +19,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatProgressSpinnerModule
   ]
 })
 export class OfficeModule { }

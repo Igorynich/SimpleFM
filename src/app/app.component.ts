@@ -1,5 +1,5 @@
 import {Component, Injector, OnDestroy, OnInit} from '@angular/core';
-import {Event, NavigationStart, Router} from '@angular/router';
+import {Event, NavigationEnd, NavigationStart, Router} from '@angular/router';
 import {IpcRendererService} from './services/ipc-renderer.service';
 import {environment} from '../environments/environment';
 import {ROUTES} from './constants/routes';
@@ -20,7 +20,7 @@ export class AppComponent implements OnInit, OnDestroy {
   env = environment;
   ipc = null;
 
-  private _trackNavEventsSub: Subscription
+  private _trackNavEventsSub: Subscription;
 
   constructor(private router: Router, private injector: Injector, private userService: UserService) {
     /*history.pushState(null, null, window.location.href);
@@ -31,16 +31,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this._trackNavEventsSub = this.userService.trackNavigationStartEvents().subscribe();
-    /*this.router.events.pipe(filter(
-      (event: Event) => {
-        return(event instanceof NavigationStart);
-      }
-    )).subscribe((value: NavigationStart) => {
-      console.log(value);
-      if (value.navigationTrigger !== 'imperative') {
 
-      }
-    });*/
 
     if (this.env.electron) {
       this.ipc = this.injector.get(IpcRendererService) as IpcRendererService;

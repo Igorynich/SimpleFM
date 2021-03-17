@@ -35,8 +35,8 @@
             {{getMatchOpponent(match).field}}
           </div>
           <div class="col-2 text-center">
-            <span [ngClass]="getMatchResultClass(match, getMatchStats(match) | async)" [appMatchTooltip]="match" [showGains]="true">
-              {{getAdjustResult(getMatchOpponent(match).field, getMatchStats(match) | async)}}
+            <span [ngClass]="getMatchResultClass(match, cupScheduleStats[match.id])" [appMatchTooltip]="match" [showGains]="true">
+              {{getAdjustResult(getMatchOpponent(match).field, cupScheduleStats[match.id])}}
             </span>
           </div>
         </ng-container>

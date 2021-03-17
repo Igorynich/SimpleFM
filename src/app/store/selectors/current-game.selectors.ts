@@ -114,7 +114,7 @@ export const selectCupScheduleByLeaguesNameEn: MemoizedSelectorWithProps<AppStat
 export const selectLeagueTableByLeaguesNameEn = createSelector(selectCurrentGameState, (state, {leaguesNameEn}) => {
   // console.log('selectLeagueTableByLeaguesNameEn', leaguesNameEn);
   const league = state.leagues.find(value => value.nameEn === leaguesNameEn);
-  console.log('selectLeagueTableByLeaguesNameEn1', league);
+  console.log('selectLeagueTableByLeaguesNameEn1', league, state.tables[league.id]?.length);
   if (state.tables[league.id]?.length) {
     return [...state.tables[league.id]].sort(sortTable);
   }
@@ -254,19 +254,21 @@ export const selectMatchById = createSelector(selectCurrentGameState, (state, {m
 });
 
 export const selectMatchStatsByMatchId = createSelector(selectCurrentGameState, (state, {matchId}) => {
-  // console.log('selectMatchById', matchId, state.matches);
-  const stats: MatchStats = state.stats[matchId];
+  // console.log('selectMatchSTATSById', matchId, state.stats);
+  const stats: MatchStats = state.stats[matchId];     // can be undefined
+  // console.warn('MATCH STATS SELECTOR', stats);
   const res: MatchStats1 = {
-    ...stats,
     awayAssists: stats?.awayAssists ? mapValues(stats.awayAssists, (obj) => state.players.find(value => value.nameEn === obj)) : null,
-    awayGoals: mapValues(stats?.awayGoals, (obj) => state.players.find(value => value.nameEn === obj)),
+    awayGoals: stats?.awayGoals ? mapValues(stats?.awayGoals, (obj) => state.players.find(value => value.nameEn === obj)) : null,
     awayRoster: stats?.awayRoster.map(nameEn => state.players.find(value => value.nameEn === nameEn)),
     homeAssists: stats?.homeAssists ? mapValues(stats.homeAssists, (obj) => state.players.find(value => value.nameEn === obj)) : null,
-    homeGoals: mapValues(stats?.homeGoals, (obj) => state.players.find(value => value.nameEn === obj)),
+    homeGoals: stats?.homeGoals ? mapValues(stats?.homeGoals, (obj) => state.players.find(value => value.nameEn === obj)) : null,
     homeRoster: stats?.homeRoster.map(nameEn => state.players.find(value => value.nameEn === nameEn)),
+    attendance: stats?.attendance,
+    matchId: stats?.matchId || matchId,
+    result: stats?.result
   };
-  // console.warn('MATCH STATS SELECTOR', stats);
-  // console.warn('MATCH STATS SELECTOR 111', res);
+  // console.warn('MATCH STATS SELECTOR 111', res, Object.keys(res).length);
   return res;
 });
 

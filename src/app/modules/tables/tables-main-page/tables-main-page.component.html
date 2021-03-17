@@ -15,81 +15,82 @@
         <mat-tab label="Таблица">
           <mat-table [dataSource]="table$ | async" class="w-100">
             <!-- Position Column -->
-            <ng-container matColumnDef="position">
+            <div matColumnDef="position">
               <mat-header-cell *matHeaderCellDef class="w-5"> Поз</mat-header-cell>
               <mat-cell *matCellDef="let element; let i = index" class="w-5"
                         [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{i + 1}} </mat-cell>
-            </ng-container>
+            </div>
 
             <!-- ClubName Column -->
-            <ng-container matColumnDef="clubName">
+            <div matColumnDef="clubName">
               <mat-header-cell *matHeaderCellDef class="w-25"> Клуб</mat-header-cell>
               <mat-cell *matCellDef="let element" class="w-25"
                         [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}">
                 <span (click)="showClubsRoster(element.clubName)" class="hover"> {{element.clubName}} </span>
               </mat-cell>
-            </ng-container>
+            </div>
 
             <!-- games Column -->
-            <ng-container matColumnDef="games">
+            <div matColumnDef="games">
               <mat-header-cell *matHeaderCellDef class="w-5"> И</mat-header-cell>
               <mat-cell *matCellDef="let element" class="w-5"
                         [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.games}} </mat-cell>
-            </ng-container>
+            </div>
 
             <!-- wins Column -->
-            <ng-container matColumnDef="wins">
+            <div matColumnDef="wins">
               <mat-header-cell *matHeaderCellDef class="w-5"> В</mat-header-cell>
               <mat-cell *matCellDef="let element" class="w-5"
                         [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.wins}} </mat-cell>
-            </ng-container>
+            </div>
 
             <!-- draws Column -->
-            <ng-container matColumnDef="draws">
+            <div matColumnDef="draws">
               <mat-header-cell *matHeaderCellDef class="w-5"> Н</mat-header-cell>
               <mat-cell *matCellDef="let element" class="w-5"
                         [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.draws}} </mat-cell>
-            </ng-container>
+            </div>
 
             <!-- loses Column -->
-            <ng-container matColumnDef="loses">
+            <div matColumnDef="loses">
               <mat-header-cell *matHeaderCellDef class="w-5"> П</mat-header-cell>
               <mat-cell *matCellDef="let element" class="w-5"
                         [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.loses}} </mat-cell>
-            </ng-container>
+            </div>
 
             <!-- gf Column -->
-            <ng-container matColumnDef="gf">
+            <div matColumnDef="gf">
               <mat-header-cell *matHeaderCellDef class="w-5"> ЗМ</mat-header-cell>
               <mat-cell *matCellDef="let element" class="w-5"
                         [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.gf}} </mat-cell>
-            </ng-container>
+            </div>
 
             <!-- ga Column -->
-            <ng-container matColumnDef="ga">
+            <div matColumnDef="ga">
               <mat-header-cell *matHeaderCellDef class="w-5"> ПМ</mat-header-cell>
               <mat-cell *matCellDef="let element" class="w-5"
                         [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.ga}} </mat-cell>
-            </ng-container>
+            </div>
 
             <!-- gd Column -->
-            <ng-container matColumnDef="gd">
+            <div matColumnDef="gd">
               <mat-header-cell *matHeaderCellDef class="w-5"> РМ</mat-header-cell>
               <mat-cell *matCellDef="let element" class="w-5"
                         [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.gd}} </mat-cell>
-            </ng-container>
+            </div>
 
             <!-- points Column -->
-            <ng-container matColumnDef="points">
+            <div matColumnDef="points">
               <mat-header-cell *matHeaderCellDef class="w-5"> О</mat-header-cell>
               <mat-cell *matCellDef="let element" class="w-5"
                         [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.points}} </mat-cell>
-            </ng-container>
+            </div>
 
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
           </mat-table>
         </mat-tab>
+
         <mat-tab label="Расписание">
           <div class="row">
             <div class="col text-center hover" *ngFor="let week of (schedule$ | async); let i = index"
@@ -117,8 +118,9 @@
         </mat-tab>
         <mat-tab label="Голеадоры">
           <mat-list>
-            <mat-list-item *ngFor="let goalscorersRecord of leaguePlayersStats$ | async | keyvalue: compareByGoals; let i = index;"
-                           [ngClass]="{'hidden': i >= 10}">
+            <mat-list-item
+              *ngFor="let goalscorersRecord of leaguePlayersStats$ | async | keyvalue: compareByGoals; let i = index;"
+              [ngClass]="{'hidden': i >= 10}">
               <div class="row w-100" *ngIf="i < 10"
                    [ngClass]="{'my-club': goalscorersRecord.key.clubNameEn === (curClub$ | async).nameEn}">
                 <div class="col-1">
@@ -141,8 +143,9 @@
         </mat-tab>
         <mat-tab label="Ассистенты">
           <mat-list>
-            <mat-list-item *ngFor="let goalscorersRecord of leaguePlayersStats$ | async | keyvalue: compareByAssists; let i = index;"
-                           [ngClass]="{'h-0': i >= 10}">
+            <mat-list-item
+              *ngFor="let goalscorersRecord of leaguePlayersStats$ | async | keyvalue: compareByAssists; let i = index;"
+              [ngClass]="{'h-0': i >= 10}">
               <div class="row w-100" *ngIf="i < 10"
                    [ngClass]="{'my-club': goalscorersRecord.key.clubNameEn === (curClub$ | async).nameEn}">
                 <div class="col-1">
@@ -165,8 +168,9 @@
         </mat-tab>
         <mat-tab label="Г+П">
           <mat-list>
-            <mat-list-item *ngFor="let goalscorersRecord of leaguePlayersStats$ | async | keyvalue: compareByGP; let i = index;"
-                           [ngClass]="{'h-0': i >= 10}">
+            <mat-list-item
+              *ngFor="let goalscorersRecord of leaguePlayersStats$ | async | keyvalue: compareByGP; let i = index;"
+              [ngClass]="{'h-0': i >= 10}">
               <div class="row w-100" *ngIf="i < 10"
                    [ngClass]="{'my-club': goalscorersRecord.key.clubNameEn === (curClub$ | async).nameEn}">
                 <div class="col-1">
@@ -179,7 +183,8 @@
                   {{goalscorersRecord.key.clubNameRu}}
                 </div>
                 <div class="col-2">
-                  {{goalscorersRecord.value['g+a']}} ({{goalscorersRecord.value.goals}}+{{goalscorersRecord.value.assists}})
+                  {{goalscorersRecord.value['g+a']}} ({{goalscorersRecord.value.goals}}
+                  +{{goalscorersRecord.value.assists}})
                 </div>
               </div>
               <mat-divider *ngIf="i === 0"></mat-divider>
@@ -203,9 +208,9 @@
               </span>
             </div>
             <div class="col-12 text-center align-middle">
-              <span [ngStyle]="{'line-height.px': 25 * (i + 1)}" *ngIf="(getMatchStats(match) | async)?.result"
-                    [appMatchTooltip]="match1ToMatch(match)">{{(getMatchStats(match) | async).result}}</span>
-              <span [ngStyle]="{'line-height.px': 25 * (i + 1)}" *ngIf="!(getMatchStats(match) | async)?.result">
+              <span [ngStyle]="{'line-height.px': 25 * (i + 1)}" *ngIf="cupScheduleStats[match.id]?.result"
+                    [appMatchTooltip]="match1ToMatch(match)">{{cupScheduleStats[match.id].result}}</span>
+              <span [ngStyle]="{'line-height.px': 25 * (i + 1)}" *ngIf="!cupScheduleStats[match.id]?.result">
                 vs
               </span>
             </div>

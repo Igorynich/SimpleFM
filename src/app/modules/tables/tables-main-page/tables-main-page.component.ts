@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterContentChecked, AfterContentInit, AfterViewChecked, AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {
   AppState, getCupRoundsNum, getCurrentCountryLeagues, getLeaguePlayersStats,
@@ -6,7 +6,7 @@ import {
   selectCurrentClub, selectCurrentWeek,
   selectLeagueScheduleByLeaguesNameEn, selectLeagueTableByLeaguesNameEn, selectMatchStatsByMatchId
 } from '../../../store/selectors/current-game.selectors';
-import {concatMap, distinctUntilChanged, map, switchMap, take, tap} from 'rxjs/operators';
+import {concatMap, distinctUntilChanged, map, startWith, switchMap, take, tap} from 'rxjs/operators';
 import {combineLatest, Observable, of, Subscription} from 'rxjs';
 import {LeagueTable} from '../../../interfaces/league-table';
 import {CleanSubscriptions} from '../../../utils/clean-subscriptions';
@@ -34,6 +34,7 @@ export class TablesMainPageComponent implements OnInit, OnDestroy {
   schedule$: Observable<Match1[][]>;
   schedule: Match1[][];
   cupSchedule$: Observable<Match1[][]>;
+  cupScheduleStats: {[matchId: number]: MatchStats1};
   curClub$: Observable<Club>;
   selectedWeek = {
     num: 0,
@@ -56,6 +57,13 @@ export class TablesMainPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.selectedLeagueName = new FormControl(undefined);
+    this.curClub$ = this.store.select(selectCurrentClub).pipe(tap(x => {
+      if (!this.selectedLeagueName?.value) {
+        this.selectedLeagueName.setValue(x.leagueNameEn);
+      }
+    }));
+    this.curClub$.pipe(take(1)).subscribe();
+
     this.allLeagues$ = this.store.select(getCurrentCountryLeagues);
     this._curWeekSub =
       combineLatest([
@@ -64,31 +72,41 @@ export class TablesMainPageComponent implements OnInit, OnDestroy {
       ]).pipe(take(1)).subscribe(([curWeek, cupRounds]) => {
         this.selectedWeek.num = getLeagueWeek(curWeek - 1, cupRounds);
       });
-    this.curClub$ = this.store.select(selectCurrentClub).pipe(tap(x => {
-      if (!this.selectedLeagueName?.value) {
-        this.selectedLeagueName.setValue(x.leagueNameEn);
-      }
-    }));
-    this.schedule$ = this.selectedLeagueName.valueChanges.pipe(distinctUntilChanged(), switchMap(selectedLeagueNameEn =>
+
+    const selectedLeagueValueChanged$ = this.selectedLeagueName.valueChanges
+      .pipe(distinctUntilChanged(), startWith(this.selectedLeagueName.value));
+
+    this.schedule$ = selectedLeagueValueChanged$.pipe(switchMap(selectedLeagueNameEn =>
       this.store.select(selectLeagueScheduleByLeaguesNameEn, {leaguesNameEn: selectedLeagueNameEn})
         .pipe(tap((x: Match1[][]) => {
           this.schedule = x;
           this.selectedWeek.schedule = x[this.selectedWeek.num];
           console.log('League Schedule', x);
         }))));
-    this.cupSchedule$ = this.store.select(selectCurrentClub).pipe(switchMap(curClub =>
-      this.store.select(selectCupScheduleByLeaguesNameEn, {leaguesNameEn: curClub.leagueNameEn})
-        .pipe(map(x => {
-          const treeNode = [];
 
-          console.log('Cup Schedule', x);
-          return x;
-        }))));
-    this.table$ = this.selectedLeagueName.valueChanges.pipe(distinctUntilChanged(), switchMap(selectedLeagueNameEn => {
+    this.cupSchedule$ = selectedLeagueValueChanged$.pipe(switchMap(selectedLeagueNameEn =>
+      this.store.select(selectCupScheduleByLeaguesNameEn, {leaguesNameEn: selectedLeagueNameEn})));
+    this.cupSchedule$.pipe(take(1), switchMap((schedule: Match1[][]) => {
+      // console.log('schedule', schedule);
+      const arr: Match1[] = schedule.reduce((previousValue, currentValue) => [...previousValue, ...currentValue], []);
+      // console.log('arr', arr);
+      const arr$: Observable<MatchStats1>[] = arr.map((match: Match1) =>
+        this.store.select(selectMatchStatsByMatchId, {matchId: match.id}).pipe(take(1)));
+      return combineLatest(arr$).pipe(take(1), map((value: MatchStats1[]) => {
+        // console.log('STATS', value);
+        const res = value.reduce((previousValue, currentValue) => {
+          return {...previousValue, [currentValue.matchId]: currentValue};
+        }, {});
+        console.log('STATS1', res);
+        return res;
+      }));
+    })).subscribe(value => this.cupScheduleStats = value);
+    this.table$ = selectedLeagueValueChanged$.pipe(switchMap(selectedLeagueNameEn => {
       console.log('Table$ selectedLeagueNameEn', selectedLeagueNameEn);
       return this.store.select(selectLeagueTableByLeaguesNameEn, {leaguesNameEn: selectedLeagueNameEn});
     }));
-    this.leaguePlayersStats$ = this.selectedLeagueName.valueChanges.pipe(distinctUntilChanged(), switchMap(selectedLeagueNameEn =>
+    // this.table$.subscribe()
+    this.leaguePlayersStats$ = selectedLeagueValueChanged$.pipe(switchMap(selectedLeagueNameEn =>
       this.store.select(getLeaguePlayersStats, {leagueName: selectedLeagueNameEn})
       .pipe(map((value: Map<Player, { goals?: number, assists?: number, 'g+a'?: number }>) => {
         // console.log('selectedLeagueTab', this.selectedLeagueTab, value);
@@ -109,6 +127,7 @@ export class TablesMainPageComponent implements OnInit, OnDestroy {
   }
 
   getMatchStats(match: Match1): Observable<MatchStats1> {
+    // return of(null);
     return this.store.select(selectMatchStatsByMatchId, {matchId: match.id});
   }
 

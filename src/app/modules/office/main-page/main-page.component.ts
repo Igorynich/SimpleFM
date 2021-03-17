@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UserService} from '../../../services/user.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, Event, NavigationEnd, NavigationStart, Router} from '@angular/router';
 import {ROUTES} from '../../../constants/routes';
 import {CurrentGameService} from '../../../services/current-game.service';
 import {MatDialog} from '@angular/material/dialog';
@@ -61,11 +61,12 @@ export class MainPageComponent implements OnInit, OnDestroy {
     }, {}, {}
   ];
   currentClub: Club;
-  loading$: Observable<boolean> = of(true);
+  loading = false;
   ROUTES = ROUTES;
 
   private _initStoreSub: Subscription;
   private _curClubSub: Subscription;
+  private _loadSub: Subscription;
 
   constructor(public userService: UserService,
               public router: Router,
@@ -76,6 +77,16 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     console.log('OFFICE COMPONENTN');
+    this._loadSub = this.router.events.subscribe((event: Event) => {
+      if (event instanceof NavigationStart) {
+        console.log('NAV START');
+        this.loading = true;
+      }
+      if (event instanceof NavigationEnd) {
+        console.log('NAV END');
+        this.loading = false;
+      }
+    });
     this._initStoreSub = combineLatest([
       this.store.select(selectCurrentWeek),
       this.store.select(selectCurrentSeason),
@@ -89,7 +100,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.loading$ = this.store.select(curGameLoading);
+    // this.loading$ = this.store.select(curGameLoading);
     this._curClubSub = this.store.select(selectCurrentClub).subscribe(value => {
       this.currentClub = value;
     });

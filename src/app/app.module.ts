@@ -13,6 +13,7 @@ import {StoreModule} from '@ngrx/store';
 import {currentGameReducer} from './store/reducers/current-game.reducer';
 import {EffectsModule} from '@ngrx/effects';
 import {CurrentGameEffects} from './store/effects/current-game.effects';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import {CurrentGameEffects} from './store/effects/current-game.effects';
     AngularFirestoreModule,
     StoreModule.forRoot({currentGame: currentGameReducer}),
     EffectsModule.forRoot([CurrentGameEffects]),
+    MatProgressSpinnerModule,
     // MatPasswordStrengthModule,
     // NgxAuthFirebaseUIModule.forRoot(environment.firebaseConfig)  // auth ui module
   ],

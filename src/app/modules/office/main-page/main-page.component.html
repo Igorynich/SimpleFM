@@ -1,4 +1,4 @@
-<div class="row justify-content-center h-100" *ngIf="!(loading$ | async)">
+<div class="row justify-content-center h-100">
   <div class="col">
     <mat-card class="office-card--main">
       <div class="row justify-content-center h-25 pb-4">
@@ -17,13 +17,13 @@
           </mat-card>
         </div>
       </div>
-      <div class="row justify-content-center h-75">
-        <div class="col" *ngIf="router.url !== '/' + ROUTES.OFFICE">
+      <div class="row justify-content-center h-75" *ngIf="!loading">
+        <div class="col-12" *ngIf="router.url !== '/' + ROUTES.OFFICE">
           <mat-card class="office-card--bot-panel h-100">
             <router-outlet></router-outlet>
           </mat-card>
         </div>
-        <div class="col" *ngIf="router.url === '/' + ROUTES.OFFICE">
+        <div class="col-12" *ngIf="router.url === '/' + ROUTES.OFFICE">
           <mat-card class="office-card--bot-panel h-100">
             <div class="row h-100">
               <div class="col-3 h-50 py-2" *ngFor="let card of cards; let i = index">
@@ -35,6 +35,18 @@
           </mat-card>
         </div>
       </div>
+      <div class="row justify-content-center h-75" *ngIf="loading">
+        <div class="col-12">
+          <mat-card class="office-card--bot-panel h-100">
+            <div class="row justify-content-center h-100">
+              <div class="col-5">
+                <mat-spinner class=""></mat-spinner>
+              </div>
+            </div>
+          </mat-card>
+        </div>
+      </div>
     </mat-card>
   </div>
 </div>
+

@@ -317,10 +317,14 @@ const _currentGameReducer = createReducer(currentGameInitState,
       homeGoals: mapValues(goals.homeGoals, (obj) => obj.nameEn),
       homeAssists: goals.homeAssists ? mapValues(goals.homeAssists, (obj) => obj?.nameEn) : null,
       awayGoals: mapValues(goals.awayGoals, (obj) => obj.nameEn),
-      awayAssists: goals.awayAssists ? mapValues(goals.awayAssists, (obj) => obj?.nameEn) : null
+      awayAssists: goals.awayAssists ? mapValues(goals.awayAssists, (obj) => obj?.nameEn) : null,
+      matchId,
+      result
     };
     // console.warn(`REDUCER ADD MATCH STATS FOR ${matchId} FINISH`, mapped);
-    return {...state, stats: {...state.stats, [matchId]: {...state.stats[matchId], ...mapped, result}}};
+    // console.warn(`REDUCER ADD MATCH STATS FOR ${matchId} FINISH1`, {...state.stats[matchId]});
+    // console.warn(`REDUCER ADD MATCH STATS FOR ${matchId} FINISH2`, {[matchId]: {...state.stats[matchId], ...mapped}});
+    return {...state, stats: {...state.stats, [matchId]: {...state.stats[matchId], ...mapped}}};
   }),
   on(addGainsAndLossesForMatch, (state, {matchId, gains, losses}) => {
     const newState = produce(state, (draft: CurrentGameState) => {
