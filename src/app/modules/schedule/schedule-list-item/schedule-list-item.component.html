@@ -1,0 +1,33 @@
+<div class="row w-100" *ngIf="match">
+    <div class="col-2">
+      Неделя {{week}}
+    </div>
+    <div class="col-2">
+      {{match.isCupMatch ? 'Кубок Англии' : (currentClub$ | async)?.leagueNameRu}}
+    </div>
+    <ng-container *ngIf="getMatchOpponent(match)?.club | async">
+      <div class="col-5">
+        {{(getMatchOpponent(match)?.club | async)?.nameRu}}
+        <span *ngIf="match.isCupMatch">({{(getMatchOpponent(match)?.club | async)?.leagueNameRu}})</span>
+      </div>
+      <div class="col-1 text-center">
+        {{getMatchOpponent(match).field | async}}
+      </div>
+      <div class="col-2 text-center">
+            <span [ngClass]="getMatchResultClass(match, matchStats$ | async) | async" [appMatchTooltip]="match" [showGains]="true">
+              {{getAdjustedResult(getMatchOpponent(match).field | async, matchStats$ | async)}}
+            </span>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!(getMatchOpponent(match)?.club | async)">
+      <div class="col">
+        Прошел в след. раунд
+      </div>
+    </ng-container>
+</div>
+
+<div class="row w-100" *ngIf="!match">
+  <div class="col-2">
+    Неделя {{week}}
+  </div>
+</div>

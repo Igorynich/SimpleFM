@@ -18,40 +18,9 @@
 
 <div class="row schedule-body">
   <div class="col">
-    <div class="row w-100" *ngFor="let match of (curClubsSchedule$ | async); let i = index">
-      <ng-container *ngIf="match">
-        <div class="col-2">
-          Неделя {{i + 1}}
-        </div>
-        <div class="col-2">
-          {{match.isCupMatch ? 'Кубок Англии' : currentClub.leagueNameRu}}
-        </div>
-        <ng-container *ngIf="getMatchOpponent(match)?.club | async">
-          <div class="col-5">
-            {{(getMatchOpponent(match)?.club | async)?.nameRu}}
-            <span *ngIf="match.isCupMatch">({{(getMatchOpponent(match)?.club | async)?.leagueNameRu}})</span>
-          </div>
-          <div class="col-1 text-center">
-            {{getMatchOpponent(match).field}}
-          </div>
-          <div class="col-2 text-center">
-            <span [ngClass]="getMatchResultClass(match, cupScheduleStats[match.id])" [appMatchTooltip]="match" [showGains]="true">
-              {{getAdjustResult(getMatchOpponent(match).field, cupScheduleStats[match.id])}}
-            </span>
-          </div>
-        </ng-container>
-        <ng-container *ngIf="!(getMatchOpponent(match)?.club | async)">
-          <div class="col">
-            Прошел в след. раунд
-          </div>
-        </ng-container>
-      </ng-container>
-      <ng-container *ngIf="!match">
-        <div class="col-2">
-          Неделя {{i + 1}}
-        </div>
-      </ng-container>
-    </div>
+    <app-schedule-list-item [match]="match" [week]="i + 1"
+                            *ngFor="let match of (curClubsSchedule$ | async); let i = index">
+    </app-schedule-list-item>
   </div>
 </div>
 

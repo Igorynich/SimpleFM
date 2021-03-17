@@ -1,0 +1,11 @@
+.match-won {
+  color: deepskyblue;
+}
+
+.match-lost {
+  color: crimson;
+}
+
+.match-draw {
+  color: goldenrod;
+}
