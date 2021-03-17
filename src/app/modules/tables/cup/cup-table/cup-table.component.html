@@ -1,0 +1,29 @@
+<div class="row align-items-center">
+  <div class="col" *ngFor="let round of cupSchedule; let i = index">
+    <p>Раунд {{i + 1}}(неделя {{cupRoundToWeek(i + 1)}})</p>
+    <app-cup-match-item [match]="match" [index]="i" *ngFor="let match of round"></app-cup-match-item>
+    <!--<div class="row my-3 mx-3" *ngFor="let match of round"
+         [ngStyle]="{'height.px': 100 * (i + 1), 'border': '2px dashed black'}">
+      <div class="col-12 text-center">
+              <span [ngStyle]="{'line-height.px': 25 * (i + 1)}"
+                    [ngClass]="{'my-club': (isMyClub$(match).home | async)}">
+                {{match.home?.nameRu || '-&#45;&#45;'}}
+              </span>
+      </div>
+      <div class="col-12 text-center align-middle">
+              <span [ngStyle]="{'line-height.px': 25 * (i + 1)}" *ngIf="cupScheduleStats[match.id]?.result"
+                    [appMatchTooltip]="match1ToMatch(match)">{{cupScheduleStats[match.id].result}}</span>
+        <span [ngStyle]="{'line-height.px': 25 * (i + 1)}" *ngIf="!cupScheduleStats[match.id]?.result">
+                vs
+              </span>
+      </div>
+      <div class="col-12 text-center">
+              <span [ngStyle]="{'line-height.px': 25 * (i + 1)}"
+                    [ngClass]="{'my-club': (isMyClub$(match).away | async)}">
+                {{match.away?.nameRu || '-&#45;&#45;'}}
+              </span>
+      </div>
+      &lt;!&ndash;<mat-divider></mat-divider>&ndash;&gt;
+    </div>-->
+  </div>
+</div>

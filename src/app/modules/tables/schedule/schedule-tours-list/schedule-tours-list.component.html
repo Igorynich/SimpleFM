@@ -1,0 +1,7 @@
+<div class="row">
+  <div class="col text-center hover" *ngFor="let week of schedule; let i = index" (click)="tourClick(i)">
+      <span [ngClass]="{selected: i === selectedWeek}">
+        {{i + 1}}
+      </span>
+  </div>
+</div>

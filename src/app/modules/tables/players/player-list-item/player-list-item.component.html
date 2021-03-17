@@ -1,0 +1,15 @@
+<div class="row w-100"
+     [ngClass]="{'my-club': playerRecord.key.clubNameEn === (curClub$ | async).nameEn}">
+  <div class="col-1">
+    {{index + 1}}
+  </div>
+  <div class="col-3">
+    {{playerRecord.key.nameRu}}
+  </div>
+  <div class="col-3">
+    {{playerRecord.key.clubNameRu}}
+  </div>
+  <div class="col-1">
+    {{playerRecord.value[displayProp]}}
+  </div>
+</div>

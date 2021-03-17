@@ -1,0 +1,23 @@
+<div class="row my-3 mx-3"
+     [ngStyle]="{'height.px': 100 * (index + 1), 'border': '2px dashed black'}">
+  <div class="col-12 text-center">
+              <span [ngStyle]="{'line-height.px': 25 * (index + 1)}"
+                    [ngClass]="{'my-club': (isMyClub$(match).home | async)}">
+                {{match.home?.nameRu || '---'}}
+              </span>
+  </div>
+  <div class="col-12 text-center align-middle">
+              <span [ngStyle]="{'line-height.px': 25 * (index + 1)}" *ngIf="(matchStats$ | async)?.result"
+                    [appMatchTooltip]="match1ToMatch(match)">{{(matchStats$ | async).result}}</span>
+    <span [ngStyle]="{'line-height.px': 25 * (index + 1)}" *ngIf="!(matchStats$ | async)?.result">
+                vs
+              </span>
+  </div>
+  <div class="col-12 text-center">
+              <span [ngStyle]="{'line-height.px': 25 * (index + 1)}"
+                    [ngClass]="{'my-club': (isMyClub$(match).away | async)}">
+                {{match.away?.nameRu || '---'}}
+              </span>
+  </div>
+  <!--<mat-divider></mat-divider>-->
+</div>
