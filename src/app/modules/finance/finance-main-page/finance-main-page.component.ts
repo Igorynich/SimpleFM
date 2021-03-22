@@ -40,7 +40,7 @@ export class FinanceMainPageComponent implements OnInit {
     return array;
   }
 
-  calculateBudget(club: Club, records: {[week: number]: FinanceRecord[]} | null): number {
+  /*calculateBudget(club: Club, records: {[week: number]: FinanceRecord[]} | null): number {
     let budget = club.budget;
     if (records) {
       Object.values(records).forEach((recs: FinanceRecord[]) => {
@@ -51,5 +51,5 @@ export class FinanceMainPageComponent implements OnInit {
       });
     }
     return budget;
-  }
+  }*/
 }

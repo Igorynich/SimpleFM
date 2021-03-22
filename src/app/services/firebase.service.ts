@@ -9,6 +9,8 @@ import {Player} from '../interfaces/player';
 import {AngularFireAuth} from '@angular/fire/auth';
 import * as firebase from 'firebase';
 import {StorageService} from './storage.service';
+import {BugReport} from '../interfaces/bug-report';
+import {BugReportDecoded} from '../interfaces/bug-report-decoded';
 
 export class PlayerQueryObj {
   club?: string;
@@ -63,19 +65,19 @@ export class FirebaseService {
   }
 
   addFeedback(data: {text: string}) {
-    const collection = this.afs.collection<{text: string}>('feedback');
-    return from(collection.add(data)).pipe(map(value => {
+    const collection = this.afs.collection<{text: string, date: Date}>('feedback');
+    return from(collection.add({text: data.text, date: new Date()})).pipe(map(value => {
       console.log(value);
       return value;
     }));
   }
 
-  addBugReport(data: {text: string, save: {data: any, stats: any}}) {
+  addBugReport(data: {text: string, save: {data: string, stats: string, transfers: string}}) {
     // const splitData = data.save.match(/.{1,128}/g);
     // console.log('splitData', splitData, splitData.length, data.save.length, );
-    const collection = this.afs.collection<{text: string, save: {data: any, stats: any}, date: Date}>('bugs');
-    return from(collection.add({text: data.text, save: {data: data.save.data, stats: data.save.stats}, date: new Date()}))
-      .pipe(map(value => {
+    const collection = this.afs.collection<{text: string, save: {data: string, stats: string, transfers: string}, date: Date}>('bugs');
+    return from(collection.add({text: data.text, save: {data: data.save.data, stats: data.save.stats, transfers: data.save.transfers},
+      date: new Date()})).pipe(map(value => {
       console.log(value);
       return value;
     }));
@@ -134,6 +136,11 @@ export class FirebaseService {
     return from(playerDoc.delete());
   }
 
+  deleteBugReport(id: string) {
+    const bugDoc = this.afs.doc<Player>(`bugs/${id}`);
+    return from(bugDoc.delete());
+  }
+
   getCountry(id: string): Observable<Country> {
     return this.afs.doc<Country>(`countries/${id}`).valueChanges();
   }
@@ -181,8 +188,10 @@ export class FirebaseService {
       });
       console.log('Progress', this.progress);
     }
+    console.log('getCountries refreshCache', refreshCache);
     if (!refreshCache) {
       const storedData = this.storage.getSavedData();
+      console.log('storedData for countries', storedData);
       if (!!storedData?.countries) {
         if (checkProgress) {
           this.progress.next({
@@ -190,6 +199,7 @@ export class FirebaseService {
             loaded: true
           });
         }
+        console.log('getCountries returned from cache', storedData.countries);
         return of(storedData.countries);
       }
     }
@@ -238,6 +248,7 @@ export class FirebaseService {
             loaded: true
           });
         }
+        console.log('getLeagues returned from cache', storedData.leagues);
         return of(storedData.leagues);
       }
     }
@@ -285,6 +296,7 @@ export class FirebaseService {
             loaded: true
           });
         }
+        console.log('getClubs returned from cache', storedData.clubs);
         return of(storedData.clubs);
       }
     }
@@ -331,6 +343,7 @@ export class FirebaseService {
             loaded: true
           });
         }
+        console.log('getPlayers returned from cache', storedData.players);
         return of(storedData.players);
       }
     }
@@ -364,6 +377,41 @@ export class FirebaseService {
       return playersArray;
     }), catchError(err => {
       console.log('Err players', err);
+      this.progress.next({
+        loading: false,
+        loaded: false
+      });
+      return of([]);
+    }));
+  }
+
+  getBugReports(checkProgress = true): Observable<BugReport[]> {
+    if (checkProgress) {
+      this.progress.next({
+        loading: true,
+        loaded: false
+      });
+    }
+
+    return this.afs.collection<BugReport>('bugs', (ref: CollectionReference) => {
+      return ref.orderBy('date');
+    }).snapshotChanges().pipe(map(value => {
+      const bugsArr: BugReport[] = value.map(item => {
+        return {
+          id: item.payload.doc.id,
+          ...item.payload.doc.data()
+        };
+      });
+      if (checkProgress) {
+        this.progress.next({
+          loading: false,
+          loaded: true
+        });
+      }
+      console.log('bugsArr with id', bugsArr);
+      return bugsArr;
+    }), catchError(err => {
+      console.log('Err bugs', err);
       this.progress.next({
         loading: false,
         loaded: false

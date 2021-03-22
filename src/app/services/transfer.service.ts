@@ -42,6 +42,7 @@ export class TransferService {
       this.store.select(getGeneratedForWeekNum)
     ]).pipe(take(1)).subscribe(([curWeek, generatedForWeekNum]) => {
       // week 1 or weeks over interval
+      console.log('generateTransferList', curWeek, generatedForWeekNum);
       if (generatedForWeekNum !== curWeek && (curWeek === 1 || (curWeek - 1) % this.TRANSFER_LIST_UPDATE_INTERVAL === 0)) {
         this.generateListedPlayers();
       }

@@ -7,7 +7,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {InfoDialogComponent} from '../../../shared/info-dialog/info-dialog.component';
 import {Store} from '@ngrx/store';
 import {CurrentGameState} from '../../../store/reducers/current-game.reducer';
-import {getBaseData, getClub, gotPlayers} from '../../../store/actions/current-game.actions';
+import {getBaseData, getClub, gotPlayers, loading} from '../../../store/actions/current-game.actions';
 import {
   AppState,
   curGameLoading,
@@ -93,6 +93,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
       this.store.select(selectCurrentPlayers)
     ]).pipe(take(1)).subscribe(([currentWeek, curSeason, curPlayers]) => {
       console.log('Cur week', currentWeek);
+      this.store.dispatch(loading({status: true}));
       if (currentWeek === 1 && curSeason === 1) {
         this.store.dispatch(getBaseData());
       } else if (currentWeek === 1 && curSeason > 1) {

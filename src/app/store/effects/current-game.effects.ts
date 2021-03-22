@@ -2,13 +2,13 @@ import {Injectable} from '@angular/core';
 import {Actions, createEffect, EffectNotification, ofType, OnRunEffects} from '@ngrx/effects';
 import {FirebaseService} from '../../services/firebase.service';
 import {
-  addFinanceRecord, advanceASeason, advanceAWeek, cleanUpBeforeANewSeason,
+  addFinanceRecord, addTransferRecord, advanceASeason, advanceAWeek, cleanUpBeforeANewSeason,
   expandStadium, generateStuffForANewSeason,
   getBaseData,
   getClub, giveSeasonalPrizeMoney,
   gotBaseData,
   gotClub,
-  gotPlayers,
+  gotPlayers, loading,
   logOut, makeDivisionRotations, playerTransferToAClub, playerTransferToCurClub, rotateClubs,
   scheduleGenerated,
   tablesGenerated
@@ -120,16 +120,22 @@ export class CurrentGameEffects {
       filter(value => !!this.userService.userName),
       switchMap(actions => {
         return this.store.pipe(select(getAllLeagues)).pipe(
-          filter(value => !!this.userService.userName),
-          map(leagues => {
+          take(1),
+          // filter(value => !!this.userService.userName),
+          switchMap(leagues => {
             const leagueTables = this.game.generateTables(leagues);
             // generating first transfer list
+            console.log('generating first tr list in effects');
             this.transferService.generateTransferList();
             //
-            return tablesGenerated({tables: {...leagueTables}});
+            return [
+              tablesGenerated({tables: {...leagueTables}}),
+              loading({status: false})
+            ];
           }));
       })
     ));
+
 
 
   stadiumExpansionFinanceReportGeneration$ = createEffect(() =>
@@ -171,7 +177,17 @@ export class CurrentGameEffects {
               description: `Продажа ${player.nameRu}`,
               expense: null,
               income: player.price * 1000000
-            })]),
+            }),
+            addTransferRecord({
+              transfer: {
+                fee: player.price,
+                playerNameEn: player.nameEn,
+                week: null,
+                season: null,
+                from: player.clubNameEn,
+                to: curClub.nameEn
+              }})
+          ]),
         );
       })
     ));
@@ -195,7 +211,17 @@ export class CurrentGameEffects {
             description: `Покупка ${player.nameRu}`,
             expense: player.price * 1000000,
             income: null
-          })];
+          }),
+          addTransferRecord({
+            transfer: {
+              fee: player.price,
+              playerNameEn: player.nameEn,
+              week: null,
+              season: null,
+              from: player.clubNameEn,
+              to: clubsNameEn
+            }})
+        ];
       })
     ));
 

@@ -1,0 +1,10 @@
+<h3 class="text-center">Баг репорт от {{data.date | date: 'medium'}}</h3>
+<p>{{data.text}}</p>
+<div class="row justify-content-between">
+  <div class="col-2">
+    <button mat-flat-button color="primary" (click)="close()">Закрыть</button>
+  </div>
+  <div class="col-2">
+    <button mat-flat-button color="warn" (click)="loadSave()">Загрузить</button>
+  </div>
+</div>

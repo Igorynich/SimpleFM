@@ -15,6 +15,8 @@ import {Props} from '@ngrx/store/src/models';
 import {League} from '../../interfaces/league';
 import {MatchStats1} from '../../interfaces/match-stats1';
 import {mapValues} from 'lodash';
+import {Transfer1} from '../../interfaces/transfer1';
+import {Transfer} from '../../interfaces/transfer';
 
 export interface AppState {
   currentGame: CurrentGameState;
@@ -39,7 +41,7 @@ export const getAllLeagues = createSelector(selectCurrentGameState, (state: Curr
 export const getAllCountries = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.countries || []);
 export const getAllPlayers = createSelector(selectCurrentGameState, (state: CurrentGameState) => state.players || []);
 
-export const getAllAvailableClubs = createSelector(selectCurrentGameState, getAllLeagues,  (state: CurrentGameState, leagues) => {
+export const getAllAvailableClubs = createSelector(selectCurrentGameState, getAllLeagues, (state: CurrentGameState, leagues) => {
   let lowestTierLeague = leagues[0];
   leagues.forEach(value => {
     if (value.tier > lowestTierLeague.tier) {
@@ -390,6 +392,20 @@ export const selectClubsRosterLastMatchStats = createSelector(selectCurrentGameS
 export const selectTransferListedPlayers = createSelector(selectCurrentGameState,
   (state: CurrentGameState) => state.transferListedPlayers);
 
+export const selectTransferHistory = createSelector(selectCurrentGameState,
+  (state: CurrentGameState) => {
+    const history: Transfer1[] = state.transfers.map((transfer: Transfer) => {
+      return {
+        ...transfer,
+        player: state.players.find(pl => pl.nameEn === transfer.playerNameEn),
+        from: state.clubs.find(cl => cl.nameEn === transfer.from),
+        to: state.clubs.find(cl => cl.nameEn === transfer.to)
+      };
+    });
+    // console.log('selectTransferHistory', history);
+    return history;
+  });
+
 export const getWeeksOnCurrentJob = createSelector(selectCurrentGameState,
   (state: CurrentGameState) => state.jobData.weeksOnCurrentJob);
 
@@ -400,7 +416,7 @@ export const getAlreadySoldAPlayerThisWeekNum = createSelector(selectCurrentGame
   (state: CurrentGameState) => state.transferData.alreadySoldAPlayerThisWeekNum);
 
 export const getLeaguePlayersStats = createSelector(selectCurrentGameState,
-  (state: CurrentGameState, props?: {leagueName: string}) => {
+  (state: CurrentGameState, props?: { leagueName: string }) => {
     // console.warn('PROPS', props);
     let league: League;
     if (!props?.leagueName) {

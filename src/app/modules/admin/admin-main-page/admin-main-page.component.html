@@ -314,6 +314,43 @@
       </div>
     </ng-template>
   </mat-tab>
+
+  <!--      баг репорты     -->
+  <mat-tab label="Баг Репорты">
+    <ng-template matTabContent>
+      <ng-container *ngTemplateOutlet="error; context: {$implicit: countries}"></ng-container>
+      <ng-container *ngTemplateOutlet="loading"></ng-container>
+      <div class="row w-100" *ngIf="(fs.progress | async).loaded">
+        <div class="col">
+          <div class="row">
+            <div class="col">
+              <mat-list role="list">
+                <mat-list-item *ngFor="let report of bugReports$ | async; let i = index">
+                  <div class="row w-100">
+                    <div class="col-1">
+                      {{i + 1}}
+                    </div>
+                    <div class="col-3">
+                      {{report.date | date: 'medium'}}
+                    </div>
+                    <div class="col-6">
+                      {{report.text}}
+                    </div>
+                    <div class="col-1">
+                      <button mat-flat-button color="primary" (click)="openBugReportDialog(report)">open</button>
+                    </div>
+                    <div class="col-1">
+                      <button mat-flat-button color="warn" (click)="deleteReport(report)">del</button>
+                    </div>
+                  </div>
+                </mat-list-item>
+              </mat-list>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </mat-tab>
 </mat-tab-group>
 
 <ng-template #error let-val>

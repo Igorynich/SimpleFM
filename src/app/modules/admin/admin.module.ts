@@ -24,6 +24,7 @@ import { AddPlayerDialogComponent } from './add-player-dialog/add-player-dialog.
 import { EditPlayerDialogComponent } from './edit-player-dialog/edit-player-dialog.component';
 import {MatSortModule} from '@angular/material/sort';
 import {MatIconModule} from '@angular/material/icon';
+import {MatListModule} from '@angular/material/list';
 
 const routes = [
   {
@@ -60,7 +61,8 @@ const routes = [
     MatPaginatorModule,
     NgxPaginationModule,
     MatSortModule,
-    MatIconModule
+    MatIconModule,
+    MatListModule
   ],
   entryComponents: [
     EditCountryDialogComponent,

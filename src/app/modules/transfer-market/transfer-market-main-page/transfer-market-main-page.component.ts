@@ -1,10 +1,15 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {TransferService} from '../../../services/transfer.service';
 import {Player} from '../../../interfaces/player';
 import {Observable, Subscription} from 'rxjs';
 import {Club} from '../../../interfaces/club';
 import {Store} from '@ngrx/store';
-import {AppState, selectCurrentClub, selectTransferListedPlayers} from '../../../store/selectors/current-game.selectors';
+import {
+  AppState,
+  selectCurrentClub,
+  selectTransferHistory,
+  selectTransferListedPlayers
+} from '../../../store/selectors/current-game.selectors';
 import {playerTransferToAClub, playerTransferToCurClub} from '../../../store/actions/current-game.actions';
 import {MatDialog} from '@angular/material/dialog';
 import {ConfirmationDialogComponent} from '../../../shared/confirmation-dialog/confirmation-dialog.component';
@@ -13,6 +18,7 @@ import {CleanSubscriptions, clearSubscription} from '../../../utils/clean-subscr
 import {take} from 'rxjs/operators';
 import {SellPlayerDialogComponent} from '../sell-player-dialog/sell-player-dialog.component';
 import {SnackBarService} from '../../../services/snack-bar.service';
+import {Transfer1} from '../../../interfaces/transfer1';
 
 @CleanSubscriptions()
 @Component({
@@ -22,8 +28,9 @@ import {SnackBarService} from '../../../services/snack-bar.service';
 })
 export class TransferMarketMainPageComponent implements OnInit, OnDestroy {
 
-  curClub$: Observable<Club>;
+  // curClub$: Observable<Club>;
   listedPlayers$: Observable<Player[]>;
+  transferHistory$: Observable<Transfer1[]>;
 
   private _dialogSub: Subscription;
 
@@ -34,8 +41,9 @@ export class TransferMarketMainPageComponent implements OnInit, OnDestroy {
               private snack: SnackBarService) { }
 
   ngOnInit(): void {
-    this.curClub$ = this.store.select(selectCurrentClub);
+    // this.curClub$ = this.store.select(selectCurrentClub);
     this.listedPlayers$ = this.store.select(selectTransferListedPlayers);
+    this.transferHistory$ = this.store.select(selectTransferHistory);
   }
 
   ngOnDestroy(): void {

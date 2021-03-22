@@ -7,6 +7,7 @@ import {LeagueTable} from '../../interfaces/league-table';
 import {WeekSchedule} from '../../interfaces/league-schedule';
 import {Match} from '../../interfaces/match';
 import {CurrentGameState} from '../reducers/current-game.reducer';
+import {Transfer} from '../../interfaces/transfer';
 
 export const setUserName = createAction('Setting UserName', props<{userName: string}>());
 
@@ -89,3 +90,7 @@ export const generateStuffForANewSeason = createAction('Starts generation of sch
 export const cleanUpBeforeANewSeason = createAction('Cleans finances, gainsAndLosses, matches and stats before new season');
 
 export const loadSavedGame = createAction('Loads saved store', props<{data: CurrentGameState}>());
+
+export const loading = createAction('loading status', props<{status: boolean}>());
+
+export const addTransferRecord = createAction('adds record to transfer list', props<{transfer: Transfer}>());

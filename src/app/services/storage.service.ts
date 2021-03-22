@@ -72,13 +72,13 @@ export class StorageService {
     scheduleShells: { [league_NumOfClubs: string]: any }
   } | null {
     const storageData = getFromLocalStorage(this.STORAGE_FOR_DATA_NAME);
-
+    // console.log('SavedData from LS', storageData);
     if (!!storageData) {
       const date = new Date();
       // @ts-ignore
       const secondsFromLastSave = date - new Date(storageData.timestamp);
       console.log('dates', storageData.timestamp, secondsFromLastSave);
-      if (secondsFromLastSave <= this.SECONDS_TO_EXPIRATION) {
+      if (secondsFromLastSave >= this.SECONDS_TO_EXPIRATION) {
         return null;
       }
       const res = {

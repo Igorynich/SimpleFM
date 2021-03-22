@@ -16,6 +16,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
+import { ReportDialogComponent } from './report-dialog/report-dialog.component';
 
 
 
@@ -28,7 +29,8 @@ import {MatIconModule} from '@angular/material/icon';
     MatchTooltipDirective,
     MatchResultComponent,
     PlayersListDialogComponent,
-    FeedbackDialogComponent
+    FeedbackDialogComponent,
+    ReportDialogComponent
   ],
   imports: [
     CommonModule,

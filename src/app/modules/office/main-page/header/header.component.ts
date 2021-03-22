@@ -11,7 +11,7 @@ import {Store} from '@ngrx/store';
 import {Club} from '../../../../interfaces/club';
 import {ActivatedRoute, Router} from '@angular/router';
 import { ROUTES } from 'src/app/constants/routes';
-import {interval, Observable, Subscription} from 'rxjs';
+import {interval, Observable, of, Subscription} from 'rxjs';
 import {filter, map, switchMap, take, tap} from 'rxjs/operators';
 import { logOut } from 'src/app/store/actions/current-game.actions';
 import {clearSubscription} from '../../../../utils/clean-subscriptions';
@@ -46,8 +46,14 @@ export class HeaderComponent implements OnInit {
     this.currentClub$ = this.store.select(selectCurrentClub);
     this.currentWeek$ = this.store.select(selectCurrentWeek);
     this.currentSeason$ = this.store.select(selectCurrentSeason);
-    this.nextOpponent$ = this.store.select(selectCurrentClub).pipe(switchMap(curClub =>
-      this.store.select(selectNextOpponent, {clubsNameEn: curClub.nameEn})));
+    this.nextOpponent$ = this.store.select(selectCurrentClub).pipe(switchMap(curClub => {
+      console.log('HEADER curClub', curClub);
+      if (!curClub) {
+        return of(null);
+      }
+      return this.store.select(selectNextOpponent, {clubsNameEn: curClub.nameEn});
+    }));
+
   }
 
   // TODO: hide

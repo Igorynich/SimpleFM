@@ -71,6 +71,9 @@ export function tapOnce<T>(fn: (v: T) => any) {
 }
 
 export function objToArr(obj: object) {
+  if (Array.isArray(obj)) {
+    return obj;
+  }
   return Object.keys(obj).map(key => obj[key]);
 }
 

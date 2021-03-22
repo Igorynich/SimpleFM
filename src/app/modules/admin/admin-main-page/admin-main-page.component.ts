@@ -9,7 +9,7 @@ import {FirebaseService} from '../../../services/firebase.service';
 import {EditLeagueDialogComponent} from '../edit-league-dialog/edit-league-dialog.component';
 import {AddCountryDialogComponent} from '../add-country-dialog/add-country-dialog.component';
 import {ConfirmationDialogComponent} from '../../../shared/confirmation-dialog/confirmation-dialog.component';
-import {debounceTime, distinctUntilChanged, map, startWith, switchMap, take, tap} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, map, retry, startWith, switchMap, take, tap} from 'rxjs/operators';
 import {CleanSubscriptions, clearSubscription} from '../../../utils/clean-subscriptions';
 import {AddLeagueDialogComponent} from '../add-league-dialog/add-league-dialog.component';
 import {Club} from '../../../interfaces/club';
@@ -23,8 +23,24 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {FormControl} from '@angular/forms';
 import {POSITIONS} from '../../../constants/positions';
-import {randomInteger} from '../../../utils/helpers';
-import {round, meanBy} from 'lodash';
+import {objToArr, randomInteger} from '../../../utils/helpers';
+import {round, meanBy, flatten} from 'lodash';
+import {BugReport} from '../../../interfaces/bug-report';
+import {BugReportDecoded} from '../../../interfaces/bug-report-decoded';
+import {LZString} from '../../../utils/lz-string';
+import {mapReviver} from '../../../utils/local-storage';
+import {StorageService} from '../../../services/storage.service';
+import {CurrentGameState} from '../../../store/reducers/current-game.reducer';
+import {ReportDialogComponent} from '../../../shared/report-dialog/report-dialog.component';
+import {loadSavedGame} from '../../../store/actions/current-game.actions';
+import {UserService} from '../../../services/user.service';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../store/selectors/current-game.selectors';
+import {ROUTES} from '../../../constants/routes';
+import {Router} from '@angular/router';
+import {Transfer} from '../../../interfaces/transfer';
+import {FinanceRecord} from '../../../interfaces/finance-record';
+import {SnackBarService} from '../../../services/snack-bar.service';
 
 @CleanSubscriptions()
 @Component({
@@ -42,6 +58,8 @@ export class AdminMainPageComponent implements OnInit, OnDestroy {
   playersDS: MatTableDataSource<Player>;
   playersChanged$ = new Subject();
   positions = POSITIONS;
+
+  bugReports$: Observable<BugReportDecoded[]>;
 
   @ViewChild('plPaginator', {read: MatPaginator, static: false}) playersPaginator: MatPaginator;
   @ViewChild('plTable', {read: MatSort, static: false}) playersSort: MatSort;
@@ -75,7 +93,9 @@ export class AdminMainPageComponent implements OnInit, OnDestroy {
   private _fillPowerSub: Subscription;
 
 
-  constructor(public fs: FirebaseService, private dialog: MatDialog) {
+  constructor(public fs: FirebaseService, private dialog: MatDialog, private storage: StorageService,
+              private userService: UserService, private store: Store<AppState>, private router: Router,
+              private snack: SnackBarService) {
   }
 
   ngOnInit() {
@@ -149,6 +169,82 @@ export class AdminMainPageComponent implements OnInit, OnDestroy {
         // this.playersChanged$.next(x);
         this.filterPlayers(x);
       })).subscribe();
+    }
+    if (ev.index === 4) {
+      this.bugReports$ = combineLatest([
+        this.fs.getBugReports(),
+        this.fs.getPlayers(),
+        this.clubs,
+        this.countries,
+        this.leagues,
+        this.fs.getScheduleShells()
+      ]).pipe(map(([reports, players, clubs, countries, leagues, shells]: [BugReport[], Player[], Club[], Country[], League[], any]) => {
+        const decodedReports: BugReportDecoded[] = reports.map((report: BugReport) => {
+          const decData = JSON.parse(LZString.decompressFromBase64(report.save.data), mapReviver);
+          const decStats = JSON.parse(LZString.decompressFromBase64(report.save.stats), mapReviver);
+          const decTransfers: Transfer[] = JSON.parse(LZString.decompressFromBase64(report.save.transfers), mapReviver);
+
+          console.log('decTransfers', decTransfers);
+          // implementing transfers
+          decTransfers.forEach((transfer: Transfer) => {
+            // const fromClub: Club = clubs.find((cl: Club) => cl.nameEn === transfer.from);
+            const toClub: Club = clubs.find((cl: Club) => cl.nameEn === transfer.to);
+            // fromClub.budget += transfer.fee;
+            // toClub.budget -= transfer.fee;
+            const player = players.find((pl: Player) => pl.nameEn === transfer.playerNameEn);
+            player.clubNameEn = toClub.nameEn;
+            player.clubNameRu = toClub.nameRu;
+          });
+          console.log('Finances', decData.finances);
+          // correcting budgets
+          decData.finances.forEach((value: { [week: number]: FinanceRecord[] }, key: string) => {
+            const club = clubs.find(cl => cl.nameEn === key);
+            const finRecordsArr: FinanceRecord[] = flatten(Object.values(value));
+            finRecordsArr.forEach((record: FinanceRecord) => {
+              club.budget += record.income || 0;
+              club.budget -= record.expense || 0;
+            });
+          });
+          console.log('Gains and Losses', decData.gainsAndLosses);
+          // adjusting players' powers
+          const gains: string[] = flatten(Object.values(decData.gainsAndLosses)
+            .map((gnl: { gains: string[], losses: string[] }) => gnl.gains));
+          const losses: string[] = flatten(Object.values(decData.gainsAndLosses)
+            .map((gnl: { gains: string[], losses: string[] }) => gnl.losses));
+          // console.log('Gains arr', gains);
+          // console.log('Losses arr', losses);
+          gains.forEach(value => {
+            const player = players.find(pl => pl.nameEn === value);
+            if (player.power < 10) {
+              player.power = round(player.power + 0.1, 1);
+              if (!player.gain) {
+                player.gain = 0;
+              }
+              player.gain = round(player.gain + 0.1, 1);
+            }
+          });
+          losses.forEach(value => {
+            const player = players.find(pl => pl.nameEn === value);
+            if (player.power > 0.1) {
+              player.power = round(player.power - 0.1, 1);
+              if (!player.gain) {
+                player.gain = 0;
+              }
+              player.gain = round(player.gain - 0.1, 1);
+            }
+          });
+          return {
+            ...report,
+            date: report.date.toDate(),
+            id: report.id,
+            save: {
+              players, clubs, countries, leagues, shells, ...decData, stats: {...decStats}, transfers: decTransfers
+            } as CurrentGameState
+          };
+        });
+        console.warn('DECODED BUG REPS', decodedReports);
+        return decodedReports;
+      }));
     }
   }
 
@@ -362,5 +458,34 @@ export class AdminMainPageComponent implements OnInit, OnDestroy {
       });
     });
     this.filterPlayers(this.players);
+  }
+
+  openBugReportDialog(report: BugReportDecoded) {
+    const dialRef = this.dialog.open(ReportDialogComponent, {
+      data: report,
+      width: '600px'
+    });
+    dialRef.afterClosed().pipe(take(1)).subscribe(save => {
+      if (!!save) {
+        this.store.dispatch(loadSavedGame({data: save}));
+        this.userService.userName = save.userName;
+        this.snack.createSnackBar('Сохранение загружено');
+        this.router.navigate([ROUTES.OFFICE]).catch(reason => {
+          console.error('Navigation fail by ', reason);
+        });
+      }
+    });
+  }
+
+  deleteReport(report: BugReportDecoded) {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '400px'
+    });
+    dialogRef.afterClosed().pipe(take(1), switchMap(value => {
+      if (value) {
+        return this.fs.deleteBugReport(report.id).pipe(retry(3));
+      }
+      return of(null);
+    })).subscribe();
   }
 }

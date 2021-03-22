@@ -6,14 +6,12 @@ import {
   addFinanceRecord,
   addGainsAndLossesForMatch,
   addGoalScorersForMatch,
-  addMatch, advanceASeason,
-  advanceAWeek, cleanUpBeforeANewSeason,
+  addMatch, addTransferRecord, advanceASeason,
+  advanceAWeek,
   expandStadium,
-  getClub,
-  giveSeasonalPrizeMoney,
   gotBaseData,
   gotClub,
-  gotPlayers, loadSavedGame,
+  gotPlayers, loading, loadSavedGame,
   logOut,
   newJobTaken,
   oneMoreWeekOnCurrentJob,
@@ -41,7 +39,7 @@ import {
 } from '../../constants/general';
 import {Match} from '../../interfaces/match';
 import {MatchStats} from '../../interfaces/match-stats';
-import {getLeagueWeek, isCupWeek, resultSplitter, sortClubsRoster, sortStarters} from '../../utils/sort-roster';
+import {getLeagueWeek, isCupWeek, resultSplitter, sortClubsRoster} from '../../utils/sort-roster';
 import {round, cloneDeep} from 'lodash';
 import {closest, objToArr, randomInteger} from '../../utils/helpers';
 import {FinanceRecord} from '../../interfaces/finance-record';
@@ -102,7 +100,7 @@ export const currentGameInitState: CurrentGameState = {
   jobData: {
     weeksOnCurrentJob: 0
   },
-  loading: true,
+  loading: false,
   matches: {},
   schedule: null,
   seasonData: {
@@ -123,6 +121,12 @@ export const currentGameInitState: CurrentGameState = {
 enableMapSet();
 
 const _currentGameReducer = createReducer(currentGameInitState,
+  on(loading, (state, {status}) => {
+    const newState = produce(state, (draft: CurrentGameState) => {
+      draft.loading = status;
+    });
+    return newState;
+  }),
   on(loadSavedGame, (state, {data}) => {
     console.warn('LOADED DATA', data);
     const newState = produce(state, (draft: CurrentGameState) => {
@@ -543,6 +547,16 @@ const _currentGameReducer = createReducer(currentGameInitState,
       }
     });
     return newState;
+  }),
+  on(addTransferRecord, (state, {transfer}: {transfer: Transfer}) => {
+    return produce(state, (draft: CurrentGameState) => {
+      const transferData: Transfer = {
+        ...transfer,
+        season: transfer.season === null ? draft.currentSeason : transfer.season,
+        week: transfer.week === null ? draft.currentWeek : transfer.week
+      };
+      draft.transfers.push(transferData);
+    });
   }),
   on(oneMoreWeekOnCurrentJob, (state) => {
     return produce(state, (draft: CurrentGameState) => {

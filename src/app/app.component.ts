@@ -6,8 +6,10 @@ import {ROUTES} from './constants/routes';
 import {LocationStrategy} from '@angular/common';
 import {filter} from 'rxjs/operators';
 import {UserService} from './services/user.service';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {CleanSubscriptions} from './utils/clean-subscriptions';
+import {AppState, curGameLoading} from './store/selectors/current-game.selectors';
+import {Store} from '@ngrx/store';
 
 @CleanSubscriptions()
 @Component({
@@ -19,10 +21,10 @@ export class AppComponent implements OnInit, OnDestroy {
   title = 'SimpleFM';
   env = environment;
   ipc = null;
-
+  loading$: Observable<boolean>;
   private _trackNavEventsSub: Subscription;
 
-  constructor(private router: Router, private injector: Injector, private userService: UserService) {
+  constructor(private router: Router, private injector: Injector, private userService: UserService, private store: Store<AppState>) {
     /*history.pushState(null, null, window.location.href);
     this.location.onPopState(() => {
       history.pushState(null, null, window.location.href);
@@ -31,7 +33,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this._trackNavEventsSub = this.userService.trackNavigationStartEvents().subscribe();
-
+    this.loading$ = this.store.select(curGameLoading);
 
     if (this.env.electron) {
       this.ipc = this.injector.get(IpcRendererService) as IpcRendererService;

@@ -1,23 +1,24 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {Match} from '../../interfaces/match';
 import {Observable} from 'rxjs';
-import {map, tap} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {
-  AppState, selectClubByClubsNameEn,
+  AppState,
+  selectClubByClubsNameEn,
   selectCurrentClub,
   selectMatchGainsByMatchId,
   selectMatchStatsByMatchId
 } from '../../store/selectors/current-game.selectors';
 import {Store} from '@ngrx/store';
 import {Club} from '../../interfaces/club';
-import {MatchStats} from '../../interfaces/match-stats';
 import {Player} from '../../interfaces/player';
 import {MatchStats1} from '../../interfaces/match-stats1';
 
 @Component({
   selector: 'app-match-result',
   templateUrl: './match-result.component.html',
-  styleUrls: ['./match-result.component.css']
+  styleUrls: ['./match-result.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MatchResultComponent implements OnInit {
 

@@ -1,0 +1,24 @@
+<cdk-virtual-scroll-viewport itemSize="50" class="w-100 my-3 viewport">
+  <div *cdkVirtualFor="let transfer of transferHistory"
+       class="row w-100 viewport-item pos-{{transfer.player.position.toLowerCase()}}">
+    <div class="col-1">
+      Сез. {{transfer.season + 1}}
+    </div>
+    <div class="col-1">
+      Нед. {{transfer.week + 1}}
+    </div>
+    <div class="col-1"></div>
+    <div class="col-3">
+      {{transfer.player.nameRu}}
+    </div>
+    <div class="col-2 text-right" [ngClass]="{'my-club': transfer.from.nameEn === (curClub$ | async).nameEn}">
+      {{transfer.from.nameRu}}
+    </div>
+    <div class="col-1 text-center">
+      <mat-icon>arrow_right_alt</mat-icon>
+    </div>
+    <div class="col-2" [ngClass]="{'my-club': transfer.to.nameEn === (curClub$ | async).nameEn}">
+      {{transfer.to.nameRu}}
+    </div>
+  </div>
+</cdk-virtual-scroll-viewport>

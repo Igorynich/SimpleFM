@@ -8,6 +8,12 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { SellPlayerDialogComponent } from './sell-player-dialog/sell-player-dialog.component';
 import {MatDialogModule} from '@angular/material/dialog';
+import { TransferMarketPlayerItemComponent } from './transfer-market-player-item/transfer-market-player-item.component';
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatIconModule} from '@angular/material/icon';
+import {ScrollingModule} from '@angular/cdk/scrolling';
+import { TransferListComponent } from './transfer-list/transfer-list.component';
+import { TransferHistoryComponent } from './transfer-history/transfer-history.component';
 
 
 const routes = [
@@ -18,7 +24,7 @@ const routes = [
 ];
 
 @NgModule({
-  declarations: [TransferMarketMainPageComponent, SellPlayerDialogComponent],
+  declarations: [TransferMarketMainPageComponent, SellPlayerDialogComponent, TransferMarketPlayerItemComponent, TransferListComponent, TransferHistoryComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -27,6 +33,9 @@ const routes = [
     MatButtonModule,
     MatTooltipModule,
     MatDialogModule,
+    MatTabsModule,
+    MatIconModule,
+    ScrollingModule,
   ],
   providers: [
     CurrencyPipe
