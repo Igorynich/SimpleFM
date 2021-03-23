@@ -5,29 +5,29 @@
         {{player.position}}
       </div>
       <div class="col-3">
-        {{player.nameRu}}
+        {{player[config.name]}}
       </div>
       <div class="col-3">
-        {{player.clubNameRu}}
+        {{player[config.clubName]}}
       </div>
       <div class="col-1">
         {{player.power}}
       </div>
       <div class="col-3"></div>
-      <div class="col-1">
+      <div class="col-1" i18n="player price | M = millions">
         {{player.price | currency}}M
       </div>
     </div>
     <div class="row justify-content-end w-100">
       <!--for future-->
       <div class="col-1" *ngIf="player.clubNameEn === (curClub$ | async).nameEn">
-        <button mat-raised-button (click)="removePlayer()">Снять</button>
+        <button mat-raised-button (click)="removePlayer()" i18n>Снять</button>
       </div>
       <!---->
-      <div class="col-1" matTooltip="Не достаточно денег"
+      <div class="col-1" matTooltip="Не достаточно денег" i18n-matTooltip
            [matTooltipDisabled]="player.price <= (curClub$ | async).budget">
         <button mat-raised-button (click)="buyPlayer()"
-                [disabled]="player.price > (curClub$ | async).budget">
+                [disabled]="player.price > (curClub$ | async).budget" i18n>
           Купить
         </button>
       </div>

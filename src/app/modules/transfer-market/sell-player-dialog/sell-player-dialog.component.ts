@@ -8,6 +8,7 @@ import {map, take} from 'rxjs/operators';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {ConfirmationDialogComponent} from '../../../shared/confirmation-dialog/confirmation-dialog.component';
 import {CurrencyPipe} from '@angular/common';
+import {ConfigService} from '../../../services/config.service';
 
 @Component({
   selector: 'app-sell-player-dialog',
@@ -22,7 +23,8 @@ export class SellPlayerDialogComponent implements OnInit {
               private transferService: TransferService,
               private dialog: MatDialog,
               private currencyPipe: CurrencyPipe,
-              private dialogRef: MatDialogRef<SellPlayerDialogComponent>) { }
+              private dialogRef: MatDialogRef<SellPlayerDialogComponent>,
+              public config: ConfigService) { }
 
   ngOnInit(): void {
     this.curPlayers$ = this.store.select(selectCurrentPlayers).pipe(map(players =>

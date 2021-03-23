@@ -16,6 +16,7 @@ import {Match1} from '../../../interfaces/match1';
 import {Player} from '../../../interfaces/player';
 import {FormControl} from '@angular/forms';
 import {League} from '../../../interfaces/league';
+import {ConfigService} from "../../../services/config.service";
 
 @CleanSubscriptions()
 @Component({
@@ -43,7 +44,8 @@ export class TablesMainPageComponent implements OnInit, OnDestroy {
 
   private _curWeekSub: Subscription;
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<AppState>,
+              public config: ConfigService) {
   }
 
   ngOnInit(): void {

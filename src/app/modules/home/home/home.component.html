@@ -11,7 +11,7 @@
     <mat-card class="enter-name-card">
       <div class="row justify-content-center">
         <div class="col-12">
-          <h2 class="enter-name-header text-center">
+          <h2 class="enter-name-header text-center" i18n>
             Добро пожаловать в SimpleFM. Пожалуйста, введите свое имя, чтобы начать игру:
           </h2>
         </div>
@@ -19,8 +19,8 @@
 
       <div class="row justify-content-center">
         <div class="col-5">
-          <mat-form-field hintLabel="Максимум 20 символов" class="enter-name-ff w-100 mt-5">
-            <input matInput #input maxlength="20" placeholder="Введите имя" autocomplete="off" [formControl]="userName"
+          <mat-form-field i18n-hintLabel hintLabel="Максимум 20 символов" class="enter-name-ff w-100 mt-5">
+            <input matInput #input maxlength="20" i18n-placeholder placeholder="Введите имя" autocomplete="off" [formControl]="userName"
                    (keyup.enter)="submitName()" autofocus>
             <mat-hint align="end">{{input.value?.length || 0}}/20</mat-hint>
           </mat-form-field>
@@ -29,7 +29,7 @@
 
       <div class="row justify-content-center mt-5">
         <div class="col-4">
-          <button class="w-100" mat-flat-button color="primary" (click)="submitName()" [disabled]="userName.invalid">
+          <button class="w-100" mat-flat-button color="primary" (click)="submitName()" [disabled]="userName.invalid" i18n>
             Начать игру!
           </button>
         </div>
@@ -37,17 +37,17 @@
 
       <div class="row justify-content-end mt-5">
         <div class="col-4">
-          <span class="hover" (click)="login()">Войти с учеткой Google</span>
+          <span class="hover" (click)="login()" i18n>Войти с учеткой Google</span>
         </div>
       </div>
 
       <div class="row justify-content-center" *ngIf="!!savedGameData">
         <div class="col-6">
-          <h5 class="text-center">Или продолжить прошлую игру?</h5>
+          <h5 class="text-center" i18n>Или продолжить прошлую игру?</h5>
           <div class="row">
             <div class="col-11">
-              <button mat-flat-button class="w-100 text-center" (click)="loadSavedGame()">
-                {{savedGameData.userName}}({{savedGameData.club.nameRu}}) - сезон {{savedGameData.season + 1}}, неделя {{savedGameData.week + 1}}
+              <button mat-flat-button class="w-100 text-center" (click)="loadSavedGame()" i18n>
+                {{savedGameData.userName}}({{savedGameData.club[config.name]}}) - сезон {{savedGameData.season + 1}}, неделя {{savedGameData.week + 1}}
               </button>
             </div>
             <div class="col-1" (click)="deleteSavedGame()">

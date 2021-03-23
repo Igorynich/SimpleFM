@@ -1,22 +1,22 @@
 <div class="tables-schedule-body">
 
   <mat-tab-group mat-align-tabs="start" [(selectedIndex)]="leagueOrCupTab">
-    <mat-tab label="Лига">
+    <mat-tab i18n-label="tab label" label="Лига">
       <ng-select class="w-25" [items]="allLeagues$ | async"
                  [formControl]="selectedLeagueName"
-                 bindLabel="nameRu"
+                 bindLabel="{{config.name}}"
                  bindValue="nameEn"
                  [virtualScroll]="true"
                  [selectOnTab]="true"
                  [clearable]="false"
-                 placeholder="Выбранная лига">
+                 placeholder="Выбранная лига" i18n-placeholder>
       </ng-select>
       <mat-tab-group mat-align-tabs="center">
-        <mat-tab label="Таблица">
+        <mat-tab label="Таблица" i18n-label="tab label">
           <app-league-table [table]="table$ | async"></app-league-table>
         </mat-tab>
 
-        <mat-tab label="Расписание">
+        <mat-tab label="Расписание" i18n-label="tab label">
           <app-schedule-tours-list [schedule]="schedule$ | async" [selectedWeek]="selectedWeek.num"
                                    (weekSelected)="setWeekTo($event)">
           </app-schedule-tours-list>
@@ -25,19 +25,19 @@
           </app-schedule-tour-matches-list>
         </mat-tab>
 
-        <mat-tab label="Голеадоры">
+        <mat-tab label="Голеадоры" i18n-label="tab label">
           <app-player-list [playersStats]="leaguePlayersStats$ | async" [type]="'goals'"></app-player-list>
         </mat-tab>
-        <mat-tab label="Ассистенты">
+        <mat-tab label="Ассистенты" i18n-label="tab label">
           <app-player-list [playersStats]="leaguePlayersStats$ | async" [type]="'assists'"></app-player-list>
         </mat-tab>
-        <mat-tab label="Г+П">
+        <mat-tab label="Г+П" i18n-label="tab label">
           <app-player-list [playersStats]="leaguePlayersStats$ | async" [type]="'g+a'"></app-player-list>
         </mat-tab>
       </mat-tab-group>
     </mat-tab>
 
-    <mat-tab label="Кубок">
+    <mat-tab label="Кубок" i18n-label="tab label">
       <app-cup-table [cupSchedule]="cupSchedule$ | async"></app-cup-table>
     </mat-tab>
   </mat-tab-group>

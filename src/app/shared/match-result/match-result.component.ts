@@ -13,6 +13,7 @@ import {Store} from '@ngrx/store';
 import {Club} from '../../interfaces/club';
 import {Player} from '../../interfaces/player';
 import {MatchStats1} from '../../interfaces/match-stats1';
+import {ConfigService} from "../../services/config.service";
 
 @Component({
   selector: 'app-match-result',
@@ -32,7 +33,8 @@ export class MatchResultComponent implements OnInit {
   homeClub$: Observable<Club>;
   awayClub$: Observable<Club>;
 
-  constructor(private store: Store<AppState>) { }
+  constructor(private store: Store<AppState>,
+              public config: ConfigService) { }
 
   ngOnInit(): void {
     this.homeClub$ = this.store.select(selectClubByClubsNameEn, {clubsNameEn: this.match.homeNameEn});

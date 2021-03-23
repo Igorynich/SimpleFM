@@ -5,7 +5,9 @@
   "scripts": {
     "ng": "ng",
     "ng:serve": "ng serve -o",
+    "ng:serve-en": "ng serve -o --configuration=en",
     "ng:serve:electron": "ng serve -c=electron",
+    "i18n-extract": "ng xi18n --output-path src/app/locale && xliffmerge --profile xliffmerge.json en",
     "electron:start": "npm-run-all -p ng:serve:electron electron:serve",
     "build": "ng build --prod=true --base-href ./ --stats-json",
     "test": "ng test",
@@ -29,6 +31,7 @@
     "@angular/fire": "^6.0.0-rc.2",
     "@angular/flex-layout": "^9.0.0-beta.29",
     "@angular/forms": "~9.1.3",
+    "@angular/localize": "^9.1.13",
     "@angular/material": "^9.2.1",
     "@angular/platform-browser": "~9.1.3",
     "@angular/platform-browser-dynamic": "~9.1.3",

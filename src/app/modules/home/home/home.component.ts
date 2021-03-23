@@ -13,6 +13,7 @@ import {AppState} from '../../../store/selectors/current-game.selectors';
 import { loadSavedGame } from 'src/app/store/actions/current-game.actions';
 import {CurrentGameState} from '../../../store/reducers/current-game.reducer';
 import {SnackBarService} from '../../../services/snack-bar.service';
+import {ConfigService} from "../../../services/config.service";
 
 @Component({
   selector: 'app-home',
@@ -31,7 +32,8 @@ export class HomeComponent implements OnInit {
 
   constructor(private router: Router, private userService: UserService, private fs: FirebaseService, private fb: FormBuilder,
               private storage: StorageService, private store: Store<AppState>,
-              private snack: SnackBarService) { }
+              private snack: SnackBarService,
+              public config: ConfigService) { }
 
   ngOnInit() {
     this.userName = new FormControl('', [Validators.required, Validators.maxLength(20)]);

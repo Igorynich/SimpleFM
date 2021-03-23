@@ -1,6 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {ConfirmationDialogData} from '../../interfaces/confirmation-dialog-data';
+import {ConfigService} from '../../services/config.service';
 
 @Component({
   selector: 'app-confirmation-dialog',
@@ -9,17 +10,18 @@ import {ConfirmationDialogData} from '../../interfaces/confirmation-dialog-data'
 })
 export class ConfirmationDialogComponent implements OnInit {
 
-  defaultHeader = 'Вы уверены?';
+  defaultHeader = $localize `Вы уверены?`;
   yes = {
-    txt: 'Да',
+    txt: $localize `Да`,
     value: true
   };
   no = {
-    txt: 'Нет',
+    txt: $localize `Нет`,
     value: false
   };
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: ConfirmationDialogData) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: ConfirmationDialogData,
+              private config: ConfigService) { }
 
   ngOnInit() {
   }

@@ -1,22 +1,22 @@
 <div class="row">
   <div class="col-6">
     <div class="row justify-content-between">
-      <div class="col-1 text-center">
+      <div class="col-1 text-center" i18n="roster header">
         Позиция
       </div>
-      <div class="col-6 text-center">
+      <div class="col-6 text-center" i18n="roster header">
         Имя
       </div>
-      <div class="col-2 text-center">
+      <div class="col-2 text-center" i18n="roster header">
         Сила
       </div>
-      <div class="col-1 text-center">
+      <div class="col-1 text-center" i18n="roster header">
         Игр
       </div>
-      <div class="col-1 text-center">
+      <div class="col-1 text-center" i18n="roster header">
         Г+П
       </div>
-      <div class="col-1 text-center">
+      <div class="col-1 text-center" i18n="roster header">
         Посл. игра
       </div>
     </div>
@@ -33,7 +33,7 @@
             {{player.position}}
           </div>
           <div class="col-6">
-            {{player.nameRu}}
+            {{player[config.name]}}
           </div>
           <div class="col-2">
             {{player.power}}

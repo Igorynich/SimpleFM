@@ -3,20 +3,22 @@
   <div class="col-12 text-center">
               <span [ngStyle]="{'line-height.px': 25 * (index + 1)}"
                     [ngClass]="{'my-club': (isMyClub$(match).home | async)}">
-                {{match.home?.nameRu || '---'}}
+                {match.home, select, null {---} other {{{match.home[config.name]}}}}
+                <!--{{match.home?.nameRu || '-&#45;&#45;'}}-->
               </span>
   </div>
   <div class="col-12 text-center align-middle">
               <span [ngStyle]="{'line-height.px': 25 * (index + 1)}" *ngIf="(matchStats$ | async)?.result"
                     [appMatchTooltip]="match1ToMatch(match)">{{(matchStats$ | async).result}}</span>
-    <span [ngStyle]="{'line-height.px': 25 * (index + 1)}" *ngIf="!(matchStats$ | async)?.result">
-                vs
+    <span [ngStyle]="{'line-height.px': 25 * (index + 1)}" *ngIf="!(matchStats$ | async)?.result" i18n>
+                против
               </span>
   </div>
   <div class="col-12 text-center">
               <span [ngStyle]="{'line-height.px': 25 * (index + 1)}"
                     [ngClass]="{'my-club': (isMyClub$(match).away | async)}">
-                {{match.away?.nameRu || '---'}}
+                {match.away, select, null {---} other {{{match.away[config.name]}}}}
+                <!--{{match.away?.nameRu || '-&#45;&#45;'}}-->
               </span>
   </div>
   <!--<mat-divider></mat-divider>-->

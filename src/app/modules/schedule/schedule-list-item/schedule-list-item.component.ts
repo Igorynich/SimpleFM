@@ -12,6 +12,7 @@ import {
 import {map, switchMap, take} from 'rxjs/operators';
 import {MatchStats1} from '../../../interfaces/match-stats1';
 import {resultSplitter} from '../../../utils/sort-roster';
+import {ConfigService} from "../../../services/config.service";
 
 @Component({
   selector: 'app-schedule-list-item',
@@ -27,7 +28,8 @@ export class ScheduleListItemComponent implements OnInit {
   currentClub$: Observable<Club>;
   matchStats$: Observable<MatchStats1>;
 
-  constructor(private store: Store<AppState>) { }
+  constructor(private store: Store<AppState>,
+              public config: ConfigService) { }
 
   ngOnInit(): void {
     this.currentClub$ =  this.store.select(selectCurrentClub)/*.pipe(take(1))*/;

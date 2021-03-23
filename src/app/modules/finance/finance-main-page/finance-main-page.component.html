@@ -1,5 +1,5 @@
 <div class="row" *ngFor="let week of weeksTo(curWeek$ | async)">
-  <div class="col-2">
+  <div class="col-2" i18n>
     Неделя {{week}}
   </div>
   <div class="col-10" *ngIf="(financeRecords$ | async) && (financeRecords$ | async)[week - 1]">
@@ -15,7 +15,7 @@
 </div>
 <div class="row">
   <div class="col" [ngClass]="{'red': (curClub$ | async).budget < 0,
-   'green': (curClub$ | async).budget > 0}">
+   'green': (curClub$ | async).budget > 0}" i18n>
     Бюджет: {{(curClub$ | async).budget | currency}}M
   </div>
 </div>

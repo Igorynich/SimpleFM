@@ -7,6 +7,7 @@ import {Club} from '../../../../interfaces/club';
 import {Store} from '@ngrx/store';
 import {AppState, selectCurrentClub, selectMatchStatsByMatchId} from '../../../../store/selectors/current-game.selectors';
 import {MatchStats1} from '../../../../interfaces/match-stats1';
+import {ConfigService} from "../../../../services/config.service";
 
 @Component({
   selector: 'app-cup-match-item',
@@ -22,7 +23,8 @@ export class CupMatchItemComponent implements OnInit {
   curClub$: Observable<Club>;
   matchStats$: Observable<MatchStats1>;
 
-  constructor(private store: Store<AppState>) { }
+  constructor(private store: Store<AppState>,
+              public config: ConfigService) { }
 
   ngOnInit(): void {
     this.curClub$ = this.store.select(selectCurrentClub);

@@ -5,17 +5,17 @@
         <div class="col d-flex flex-column">
           <div class="row justify-content-center my-auto">
             <div class="col text-center white">
-              <h3>{{offeringClub.nameRu}} ({{offeringClubLeaguePosition$ | async}} место в {{offeringClub.leagueNameRu}})
+              <h3 i18n>{{offeringClub[config.name]}} ({{offeringClubLeaguePosition$ | async}} место в {{offeringClub[config.leagueName]}})
                 - приглашает вас занять место главного тренера</h3>
             </div>
           </div>
 
           <div class="row new-job-buttons">
             <div class="col">
-              <button mat-raised-button color="primary" (click)="acceptOffer()">Принять предложение</button>
+              <button mat-raised-button color="primary" (click)="acceptOffer()" i18n>Принять предложение</button>
             </div>
             <div class="col">
-              <button mat-raised-button color="accent" (click)="declineOffer()">Отклонить предложение</button>
+              <button mat-raised-button color="accent" (click)="declineOffer()" i18n>Отклонить предложение</button>
             </div>
           </div>
         </div>

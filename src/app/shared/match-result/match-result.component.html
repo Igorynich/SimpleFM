@@ -3,9 +3,9 @@
     <div class="row">
       <div class="col text-center">
                 <span [ngClass]="{'my-club': (isMyClub$(match).home | async)}">
-                  {{(homeClub$ | async).nameRu}}
+                  {{(homeClub$ | async)[config.name]}}
                 </span> - <span [ngClass]="{'my-club': (isMyClub$(match).away | async)}">
-                {{(awayClub$ | async).nameRu}}
+                {{(awayClub$ | async)[config.name]}}
               </span>
       </div>
     </div>
@@ -16,47 +16,47 @@
       </div>
     </div>
     <div class="row" *ngIf="(matchStats$ | async)?.result">
-      <div class="col">
-        Att: {{(matchStats$ | async).attendance}}({{(homeClub$ | async).stadium}})
+      <div class="col" i18n="зрителей | Att: ">
+        {{(matchStats$ | async).attendance}} зрителей({{(homeClub$ | async).stadium}})
       </div>
     </div>
     <div class="row justify-content-around">
       <div class="col-5 scorers" [ngClass]="{'my-club': (isMyClub$(match).home | async)}">
         <div *ngFor="let min of keys((matchStats$ | async).homeGoals)"
            [ngClass]="{'my-club': (isMyClub$(match).home | async)}">
-          {{min}}' {{(matchStats$ | async).homeGoals[min]?.nameRu}}
-          <span *ngIf="(matchStats$ | async).homeAssists[min]">({{(matchStats$ | async).homeAssists[min]?.nameRu}})</span>
+          {{min}}' {{(matchStats$ | async).homeGoals[min][config.name]}}
+          <span *ngIf="(matchStats$ | async).homeAssists[min]">({{(matchStats$ | async).homeAssists[min][config.name]}})</span>
         </div>
       </div>
       <div class="col-5 scorers" [ngClass]="{'my-club': (isMyClub$(match).away | async)}">
         <div *ngFor="let min of keys((matchStats$ | async).awayGoals)"
            [ngClass]="{'my-club': (isMyClub$(match).away | async)}">
-          {{min}}' {{(matchStats$ | async).awayGoals[min]?.nameRu}}
-          <span *ngIf="(matchStats$ | async).awayAssists[min]">({{(matchStats$ | async).awayAssists[min]?.nameRu}})</span>
+          {{min}}' {{(matchStats$ | async).awayGoals[min][config.name]}}
+          <span *ngIf="(matchStats$ | async).awayAssists[min]">({{(matchStats$ | async).awayAssists[min][config.name]}})</span>
         </div>
       </div>
     </div>
     <div class="row justify-content-around">
       <div class="col-5 gains">
         <span *ngFor="let player of (matchGaines$ | async).gains">
-          <span *ngIf="player.clubNameEn === match.homeNameEn">{{player.nameRu}} </span>
+          <span *ngIf="player.clubNameEn === match.homeNameEn">{{player[config.name]}} </span>
         </span>
       </div>
       <div class="col-5 gains">
         <span *ngFor="let player of (matchGaines$ | async).gains">
-          <span *ngIf="player.clubNameEn === match.awayNameEn">{{player.nameRu}} </span>
+          <span *ngIf="player.clubNameEn === match.awayNameEn">{{player[config.name]}} </span>
         </span>
       </div>
     </div>
     <div class="row justify-content-around">
       <div class="col-5 losses">
         <span *ngFor="let player of (matchGaines$ | async).losses">
-          <span *ngIf="player.clubNameEn === match.homeNameEn">{{player.nameRu}} </span>
+          <span *ngIf="player.clubNameEn === match.homeNameEn">{{player[config.name]}} </span>
         </span>
       </div>
       <div class="col-5 losses">
         <span *ngFor="let player of (matchGaines$ | async).losses">
-          <span *ngIf="player.clubNameEn === match.awayNameEn">{{player.nameRu}} </span>
+          <span *ngIf="player.clubNameEn === match.awayNameEn">{{player[config.name]}} </span>
         </span>
       </div>
     </div>

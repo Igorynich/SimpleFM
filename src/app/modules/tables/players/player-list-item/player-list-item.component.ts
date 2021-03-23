@@ -4,6 +4,7 @@ import {Store} from '@ngrx/store';
 import {AppState, selectCurrentClub} from '../../../../store/selectors/current-game.selectors';
 import {Observable} from 'rxjs';
 import {Club} from '../../../../interfaces/club';
+import {ConfigService} from '../../../../services/config.service';
 
 @Component({
   selector: 'app-player-list-item',
@@ -20,7 +21,8 @@ export class PlayerListItemComponent implements OnInit {
   curClub$: Observable<Club>;
   displayProp: string;
 
-  constructor(private store: Store<AppState>) { }
+  constructor(private store: Store<AppState>,
+              public config: ConfigService) { }
 
   ngOnInit(): void {
     this.curClub$ = this.store.select(selectCurrentClub);

@@ -18,6 +18,7 @@ import {CleanSubscriptions} from '../../../utils/clean-subscriptions';
 import {getStarters, sortStarters} from '../../../utils/sort-roster';
 import {SnackBarService} from '../../../services/snack-bar.service';
 import {PlayerStats} from '../../../interfaces/player-stats';
+import {ConfigService} from '../../../services/config.service';
 
 @CleanSubscriptions()
 @Component({
@@ -37,7 +38,7 @@ export class RosterMainPageComponent implements OnInit, OnDestroy {
   private _statsLGSub: Subscription;
 
   constructor(private fs: FirebaseService, private game: CurrentGameService, private store: Store<AppState>,
-              private snack: SnackBarService) {
+              private snack: SnackBarService, public config: ConfigService) {
   }
 
   ngOnInit(): void {

@@ -2,10 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import {UserService} from '../../../../services/user.service';
 import {
   AppState,
-  selectCurrentClub, selectCurrentGameState, selectCurrentSeason, selectCurrentState,
+  selectCurrentClub, selectCurrentSeason, selectCurrentState,
   selectCurrentWeek,
-  selectNextOpponent,
-  selectScheduleByClubsNameEn
+  selectNextOpponent
 } from '../../../../store/selectors/current-game.selectors';
 import {Store} from '@ngrx/store';
 import {Club} from '../../../../interfaces/club';
@@ -17,6 +16,7 @@ import { logOut } from 'src/app/store/actions/current-game.actions';
 import {clearSubscription} from '../../../../utils/clean-subscriptions';
 import {MatDialog} from '@angular/material/dialog';
 import {FeedbackDialogComponent} from '../../../../shared/feedback-dialog/feedback-dialog.component';
+import {ConfigService} from "../../../../services/config.service";
 
 @Component({
   selector: 'app-header',
@@ -40,7 +40,8 @@ export class HeaderComponent implements OnInit {
               private store: Store<AppState>,
               private router: Router,
               private route: ActivatedRoute,
-              private dialog: MatDialog) { }
+              private dialog: MatDialog,
+              public config: ConfigService) { }
 
   ngOnInit(): void {
     this.currentClub$ = this.store.select(selectCurrentClub);

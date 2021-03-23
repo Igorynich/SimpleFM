@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {Club} from '../../../interfaces/club';
 import {AppState, selectCurrentClub} from '../../../store/selectors/current-game.selectors';
 import {Store} from '@ngrx/store';
+import {ConfigService} from "../../../services/config.service";
 
 @Component({
   selector: 'app-transfer-market-player-item',
@@ -20,7 +21,8 @@ export class TransferMarketPlayerItemComponent implements OnInit {
   @Output() remove = new EventEmitter();
   @Output() buy = new EventEmitter();
 
-  constructor(private store: Store<AppState>) { }
+  constructor(private store: Store<AppState>,
+              public config: ConfigService) { }
 
   ngOnInit(): void {
     this.curClub$ = this.store.select(selectCurrentClub);

@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnI
 import {CurrentWeekSchedule} from '../../../interfaces/current-week-schedule';
 import {AppState} from '../../../store/selectors/current-game.selectors';
 import {Store} from '@ngrx/store';
+import {ConfigService} from '../../../services/config.service';
 
 @Component({
   selector: 'app-results-card',
@@ -21,7 +22,8 @@ export class ResultsCardComponent implements OnInit {
 
   // curClub$: Observable<Club>;
 
-  constructor(private store: Store<AppState>) { }
+  constructor(private store: Store<AppState>,
+              public config: ConfigService) { }
 
   ngOnInit(): void {
     // this.curClub$ = this.store.select(selectCurrentClub);

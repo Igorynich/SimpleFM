@@ -5,12 +5,12 @@
       <div class="col-2">
         <div class="row">
           <div class="col">
-            <h3 class="main-header text-center">Неделя {{currentWeek}}</h3>
+            <h3 class="main-header text-center" i18n>Неделя {{currentWeek}}</h3>
           </div>
         </div>
         <div class="row league-name mb-3">
           <div class="col text-center">
-            {{leagueResults.tournament.nameRu}}
+            {{leagueResults.tournament[config.name]}}
           </div>
         </div>
       </div>
@@ -31,7 +31,7 @@
     </div>
     <div class="row justify-content-center align-items-end py-3 continue-button background-black">
       <div class="col-3">
-        <button class="w-100" mat-raised-button color="primary" (click)="onContinueClick()">Продолжить</button>
+        <button class="w-100" mat-raised-button color="primary" (click)="onContinueClick()" i18n>Продолжить</button>
       </div>
     </div>
   </div>

@@ -19,6 +19,7 @@ import {combineLatest, Observable, of, Subscription} from 'rxjs';
 import {Club} from '../../../interfaces/club';
 import {switchMap, take} from 'rxjs/operators';
 import {CleanSubscriptions} from '../../../utils/clean-subscriptions';
+import {ConfigService} from "../../../services/config.service";
 
 @CleanSubscriptions()
 @Component({
@@ -73,7 +74,8 @@ export class MainPageComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute,
               public game: CurrentGameService,
               private dialog: MatDialog,
-              private store: Store<AppState>) { }
+              private store: Store<AppState>,
+              public config: ConfigService) { }
 
   ngOnInit() {
     console.log('OFFICE COMPONENTN');

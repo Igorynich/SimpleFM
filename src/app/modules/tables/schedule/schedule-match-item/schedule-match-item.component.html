@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-5 text-right" [ngClass]="{'my-club': (isMyClub$(match).home | async)}">
-    {{match.home.nameRu}}
+    {{match.home[config.name]}}
   </div>
   <div class="col-1 text-center">
     <span *ngIf="(matchStats$ | async)?.result" [appMatchTooltip]="match1ToMatch(match)">
@@ -9,6 +9,6 @@
     <span *ngIf="!(matchStats$ | async)?.result">-</span>
   </div>
   <div class="col-5 text-left" [ngClass]="{'my-club': (isMyClub$(match).away | async)}">
-    {{match.away.nameRu}}
+    {{match.away[config.name]}}
   </div>
 </div>

@@ -1,14 +1,14 @@
 <mat-table [dataSource]="table" class="w-100">
   <!-- Position Column -->
   <div matColumnDef="position">
-    <mat-header-cell *matHeaderCellDef class="w-5"> Поз</mat-header-cell>
+    <mat-header-cell *matHeaderCellDef class="w-5" i18n="table header"> Поз</mat-header-cell>
     <mat-cell *matCellDef="let element; let i = index" class="w-5"
               [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{i + 1}} </mat-cell>
   </div>
 
   <!-- ClubName Column -->
   <div matColumnDef="clubName">
-    <mat-header-cell *matHeaderCellDef class="w-25"> Клуб</mat-header-cell>
+    <mat-header-cell *matHeaderCellDef class="w-25" i18n="table header"> Клуб</mat-header-cell>
     <mat-cell *matCellDef="let element" class="w-25"
               [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}">
       <span (click)="showClubsRoster(element.clubName)" class="hover"> {{element.clubName}} </span>
@@ -17,56 +17,56 @@
 
   <!-- games Column -->
   <div matColumnDef="games">
-    <mat-header-cell *matHeaderCellDef class="w-5"> И</mat-header-cell>
+    <mat-header-cell *matHeaderCellDef class="w-5" i18n="table header"> И</mat-header-cell>
     <mat-cell *matCellDef="let element" class="w-5"
               [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.games}} </mat-cell>
   </div>
 
   <!-- wins Column -->
   <div matColumnDef="wins">
-    <mat-header-cell *matHeaderCellDef class="w-5"> В</mat-header-cell>
+    <mat-header-cell *matHeaderCellDef class="w-5" i18n="table header"> В</mat-header-cell>
     <mat-cell *matCellDef="let element" class="w-5"
               [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.wins}} </mat-cell>
   </div>
 
   <!-- draws Column -->
   <div matColumnDef="draws">
-    <mat-header-cell *matHeaderCellDef class="w-5"> Н</mat-header-cell>
+    <mat-header-cell *matHeaderCellDef class="w-5" i18n="table header"> Н</mat-header-cell>
     <mat-cell *matCellDef="let element" class="w-5"
               [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.draws}} </mat-cell>
   </div>
 
   <!-- loses Column -->
   <div matColumnDef="loses">
-    <mat-header-cell *matHeaderCellDef class="w-5"> П</mat-header-cell>
+    <mat-header-cell *matHeaderCellDef class="w-5" i18n="table header"> П</mat-header-cell>
     <mat-cell *matCellDef="let element" class="w-5"
               [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.loses}} </mat-cell>
   </div>
 
   <!-- gf Column -->
   <div matColumnDef="gf">
-    <mat-header-cell *matHeaderCellDef class="w-5"> ЗМ</mat-header-cell>
+    <mat-header-cell *matHeaderCellDef class="w-5" i18n="table header"> ЗМ</mat-header-cell>
     <mat-cell *matCellDef="let element" class="w-5"
               [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.gf}} </mat-cell>
   </div>
 
   <!-- ga Column -->
   <div matColumnDef="ga">
-    <mat-header-cell *matHeaderCellDef class="w-5"> ПМ</mat-header-cell>
+    <mat-header-cell *matHeaderCellDef class="w-5" i18n="table header"> ПМ</mat-header-cell>
     <mat-cell *matCellDef="let element" class="w-5"
               [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.ga}} </mat-cell>
   </div>
 
   <!-- gd Column -->
   <div matColumnDef="gd">
-    <mat-header-cell *matHeaderCellDef class="w-5"> РМ</mat-header-cell>
+    <mat-header-cell *matHeaderCellDef class="w-5" i18n="table header"> РМ</mat-header-cell>
     <mat-cell *matCellDef="let element" class="w-5"
               [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.gd}} </mat-cell>
   </div>
 
   <!-- points Column -->
   <div matColumnDef="points">
-    <mat-header-cell *matHeaderCellDef class="w-5"> О</mat-header-cell>
+    <mat-header-cell *matHeaderCellDef class="w-5" i18n="table header"> О</mat-header-cell>
     <mat-cell *matCellDef="let element" class="w-5"
               [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.points}} </mat-cell>
   </div>

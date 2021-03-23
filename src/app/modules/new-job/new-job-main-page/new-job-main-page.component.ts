@@ -8,6 +8,7 @@ import { ROUTES } from 'src/app/constants/routes';
 import {LeagueTable} from '../../../interfaces/league-table';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {ConfigService} from '../../../services/config.service';
 
 @Component({
   selector: 'app-new-job-main-page',
@@ -22,7 +23,8 @@ export class NewJobMainPageComponent implements OnInit {
 
   constructor(private store: Store<AppState>,
               private router: Router,
-              private jobService: JobService) { }
+              private jobService: JobService,
+              public config: ConfigService) { }
 
   ngOnInit(): void {
     this.offeringClub = this.jobService.findNewJobOfferingCLub();

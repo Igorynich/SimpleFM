@@ -26,6 +26,7 @@ import {Player} from '../../../interfaces/player';
 import {Router} from '@angular/router';
 import { ROUTES } from 'src/app/constants/routes';
 import {MatchStats1} from '../../../interfaces/match-stats1';
+import {ConfigService} from "../../../services/config.service";
 
 @Component({
   selector: 'app-season-end-main-page',
@@ -56,7 +57,8 @@ export class SeasonEndMainPageComponent implements OnInit {
   constructor(private seasonService: SeasonService,
               private store: Store<AppState>,
               public userService: UserService,
-              private router: Router) {
+              private router: Router,
+              public config: ConfigService) {
   }
 
   ngOnInit(): void {

@@ -40,6 +40,7 @@ import {CupResult} from '../../interfaces/cup-result';
 import {Player} from '../../interfaces/player';
 import {randomInteger} from '../../utils/helpers';
 import {StorageService} from '../../services/storage.service';
+import {ConfigService} from "../../services/config.service";
 
 @Injectable()
 export class CurrentGameEffects {
@@ -149,7 +150,7 @@ export class CurrentGameEffects {
           map(curClub => {
             return addFinanceRecord({
               clubNameEn: curClub.nameEn,
-              description: `Увеличение вместительности стадиона на ${step}`,
+              description: $localize `Увеличение вместительности стадиона на ${step}`,
               expense: cost * 1000000,
               income: null
             });
@@ -168,13 +169,13 @@ export class CurrentGameEffects {
           switchMap(curClub => [
             addFinanceRecord({
               clubNameEn: curClub.nameEn,
-              description: `Покупка ${player.nameRu}`,
+              description: $localize `Покупка ${player[this.config.name]}`,
               expense: player.price * 1000000,
               income: null
             }),
             addFinanceRecord({
               clubNameEn: player.clubNameEn,
-              description: `Продажа ${player.nameRu}`,
+              description: $localize `Продажа ${player[this.config.name]}`,
               expense: null,
               income: player.price * 1000000
             }),
@@ -202,13 +203,13 @@ export class CurrentGameEffects {
         return [
           addFinanceRecord({
             clubNameEn: player.clubNameEn,
-            description: `Продажа ${player.nameRu}`,
+            description: $localize `Продажа ${player[this.config.name]}`,
             expense: null,
             income: player.price * 1000000
           }),
           addFinanceRecord({
             clubNameEn: clubsNameEn,
-            description: `Покупка ${player.nameRu}`,
+            description: $localize `Покупка ${player[this.config.name]}`,
             expense: player.price * 1000000,
             income: null
           }),
@@ -338,7 +339,8 @@ export class CurrentGameEffects {
               private userService: UserService,
               private transferService: TransferService,
               private finService: FinanceService,
-              private storage: StorageService) {
+              private storage: StorageService,
+              private config: ConfigService) {
   }
 
 }

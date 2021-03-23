@@ -1,17 +1,17 @@
 <mat-tab-group class="w-100">
-  <mat-tab label="Трансфер Маркет">
+  <mat-tab label="Трансфер Маркет" i18n-label="tab label">
     <ng-template matTabContent>
       <app-transfer-list [listedPlayers]="listedPlayers$ | async" (buy)="buyPlayerClick($event)"
                          (remove)="removePlayerFromList($event)">
       </app-transfer-list>
       <div class="row">
         <div class="col">
-          <button mat-raised-button (click)="sellPlayerClick()">Продать игрока</button>
+          <button mat-raised-button (click)="sellPlayerClick()" i18n>Продать игрока</button>
         </div>
       </div>
     </ng-template>
   </mat-tab>
-  <mat-tab label="История трансферов">
+  <mat-tab label="История трансферов" i18n-label="tab label">
     <ng-template matTabContent>
       <app-transfer-history [transferHistory]="transferHistory$ | async"></app-transfer-history>
     </ng-template>

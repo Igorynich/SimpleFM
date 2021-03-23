@@ -4,6 +4,7 @@ import {Club} from '../../../interfaces/club';
 import {AppState, selectCurrentClub} from '../../../store/selectors/current-game.selectors';
 import {Store} from '@ngrx/store';
 import {Transfer1} from '../../../interfaces/transfer1';
+import {ConfigService} from "../../../services/config.service";
 
 @Component({
   selector: 'app-transfer-history',
@@ -17,7 +18,8 @@ export class TransferHistoryComponent implements OnInit {
 
   @Input() transferHistory: Transfer1[];
 
-  constructor(private store: Store<AppState>) { }
+  constructor(private store: Store<AppState>,
+              public config: ConfigService) { }
 
   ngOnInit(): void {
     this.curClub$ = this.store.select(selectCurrentClub);
