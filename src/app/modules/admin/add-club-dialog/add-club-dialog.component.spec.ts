@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { AddClubDialogComponent } from './add-club-dialog.component';
 import {AdminModule} from '../admin.module';
@@ -12,7 +12,7 @@ describe('AddClubDialogComponent', () => {
   let component: AddClubDialogComponent;
   let fixture: ComponentFixture<AddClubDialogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [AdminModule, BrowserAnimationsModule],
       providers: [

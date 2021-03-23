@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { EditCountryDialogComponent } from './edit-country-dialog.component';
 import {AdminModule} from '../admin.module';
@@ -12,7 +12,7 @@ describe('EditCountryDialogComponent', () => {
   let component: EditCountryDialogComponent;
   let fixture: ComponentFixture<EditCountryDialogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [AdminModule, BrowserAnimationsModule],
       providers: [

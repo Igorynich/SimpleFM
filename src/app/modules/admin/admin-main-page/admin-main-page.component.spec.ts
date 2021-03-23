@@ -1,4 +1,4 @@
-import {async, ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 
 import {AdminMainPageComponent} from './admin-main-page.component';
 import {AdminModule} from '../admin.module';
@@ -15,7 +15,7 @@ describe('AdminMainPageComponent', () => {
   let component: AdminMainPageComponent;
   let fixture: ComponentFixture<AdminMainPageComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [AdminModule, BrowserAnimationsModule],
       providers: [

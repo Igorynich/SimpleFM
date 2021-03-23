@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ConfirmationDialogComponent } from './confirmation-dialog.component';
 import {MAT_DIALOG_DATA, MatDialogClose} from '@angular/material/dialog';
@@ -24,7 +24,7 @@ describe('ConfirmationDialogComponent', () => {
   };
   let testData: ConfirmationDialogData;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [SharedModule],
       providers: [{provide: MAT_DIALOG_DATA, useValue: testDataStub}]

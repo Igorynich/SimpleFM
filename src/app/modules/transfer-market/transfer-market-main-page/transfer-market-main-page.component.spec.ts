@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { TransferMarketMainPageComponent } from './transfer-market-main-page.component';
 
@@ -6,7 +6,7 @@ describe('TransferMarketMainPageComponent', () => {
   let component: TransferMarketMainPageComponent;
   let fixture: ComponentFixture<TransferMarketMainPageComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ TransferMarketMainPageComponent ]
     })

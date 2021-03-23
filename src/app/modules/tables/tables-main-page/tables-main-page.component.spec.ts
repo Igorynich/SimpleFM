@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { TablesMainPageComponent } from './tables-main-page.component';
 
@@ -6,7 +6,7 @@ describe('TablesMainPageComponent', () => {
   let component: TablesMainPageComponent;
   let fixture: ComponentFixture<TablesMainPageComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ TablesMainPageComponent ]
     })

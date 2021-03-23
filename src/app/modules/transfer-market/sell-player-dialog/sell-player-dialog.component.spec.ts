@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { SellPlayerDialogComponent } from './sell-player-dialog.component';
 
@@ -6,7 +6,7 @@ describe('SellPlayerDialogComponent', () => {
   let component: SellPlayerDialogComponent;
   let fixture: ComponentFixture<SellPlayerDialogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SellPlayerDialogComponent ]
     })

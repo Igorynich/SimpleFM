@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { NavigateToOfficeComponent } from './navigate-to-office.component';
 
@@ -6,7 +6,7 @@ describe('NavigateToOfficeComponent', () => {
   let component: NavigateToOfficeComponent;
   let fixture: ComponentFixture<NavigateToOfficeComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ NavigateToOfficeComponent ]
     })

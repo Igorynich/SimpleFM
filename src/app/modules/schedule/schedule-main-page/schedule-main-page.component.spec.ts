@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ScheduleMainPageComponent } from './schedule-main-page.component';
 
@@ -6,7 +6,7 @@ describe('ScheduleMainPageComponent', () => {
   let component: ScheduleMainPageComponent;
   let fixture: ComponentFixture<ScheduleMainPageComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ScheduleMainPageComponent ]
     })
