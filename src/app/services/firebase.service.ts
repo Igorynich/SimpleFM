@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {AngularFirestore, CollectionReference} from '@angular/fire/firestore';
+import {AngularFirestore, CollectionReference, QueryDocumentSnapshot} from '@angular/fire/firestore';
 import {Country} from '../interfaces/country';
 import {BehaviorSubject, from, Observable, of} from 'rxjs';
 import {catchError, map, tap} from 'rxjs/operators';
@@ -7,10 +7,9 @@ import {League} from '../interfaces/league';
 import {Club} from '../interfaces/club';
 import {Player} from '../interfaces/player';
 import {AngularFireAuth} from '@angular/fire/auth';
-import * as firebase from 'firebase';
 import {StorageService} from './storage.service';
 import {BugReport} from '../interfaces/bug-report';
-import {BugReportDecoded} from '../interfaces/bug-report-decoded';
+import firebase from 'firebase';
 
 export class PlayerQueryObj {
   club?: string;
@@ -53,7 +52,7 @@ export class FirebaseService {
       console.log('Schedules Collection', value);
       const scheduleEntity = {};
       value.forEach(item => {
-        scheduleEntity[item.payload.doc.id] = item.payload.doc.data();
+        // scheduleEntity[item.payload.doc.id] = item.payload.doc.data();
       });
       console.log('scheduleEntity', scheduleEntity);
       return scheduleEntity;
@@ -204,12 +203,13 @@ export class FirebaseService {
       }
     }
 
-    return this.afs.collection<Country>('countries', ref => ref.orderBy('nameEn')).snapshotChanges().pipe(map(value => {
+    return this.afs.collection<Country>('countries', ref => ref.orderBy('nameEn'))
+      .snapshotChanges().pipe(map(value => {
       console.log('countries', value);
       const countriesArray = [];
       value.map(item => {
         countriesArray.push({
-          id: item.payload.doc.id,
+          // id: item.payload.doc?.id,
           ...item.payload.doc.data()
         });
       });
@@ -257,7 +257,7 @@ export class FirebaseService {
       const leaguesArray = [];
       value.map(item => {
         leaguesArray.push({
-          id: item.payload.doc.id,
+          // id: item.payload.doc.id,
           ...item.payload.doc.data()
         });
       });
@@ -305,7 +305,7 @@ export class FirebaseService {
       const clubsArray = [];
       value.map(item => {
         clubsArray.push({
-          id: item.payload.doc.id,
+          // id: item.payload.doc.id,
           ...item.payload.doc.data()
         });
       });
@@ -353,7 +353,7 @@ export class FirebaseService {
     }).snapshotChanges().pipe(map(value => {
       const playersArray: Player[] = value.map(item => {
         return {
-          id: item.payload.doc.id,
+          // id: item.payload.doc.id,
           ...item.payload.doc.data()
         };
       });
@@ -398,7 +398,7 @@ export class FirebaseService {
     }).snapshotChanges().pipe(map(value => {
       const bugsArr: BugReport[] = value.map(item => {
         return {
-          id: item.payload.doc.id,
+          // id: item.payload.doc.id,
           ...item.payload.doc.data()
         };
       });
@@ -431,7 +431,7 @@ export class FirebaseService {
       const playersArray = [];
       value.map(item => {
         playersArray.push({
-          id: item.payload.doc.id,
+          // id: item.payload.doc.id,
           ...item.payload.doc.data()
         });
       });

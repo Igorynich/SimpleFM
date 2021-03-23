@@ -10,10 +10,40 @@
           <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="6476492523106928457" datatype="html">
+        <source>Увеличение вместительности стадиона на <x id="PH" equiv-text="step"/></source>
+        <target>Increased stadium capacity by <x id="PH" equiv-text="step"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/store/effects/current-game.effects.ts</context>
+          <context context-type="linenumber">153</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1566990732875550500" datatype="html">
+        <source>Покупка <x id="PH" equiv-text="player[this.config.name]"/></source>
+        <target>Bought <x id="PH" equiv-text="player[this.config.name]"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/store/effects/current-game.effects.ts</context>
+          <context context-type="linenumber">172</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/store/effects/current-game.effects.ts</context>
+          <context context-type="linenumber">212</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="9049372037667218837" datatype="html">
+        <source>Продажа <x id="PH" equiv-text="player[this.config.name]"/></source>
+        <target>Sold <x id="PH" equiv-text="player[this.config.name]"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/store/effects/current-game.effects.ts</context>
+          <context context-type="linenumber">178</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/store/effects/current-game.effects.ts</context>
+          <context context-type="linenumber">206</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="0752c7fcaedb826f1bc35d16419cddb06f7f3ec2" datatype="html">
-        <source>
-        <x id="INTERPOLATION" equiv-text="{{(matchStats$ | async).attendance}}"/> зрителей(<x id="INTERPOLATION_1" equiv-text="{{(homeClub$ | async).stadium}}"/>)
-      </source>
+        <source> <x id="INTERPOLATION" equiv-text="{{(matchStats$ | async).attendance}}"/> зрителей(<x id="INTERPOLATION_1" equiv-text="{{(homeClub$ | async).stadium}}"/>) </source>
         <target>
         Att: <x id="INTERPOLATION" equiv-text="{{(matchStats$ | async).attendance}}"/>(<x id="INTERPOLATION_1" equiv-text="{{(homeClub$ | async).stadium}}"/>)
       </target>
@@ -21,7 +51,7 @@
           <context context-type="sourcefile">src/app/shared/match-result/match-result.component.html</context>
           <context context-type="linenumber">19</context>
         </context-group>
-        <note priority="1" from="description"> Att: </note>
+        <note priority="1" from="description"> Att:</note>
         <note priority="1" from="meaning">зрителей </note>
       </trans-unit>
       <trans-unit id="d0cb5c35a9f6cc9bde75221a25307b6975c3921c" datatype="html">
@@ -41,8 +71,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="f5c77e109050f953315c11faf61936c344a7eb92" datatype="html">
-        <source>Сезон <x id="INTERPOLATION" equiv-text="{{currentSeason$ | async}}"/>
-          Неделя <x id="INTERPOLATION_1" equiv-text="{{(currentWeek$ | async)}}"/></source>
+        <source>Сезон <x id="INTERPOLATION" equiv-text="{{currentSeason$ | async}}"/> Неделя <x id="INTERPOLATION_1" equiv-text="{{(currentWeek$ | async)}}"/></source>
         <target>Season <x id="INTERPOLATION" equiv-text="{{currentSeason$ | async}}"/>
           Week <x id="INTERPOLATION_1" equiv-text="{{(currentWeek$ | async)}}"/></target>
         <context-group purpose="location">
@@ -59,8 +88,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="471f82ea8075c6bfbc8bc0d0fe72b683821377ee" datatype="html">
-        <source>против <x id="INTERPOLATION" equiv-text="{{(nextOpponent$ | async)?.opponent ? (nextOpponent$ | async)?.opponent[config.name] : ''}}"/>
-              (<x id="INTERPOLATION_1" equiv-text="{{(nextOpponent$ | async)?.field}}"/>)</source>
+        <source>против <x id="INTERPOLATION" equiv-text="{{(nextOpponent$ | async)?.opponent ? (nextOpponent$ | async)?.opponent[config.name] : ''}}"/> (<x id="INTERPOLATION_1" equiv-text="{{(nextOpponent$ | async)?.field}}"/>)</source>
         <target>vs <x id="INTERPOLATION" equiv-text="{{(nextOpponent$ | async)?.opponent ? (nextOpponent$ | async)?.opponent[config.name] : ''}}"/>
               (<x id="INTERPOLATION_1" equiv-text="{{(nextOpponent$ | async)?.field}}"/>)</target>
         <context-group purpose="location">
@@ -69,200 +97,170 @@
         </context-group>
       </trans-unit>
       <trans-unit id="3900b852f4756aecb7c752b4b596d255246778aa" datatype="html">
-        <source>
-          След. неделя
-        </source>
+        <source> След. неделя </source>
         <target>
           Next week
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/office/main-page/header/header.component.html</context>
-          <context context-type="linenumber">53</context>
+          <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit>
       <trans-unit id="531d883486b89a1fd253b9e3fd3c3e722a123199" datatype="html">
-        <source>
-          Выйти
-        </source>
+        <source> Выйти </source>
         <target>
           Quit
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/office/main-page/header/header.component.html</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">60</context>
         </context-group>
       </trans-unit>
       <trans-unit id="f37f8d4eb90846a0f63c5414facc01f66926edeb" datatype="html">
-        <source>
-          Админка
-        </source>
+        <source> Админка </source>
         <target>
           Admin
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/office/main-page/header/header.component.html</context>
-          <context context-type="linenumber">63</context>
+          <context context-type="linenumber">64</context>
         </context-group>
       </trans-unit>
       <trans-unit id="edbbf0b6a3fa34d2595c27fae95d0cbe3783e5db" datatype="html">
-        <source>
-        Позиция
-      </source>
+        <source> Позиция </source>
         <target>
         Position
       </target>
         <note priority="1" from="description">roster header</note>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/roster/roster-main-page/roster-main-page.component.html</context>
-          <context context-type="linenumber">4</context>
+          <context context-type="linenumber">5</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/transfer-market/transfer-list/transfer-list.component.html</context>
-          <context context-type="linenumber">4</context>
+          <context context-type="linenumber">5</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6f9960abddac12c6758be054b581d999d9222bc1" datatype="html">
-        <source>
-        Имя
-      </source>
+        <source> Имя </source>
         <target>
         Name
       </target>
         <note priority="1" from="description">roster header</note>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/roster/roster-main-page/roster-main-page.component.html</context>
-          <context context-type="linenumber">7</context>
+          <context context-type="linenumber">8</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/transfer-market/transfer-list/transfer-list.component.html</context>
-          <context context-type="linenumber">7</context>
+          <context context-type="linenumber">8</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2f54e9d45259f657c78dd357659d9ce01b268a13" datatype="html">
-        <source>
-        Сила
-      </source>
+        <source> Сила </source>
         <target>
         Power
       </target>
         <note priority="1" from="description">roster header</note>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/roster/roster-main-page/roster-main-page.component.html</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">11</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/transfer-market/transfer-list/transfer-list.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit>
       <trans-unit id="af378111f0f169270b5be595fb02340a35d14472" datatype="html">
-        <source>
-        Игр
-      </source>
+        <source> Игр </source>
         <target>
         Games
       </target>
+        <note priority="1" from="description">roster header</note>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/roster/roster-main-page/roster-main-page.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">14</context>
         </context-group>
-        <note priority="1" from="description">roster header</note>
       </trans-unit>
       <trans-unit id="269f5d782a14f7e3cf436456f857623a5595ef49" datatype="html">
-        <source>
-        Г+П
-      </source>
+        <source> Г+П </source>
         <target>
         G+A
       </target>
+        <note priority="1" from="description">roster header</note>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/roster/roster-main-page/roster-main-page.component.html</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">17</context>
         </context-group>
-        <note priority="1" from="description">roster header</note>
       </trans-unit>
       <trans-unit id="89e6ef25d12bb26a90a55c3de1b2f19edb8bfb29" datatype="html">
-        <source>
-        Посл. игра
-      </source>
+        <source> Посл. игра </source>
         <target>
         Last Game
       </target>
+        <note priority="1" from="description">roster header</note>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/roster/roster-main-page/roster-main-page.component.html</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="linenumber">20</context>
         </context-group>
-        <note priority="1" from="description">roster header</note>
       </trans-unit>
       <trans-unit id="445fa72b871580d6e83fcbb8ac4efec05a81ee70" datatype="html">
-        <source>
-    Неделя
-  </source>
+        <source> Неделя </source>
         <target>
     Week
   </target>
+        <note priority="1" from="description">schedule header</note>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/schedule/schedule-main-page/schedule-main-page.component.html</context>
-          <context context-type="linenumber">2</context>
+          <context context-type="linenumber">3</context>
         </context-group>
-        <note priority="1" from="description">schedule header</note>
       </trans-unit>
       <trans-unit id="982835e96df023ae42b4362a1e0e62aeb19d130c" datatype="html">
-        <source>
-    Турнир
-  </source>
+        <source> Турнир </source>
         <target>
     Competition
   </target>
+        <note priority="1" from="description">schedule header</note>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/schedule/schedule-main-page/schedule-main-page.component.html</context>
-          <context context-type="linenumber">5</context>
+          <context context-type="linenumber">6</context>
         </context-group>
-        <note priority="1" from="description">schedule header</note>
       </trans-unit>
       <trans-unit id="1e30b0f2cf1e06ebad6e6688d9c981a24d907b99" datatype="html">
-        <source>
-    Оппонент
-  </source>
+        <source> Оппонент </source>
         <target>
     Opposition
   </target>
+        <note priority="1" from="description">schedule header</note>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/schedule/schedule-main-page/schedule-main-page.component.html</context>
-          <context context-type="linenumber">8</context>
+          <context context-type="linenumber">9</context>
         </context-group>
-        <note priority="1" from="description">schedule header</note>
       </trans-unit>
       <trans-unit id="92534fa704ef3c70dfa21daad1083c4f5ba2d718" datatype="html">
-        <source>
-    Поле
-  </source>
+        <source> Поле </source>
         <target>
     Venue
   </target>
+        <note priority="1" from="description">schedule header</note>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/schedule/schedule-main-page/schedule-main-page.component.html</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">12</context>
         </context-group>
-        <note priority="1" from="description">schedule header</note>
       </trans-unit>
       <trans-unit id="28b86c7b5e7b71beb57fd7acc356eb462b0a7082" datatype="html">
-        <source>
-    Результат
-  </source>
+        <source> Результат </source>
         <target>
     Result
   </target>
+        <note priority="1" from="description">schedule header</note>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/schedule/schedule-main-page/schedule-main-page.component.html</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">15</context>
         </context-group>
-        <note priority="1" from="description">schedule header</note>
       </trans-unit>
       <trans-unit id="f918cf44f632286f8efd477e81b2e02c0753c2cc" datatype="html">
-        <source>
-      Неделя <x id="INTERPOLATION" equiv-text="{{week}}"/>
-    </source>
+        <source> Неделя <x id="INTERPOLATION" equiv-text="{{week}}"/> </source>
         <target>
       Week <x id="INTERPOLATION" equiv-text="{{week}}"/>
     </target>
@@ -272,21 +270,18 @@
         </context-group>
       </trans-unit>
       <trans-unit id="de9539e93147a27607afdb244efe8c2f39d456c0" datatype="html">
-        <source>
-      <x id="ICU" equiv-text="{match.isCupMatch, select, true {...} false {...}}"/>
-
-    </source>
+        <source> <x id="ICU" equiv-text="{match.isCupMatch, select, true {Кубок Англии} false {{{(currentClub$ | async)[config.leagueName]}}}}"/> </source>
         <target>
       <x id="ICU" equiv-text="{match.isCupMatch, select, true {...} false {...}}"/>
 
     </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/schedule/schedule-list-item/schedule-list-item.component.html</context>
-          <context context-type="linenumber">5</context>
+          <context context-type="linenumber">6</context>
         </context-group>
       </trans-unit>
       <trans-unit id="de54fd70b663319bad58661f571291aa16aa52c9" datatype="html">
-        <source>{VAR_SELECT, select, true {Кубок Англии} false {<x id="INTERPOLATION" equiv-text="{{(currentClub$ | async)[config.leagueName]}}"/>} }</source>
+        <source>{VAR_SELECT, select, true {Кубок Англии} false {<x id="INTERPOLATION"/>}}</source>
         <target>{VAR_SELECT, select, true {Cup of England} false {<x id="INTERPOLATION" equiv-text="{{(currentClub$ | async)[config.leagueName]}}"/>} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/schedule/schedule-list-item/schedule-list-item.component.html</context>
@@ -294,22 +289,18 @@
         </context-group>
       </trans-unit>
       <trans-unit id="b5f3ffaacbf456d7d8f1ac83c4a99ef318e1fcc6" datatype="html">
-        <source>
-        Прошел в след. раунд
-      </source>
+        <source> Прошел в след. раунд </source>
         <target>
         Through to next round
       </target>
+        <note priority="1" from="description">schedule when no opponent</note>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/schedule/schedule-list-item/schedule-list-item.component.html</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="linenumber">25</context>
         </context-group>
-        <note priority="1" from="description">schedule when no opponent</note>
       </trans-unit>
       <trans-unit id="d3c9a8ee5ce5ea6c4c5163a7f718c67e2fb0e607" datatype="html">
-        <source>
-    Неделя <x id="INTERPOLATION" equiv-text="{{week}}"/>
-  </source>
+        <source> Неделя <x id="INTERPOLATION" equiv-text="{{week}}"/> </source>
         <target>
     Week <x id="INTERPOLATION" equiv-text="{{week}}"/>
   </target>
@@ -588,21 +579,17 @@
         </context-group>
       </trans-unit>
       <trans-unit id="2e091b83436366dd8d7164f4e2cfc08788cd6885" datatype="html">
-        <source>
-                против
-              </source>
+        <source> против </source>
         <target>
                 vs
               </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/tables/cup/cup-match-item/cup-match-item.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit>
       <trans-unit id="c3955f63b3476910881aba662bfb0c051ce9bfb3" datatype="html">
-        <source>
-    Бюджет: <x id="INTERPOLATION" equiv-text="{{(curClub$ | async).budget | currency}}"/>M
-  </source>
+        <source> Бюджет: <x id="INTERPOLATION" equiv-text="{{(curClub$ | async).budget | currency}}"/>M </source>
         <target>
     Budget: <x id="INTERPOLATION" equiv-text="{{(curClub$ | async).budget | currency}}"/>M
   </target>
@@ -620,21 +607,17 @@
         </context-group>
       </trans-unit>
       <trans-unit id="6e83e53ed5bdf591133d9638a95c096e0fb03e12" datatype="html">
-        <source>
-    Увеличить вместимость стадиона?
-  </source>
+        <source> Увеличить вместимость стадиона? </source>
         <target>
     Increase stadium capacity?
   </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/stadium/stadium-main-page/stadium-main-page.component.html</context>
-          <context context-type="linenumber">7</context>
+          <context context-type="linenumber">8</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3bd184c6f13b6d9567cf848d5a644e7c01decf7c" datatype="html">
-        <source>
-      +<x id="INTERPOLATION" equiv-text="{{EXP_STEP}}"/> зрителей за <x id="INTERPOLATION_1" equiv-text="{{EXP_COST | currency}}"/>M
-    </source>
+        <source> +<x id="INTERPOLATION" equiv-text="{{EXP_STEP}}"/> зрителей за <x id="INTERPOLATION_1" equiv-text="{{EXP_COST | currency}}"/>M </source>
         <target>
       +<x id="INTERPOLATION" equiv-text="{{EXP_STEP}}"/> places for <x id="INTERPOLATION_1" equiv-text="{{EXP_COST | currency}}"/>M
     </target>
@@ -644,9 +627,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="316a248450e0a17ac1849ce942e3501f8a469fbf" datatype="html">
-        <source>
-                <x id="INTERPOLATION" equiv-text="{{player.price | currency}}"/>M
-              </source>
+        <source> <x id="INTERPOLATION" equiv-text="{{player.price | currency}}"/>M </source>
         <target>
                 <x id="INTERPOLATION" equiv-text="{{player.price | currency}}"/>M
               </target>
@@ -658,15 +639,13 @@
         <note priority="1" from="meaning">price </note>
       </trans-unit>
       <trans-unit id="68f64a1c92bac69824a23abb5fdcf0213631edbd" datatype="html">
-        <source>
-                  Продать
-                </source>
+        <source> Продать </source>
         <target>
                   Sell
                 </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/transfer-market/sell-player-dialog/sell-player-dialog.component.html</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="linenumber">25</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ea4823e92c81e6c593190b6a7beda216d54e2d7b" datatype="html">
@@ -704,9 +683,7 @@
         <note priority="1" from="description">tab label</note>
       </trans-unit>
       <trans-unit id="a5b850aa9ad7205ab7d62d7180431d7fb238778a" datatype="html">
-        <source>
-        <x id="INTERPOLATION" equiv-text="{{player.price | currency}}"/>M
-      </source>
+        <source> <x id="INTERPOLATION" equiv-text="{{player.price | currency}}"/>M </source>
         <target>
         <x id="INTERPOLATION" equiv-text="{{player.price | currency}}"/>M
       </target>
@@ -726,15 +703,37 @@
         </context-group>
       </trans-unit>
       <trans-unit id="4effd0dcf693458b3ba6082a6a7ec7720eb177d5" datatype="html">
-        <source>
-          Купить
-        </source>
+        <source> Купить </source>
         <target>
           Buy
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/transfer-market/transfer-market-player-item/transfer-market-player-item.component.html</context>
-          <context context-type="linenumber">30</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="526954088553537079" datatype="html">
+        <source>Вы уверены?</source>
+        <target>Are You Sure?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/confirmation-dialog/confirmation-dialog.component.ts</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7258196389588589082" datatype="html">
+        <source>Да</source>
+        <target>Yes</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/confirmation-dialog/confirmation-dialog.component.ts</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6691503823975026026" datatype="html">
+        <source>Нет</source>
+        <target>No</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/confirmation-dialog/confirmation-dialog.component.ts</context>
+          <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit>
       <trans-unit id="d95e7faf10a7b1fa7dd1bba8481e078c93077ce1" datatype="html">
@@ -746,33 +745,27 @@
         </context-group>
       </trans-unit>
       <trans-unit id="e531e74d970a4dad1543f61c3a371fa1acfac922" datatype="html">
-        <source>
-        Клуб
-      </source>
+        <source> Клуб </source>
         <target>
         Club
       </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/transfer-market/transfer-list/transfer-list.component.html</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">11</context>
         </context-group>
       </trans-unit>
       <trans-unit id="b5d8b1dbc69b3fe7b3eefd026d6e0eace3296a1b" datatype="html">
-        <source>
-        Цена
-      </source>
+        <source> Цена </source>
         <target>
         Price
       </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/transfer-market/transfer-list/transfer-list.component.html</context>
-          <context context-type="linenumber">17</context>
+          <context context-type="linenumber">18</context>
         </context-group>
       </trans-unit>
       <trans-unit id="dd602d13f46d13b6652d10d7b3097b1cb96818be" datatype="html">
-        <source>
-      Сез. <x id="INTERPOLATION" equiv-text="{{transfer.season + 1}}"/>
-    </source>
+        <source> Сез. <x id="INTERPOLATION" equiv-text="{{transfer.season + 1}}"/> </source>
         <target>
       S. <x id="INTERPOLATION" equiv-text="{{transfer.season + 1}}"/>
     </target>
@@ -782,9 +775,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="7931f0c037f1ec8a0ad5900b200b8c0994612944" datatype="html">
-        <source>
-      Нед. <x id="INTERPOLATION" equiv-text="{{transfer.week + 1}}"/>
-    </source>
+        <source> Нед. <x id="INTERPOLATION" equiv-text="{{transfer.week + 1}}"/> </source>
         <target>
       W. <x id="INTERPOLATION" equiv-text="{{transfer.week + 1}}"/>
     </target>
@@ -810,8 +801,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="8bfbf1e5e392c56354cd3c8b368a3eef99ec61c5" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{offeringClub[config.name]}}"/> (<x id="INTERPOLATION_1" equiv-text="{{offeringClubLeaguePosition$ | async}}"/> место в <x id="INTERPOLATION_2" equiv-text="{{offeringClub[config.leagueName]}}"/>)
-                - приглашает вас занять место главного тренера</source>
+        <source><x id="INTERPOLATION" equiv-text="{{offeringClub[config.name]}}"/> (<x id="INTERPOLATION_1" equiv-text="{{offeringClubLeaguePosition$ | async}}"/> место в <x id="INTERPOLATION_2" equiv-text="{{offeringClub[config.leagueName]}}"/>) - приглашает вас занять место главного тренера</source>
         <target><x id="INTERPOLATION" equiv-text="{{offeringClub[config.name]}}"/> (<x id="INTERPOLATION_1" equiv-text="{{offeringClubLeaguePosition$ | async}}"/> place in <x id="INTERPOLATION_2" equiv-text="{{offeringClub[config.leagueName]}}"/>)
                 - wants you to take manager position</target>
         <context-group purpose="location">
@@ -844,9 +834,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="04dcab4e00d80544868fa75b26e3a317d6992922" datatype="html">
-        <source>
-                  Призовые за выступление в лиге составили <x id="INTERPOLATION" equiv-text="{{playersLeaguePrizeMoney$ | async | currency}}"/>
-                </source>
+        <source> Призовые за выступление в лиге составили <x id="INTERPOLATION" equiv-text="{{playersLeaguePrizeMoney$ | async | currency}}"/> </source>
         <target>
                   Prize money for League Participation was <x id="INTERPOLATION" equiv-text="{{playersLeaguePrizeMoney$ | async | currency}}"/>
                 </target>
@@ -856,9 +844,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="9e680dc1d8b691ada345551fe38de6cd9abdbd59" datatype="html">
-        <source>
-                  <x id="INTERPOLATION" equiv-text="{{(curClub$ | async)[config.name]}}"/> под руководством <x id="INTERPOLATION_1" equiv-text="{{userService.userName}}"/> выиграл Кубок!
-                </source>
+        <source> <x id="INTERPOLATION" equiv-text="{{(curClub$ | async)[config.name]}}"/> под руководством <x id="INTERPOLATION_1" equiv-text="{{userService.userName}}"/> выиграл Кубок! </source>
         <target>
                   <x id="INTERPOLATION" equiv-text="{{(curClub$ | async)[config.name]}}"/> with <x id="INTERPOLATION_1" equiv-text="{{userService.userName}}"/> as their Manager, won The Cup!
                 </target>
@@ -868,10 +854,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="9ae0296c7398cc64817e56b1e1a637e1b20a50db" datatype="html">
-        <source>
-                  <x id="INTERPOLATION" equiv-text="{{(curClub$ | async)[config.name]}}"/> под руководством <x id="INTERPOLATION_1" equiv-text="{{userService.userName}}"/> добрался до
-                  <x id="INTERPOLATION_2" equiv-text="{{(playersCupResult$ | async).eliminated}}"/> раунда кубка!
-                </source>
+        <source> <x id="INTERPOLATION" equiv-text="{{(curClub$ | async)[config.name]}}"/> под руководством <x id="INTERPOLATION_1" equiv-text="{{userService.userName}}"/> добрался до <x id="INTERPOLATION_2" equiv-text="{{(playersCupResult$ | async).eliminated}}"/> раунда кубка! </source>
         <target>
                   <x id="INTERPOLATION" equiv-text="{{(curClub$ | async)[config.name]}}"/> with <x id="INTERPOLATION_1" equiv-text="{{userService.userName}}"/> as their Manager got to round
                   <x id="INTERPOLATION_2" equiv-text="{{(playersCupResult$ | async).eliminated}}"/> of The Cup!
@@ -882,9 +865,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="b46b1540c0c74eb659306fb88213c5246d082e31" datatype="html">
-        <source>
-                  Призовые за выступление в кубке составили <x id="INTERPOLATION" equiv-text="{{playersCupPrizeMoney$ | async | currency}}"/>
-                </source>
+        <source> Призовые за выступление в кубке составили <x id="INTERPOLATION" equiv-text="{{playersCupPrizeMoney$ | async | currency}}"/> </source>
         <target>
                   Prize money for Cup Participation was <x id="INTERPOLATION" equiv-text="{{playersCupPrizeMoney$ | async | currency}}"/>
                 </target>
@@ -926,11 +907,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="c2985d8b982090328cf23a14aa4f9451ca2d54bd" datatype="html">
-        <source>
-                    Бомбардиры:
-                    <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span>"/><x id="INTERPOLATION" equiv-text="{{pl.nameRu}}"/> <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/>
-                    - <x id="INTERPOLATION_1" equiv-text="{{(bestScorersForEachLeague$ | async)[i].goals.q}}"/> голов
-                  </source>
+        <source> Бомбардиры: <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span *ngFor=&quot;let pl of (bestScorersForEachLeague$ | async)[i].goals.players&quot;>"/><x id="INTERPOLATION" equiv-text="{{pl.nameRu}}"/> <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/> - <x id="INTERPOLATION_1" equiv-text="{{(bestScorersForEachLeague$ | async)[i].goals.q}}"/> голов </source>
         <target>
                     Goalscorers:
                     <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span>"/><x id="INTERPOLATION" equiv-text="{{pl.nameRu}}"/> <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/>
@@ -938,15 +915,11 @@
                   </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">205</context>
+          <context context-type="linenumber">206</context>
         </context-group>
       </trans-unit>
       <trans-unit id="97bac3ae1ed3a45d466c4d78e068806ccf33324f" datatype="html">
-        <source>
-                    Ассистенты:
-                    <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span>"/><x id="INTERPOLATION" equiv-text="{{pl.nameRu}}"/> <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/>
-                    - <x id="INTERPOLATION_1" equiv-text="{{(bestScorersForEachLeague$ | async)[i].assists.q}}"/> пасов
-                  </source>
+        <source> Ассистенты: <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span *ngFor=&quot;let pl of (bestScorersForEachLeague$ | async)[i].assists.players&quot;>"/><x id="INTERPOLATION" equiv-text="{{pl.nameRu}}"/> <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/> - <x id="INTERPOLATION_1" equiv-text="{{(bestScorersForEachLeague$ | async)[i].assists.q}}"/> пасов </source>
         <target>
                     Assistants:
                     <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span>"/><x id="INTERPOLATION" equiv-text="{{pl.nameRu}}"/> <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/>
@@ -954,15 +927,11 @@
                   </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">210</context>
+          <context context-type="linenumber">211</context>
         </context-group>
       </trans-unit>
       <trans-unit id="a607854c207d92c797eafe307b7382ebcbc8140f" datatype="html">
-        <source>
-                    Г+П:
-                    <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span>"/><x id="INTERPOLATION" equiv-text="{{pl.nameRu}}"/>(<x id="INTERPOLATION_1" equiv-text="{{(bestScorersForEachLeague$ | async)[i].ga.sum[i1]}}"/>) <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/>
-                    - <x id="INTERPOLATION_2" equiv-text="{{(bestScorersForEachLeague$ | async)[i].ga.q}}"/> балов
-                  </source>
+        <source> Г+П: <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span *ngFor=&quot;let pl of (bestScorersForEachLeague$ | async)[i].ga.players; let i1 = index&quot;>"/><x id="INTERPOLATION" equiv-text="{{pl.nameRu}}"/>(<x id="INTERPOLATION_1" equiv-text="{{(bestScorersForEachLeague$ | async)[i].ga.sum[i1]}}"/>) <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/> - <x id="INTERPOLATION_2" equiv-text="{{(bestScorersForEachLeague$ | async)[i].ga.q}}"/> балов </source>
         <target>
                     G+A:
                     <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span>"/><x id="INTERPOLATION" equiv-text="{{pl.nameRu}}"/>(<x id="INTERPOLATION_1" equiv-text="{{(bestScorersForEachLeague$ | async)[i].ga.sum[i1]}}"/>) <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/>
@@ -970,7 +939,7 @@
                   </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">215</context>
+          <context context-type="linenumber">216</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4b6e61a972d89dd6181cfee6cc15e1285815e182" datatype="html">
@@ -982,15 +951,13 @@
         </context-group>
       </trans-unit>
       <trans-unit id="e36df2c2fdb955a44c01110b4712bc23688595dd" datatype="html">
-        <source>
-            Добро пожаловать в SimpleFM. Пожалуйста, введите свое имя, чтобы начать игру:
-          </source>
+        <source> Добро пожаловать в SimpleFM. Пожалуйста, введите свое имя, чтобы начать игру: </source>
         <target>
             Welcome to SimpleFM. Please enter your name to start the game:
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/home/home/home.component.html</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4304ee204fdbe7003cc21f292ce09eeb969907bb" datatype="html">
@@ -1010,15 +977,13 @@
         </context-group>
       </trans-unit>
       <trans-unit id="ec5c686db7ae554a0f01990b8051946518ba044a" datatype="html">
-        <source>
-            Начать игру!
-          </source>
+        <source> Начать игру! </source>
         <target>
             Начать игру!
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/home/home/home.component.html</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">33</context>
         </context-group>
       </trans-unit>
       <trans-unit id="48d996e090967f1b6d769b6fbe2a732ef20ce8df" datatype="html">
@@ -1038,9 +1003,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="8d78053e148d7c62ee9867350932082643814911" datatype="html">
-        <source>
-                <x id="INTERPOLATION" equiv-text="{{savedGameData.userName}}"/>(<x id="INTERPOLATION_1" equiv-text="{{savedGameData.club[config.name]}}"/>) - сезон <x id="INTERPOLATION_2" equiv-text="{{savedGameData.season + 1}}"/>, неделя <x id="INTERPOLATION_3" equiv-text="{{savedGameData.week + 1}}"/>
-              </source>
+        <source> <x id="INTERPOLATION" equiv-text="{{savedGameData.userName}}"/>(<x id="INTERPOLATION_1" equiv-text="{{savedGameData.club[config.name]}}"/>) - сезон <x id="INTERPOLATION_2" equiv-text="{{savedGameData.season + 1}}"/>, неделя <x id="INTERPOLATION_3" equiv-text="{{savedGameData.week + 1}}"/> </source>
         <target>
                 <x id="INTERPOLATION" equiv-text="{{savedGameData.userName}}"/>(<x id="INTERPOLATION_1" equiv-text="{{savedGameData.club[config.name]}}"/>) - season <x id="INTERPOLATION_2" equiv-text="{{savedGameData.season + 1}}"/>, week <x id="INTERPOLATION_3" equiv-text="{{savedGameData.week + 1}}"/>
               </target>

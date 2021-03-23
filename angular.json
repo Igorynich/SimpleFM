@@ -19,6 +19,10 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "chart.js"
+            ],
             "localize": false,
             "outputPath": "dist/SimpleFM",
             "index": "src/index.html",

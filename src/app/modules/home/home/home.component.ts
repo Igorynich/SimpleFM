@@ -5,7 +5,8 @@ import {Router} from '@angular/router';
 import {UserService} from '../../../services/user.service';
 import {ROUTES} from '../../../constants/routes';
 import {FirebaseService} from '../../../services/firebase.service';
-import {User} from 'firebase';
+// import {User} from 'firebase';
+import firebase from 'firebase';
 import {StorageService} from '../../../services/storage.service';
 import {Club} from '../../../interfaces/club';
 import {Store} from '@ngrx/store';
@@ -13,7 +14,7 @@ import {AppState} from '../../../store/selectors/current-game.selectors';
 import { loadSavedGame } from 'src/app/store/actions/current-game.actions';
 import {CurrentGameState} from '../../../store/reducers/current-game.reducer';
 import {SnackBarService} from '../../../services/snack-bar.service';
-import {ConfigService} from "../../../services/config.service";
+import {ConfigService} from '../../../services/config.service';
 
 @Component({
   selector: 'app-home',
@@ -68,7 +69,7 @@ export class HomeComponent implements OnInit {
       this.fs.login().subscribe(value => {
         console.log('GOOGLE LOGIN', value);
         const token = value.credential.accessToken;
-        const user: User = value.user;
+        const user: firebase.User = value.user;
         this.userService.userName = user.displayName;
         this.router.navigate([ROUTES.OFFICE]).catch(reason => {
           console.error('Navigation fail by ', reason);

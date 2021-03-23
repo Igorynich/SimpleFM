@@ -3,7 +3,8 @@
   <div class="col-12 text-center">
               <span [ngStyle]="{'line-height.px': 25 * (index + 1)}"
                     [ngClass]="{'my-club': (isMyClub$(match).home | async)}">
-                {match.home, select, null {---} other {{{match.home[config.name]}}}}
+                <ng-container *ngIf="match.home">{{match.home[config.name]}}}</ng-container>
+                <!--{match.home, select, null {-&#45;&#45;} undefined {-&#45;&#45;} other {{{match.home[config.name]}}}}-->
                 <!--{{match.home?.nameRu || '-&#45;&#45;'}}-->
               </span>
   </div>
@@ -17,7 +18,8 @@
   <div class="col-12 text-center">
               <span [ngStyle]="{'line-height.px': 25 * (index + 1)}"
                     [ngClass]="{'my-club': (isMyClub$(match).away | async)}">
-                {match.away, select, null {---} other {{{match.away[config.name]}}}}
+                <ng-container *ngIf="match.away">{{match.away[config.name]}}}</ng-container>
+                <!--{match.away, select, null {-&#45;&#45;} other {{{match.away[config.name]}}}}-->
                 <!--{{match.away?.nameRu || '-&#45;&#45;'}}-->
               </span>
   </div>

@@ -7,7 +7,7 @@ import {Club} from '../../../../interfaces/club';
 import {Store} from '@ngrx/store';
 import {AppState, selectCurrentClub, selectMatchStatsByMatchId} from '../../../../store/selectors/current-game.selectors';
 import {MatchStats1} from '../../../../interfaces/match-stats1';
-import {ConfigService} from "../../../../services/config.service";
+import {ConfigService} from '../../../../services/config.service';
 
 @Component({
   selector: 'app-cup-match-item',
