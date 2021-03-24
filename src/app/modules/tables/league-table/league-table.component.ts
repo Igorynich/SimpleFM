@@ -6,6 +6,7 @@ import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {PlayersListDialogComponent} from '../../../shared/players-list-dialog/players-list-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
+import {ConfigService} from '../../../services/config.service';
 
 @Component({
   selector: 'app-league-table',
@@ -20,14 +21,14 @@ export class LeagueTableComponent implements OnInit {
   curClub$: Observable<Club>;
   displayedColumns: string[] = ['position', 'clubName', 'games', 'wins', 'draws', 'loses', 'gf', 'ga', 'gd', 'points'];
 
-  constructor(private store: Store<AppState>, private dialog: MatDialog) { }
+  constructor(private store: Store<AppState>, private dialog: MatDialog, public config: ConfigService) { }
 
   ngOnInit(): void {
     this.curClub$ = this.store.select(selectCurrentClub);
   }
 
   isMyClubsTableRecord(element: LeagueTable, curClub: Club): boolean {
-    return element.clubName === curClub.nameEn || element.clubName === curClub.nameRu;
+    return element.club.nameEn === curClub.nameEn;
   }
 
   showClubsRoster(clubName: string) {

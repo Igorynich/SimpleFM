@@ -11,7 +11,7 @@
     <mat-header-cell *matHeaderCellDef class="w-25" i18n="table header"> Клуб</mat-header-cell>
     <mat-cell *matCellDef="let element" class="w-25"
               [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}">
-      <span (click)="showClubsRoster(element.clubName)" class="hover"> {{element.clubName}} </span>
+      <span (click)="showClubsRoster(element.club.nameEn)" class="hover"> {{element.club[config.name]}} </span>
     </mat-cell>
   </div>
 

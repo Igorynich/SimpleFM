@@ -465,9 +465,9 @@ const _currentGameReducer = createReducer(currentGameInitState,
               const away: Club = draft.clubs.find(value => value.nameEn === match.awayNameEn);
               if (matchStats?.result && !match.isCupMatch) {      // если есть result и матч не кубковый
                 const homeRecord: LeagueTable = tableRecords.find(record =>
-                  home.nameEn === record.clubName || home.nameRu === record.clubName);
+                  home.nameEn === record.club.nameEn);
                 const awayRecord: LeagueTable = tableRecords.find(record =>
-                  away.nameEn === record.clubName || away.nameRu === record.clubName);
+                  away.nameEn === record.club.nameEn);
                 if (homeRecord && awayRecord) {
                   const [homeGoals, awayGoals] = resultSplitter(matchStats.result);
                   if (homeGoals > awayGoals) {

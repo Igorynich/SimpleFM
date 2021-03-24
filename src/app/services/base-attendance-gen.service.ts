@@ -113,10 +113,8 @@ export class BaseAttendanceGenService {
       .pipe(withLatestFrom(this.store.select(selectClubPowersByLeaguesNameEn, {leaguesNameEn: home.leagueNameEn})), take(1))
       .subscribe(([leagueTable, clubPowersArray]: [LeagueTable[], {club: Club, power: number}[]]) => {
         // use leaguePosition - powerPosition to generate attendance
-        const homeLeaguePos = leagueTable.findIndex((tableLine: LeagueTable) => home.nameEn === tableLine.clubName
-          || home.nameRu === tableLine.clubName);
-        const awayLeaguePos = leagueTable.findIndex((tableLine: LeagueTable) => away.nameEn === tableLine.clubName
-          || away.nameRu === tableLine.clubName);
+        const homeLeaguePos = leagueTable.findIndex((tableLine: LeagueTable) => home.nameEn === tableLine.club.nameEn);
+        const awayLeaguePos = leagueTable.findIndex((tableLine: LeagueTable) => away.nameEn === tableLine.club.nameEn);
         const homeStartSeasonPowerObj = clubPowersArray.find((powerObj: {club: Club, power: number}) =>
           powerObj.club.nameEn === match.homeNameEn);
         const awayStartSeasonPowerObj = clubPowersArray.find((powerObj: {club: Club, power: number}) =>

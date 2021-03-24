@@ -26,7 +26,7 @@ import {Player} from '../../../interfaces/player';
 import {Router} from '@angular/router';
 import { ROUTES } from 'src/app/constants/routes';
 import {MatchStats1} from '../../../interfaces/match-stats1';
-import {ConfigService} from "../../../services/config.service";
+import {ConfigService} from '../../../services/config.service';
 
 @Component({
   selector: 'app-season-end-main-page',
@@ -106,7 +106,7 @@ export class SeasonEndMainPageComponent implements OnInit {
         return this.store.select(selectLeagueTableByLeaguesNameEn, {leaguesNameEn: tierUnoLeague.nameEn}).pipe(take(1));
       }
     ), switchMap((tierUnoLeagueTable: LeagueTable[]) =>
-      this.store.select(selectClubByClubsName, {clubsName: tierUnoLeagueTable[0].clubName}).pipe(take(1))));
+      this.store.select(selectClubByClubsName, {clubsName: tierUnoLeagueTable[0].club.nameEn}).pipe(take(1))));
 
     this.cupWinner$ = this.store.select(selectCupScheduleByCountryNameEn, {countryNameEn: null})
       .pipe(take(1), switchMap((cupSchedule: WeekSchedule[][]) => {
@@ -137,7 +137,8 @@ export class SeasonEndMainPageComponent implements OnInit {
         const goals = {q: mostGoals, players: bestScorers};
         const sortedByAssists = [...playerStats.entries()].sort((a, b) => (b[1].assists || 0) - (a[1].assists || 0));
         const mostAssists: number = sortedByAssists[0] && sortedByAssists[0][1].assists;
-        const bestAssistants: Player[] = sortedByAssists.filter(([key, value]: [Player, {goals?: number, assists?: number, 'g+a'?: number}]) =>
+        const bestAssistants: Player[] = sortedByAssists.
+        filter(([key, value]: [Player, {goals?: number, assists?: number, 'g+a'?: number}]) =>
           value.assists === mostAssists).map(([key, value]) => key);
         const assists = {q: mostAssists, players: bestAssistants};
         const sortedByGA = [...playerStats.entries()].sort((a, b) => (b[1]['g+a'] || 0) - (a[1]['g+a'] || 0));
@@ -162,7 +163,7 @@ export class SeasonEndMainPageComponent implements OnInit {
   }
 
   isMyClubsTableRecord(element: LeagueTable, curClub: Club): boolean {
-    return element.clubName === curClub.nameEn || element.clubName === curClub.nameRu;
+    return element.club.nameEn === curClub.nameEn;
   }
 }
 

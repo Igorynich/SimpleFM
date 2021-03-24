@@ -40,7 +40,7 @@ import {CupResult} from '../../interfaces/cup-result';
 import {Player} from '../../interfaces/player';
 import {randomInteger} from '../../utils/helpers';
 import {StorageService} from '../../services/storage.service';
-import {ConfigService} from "../../services/config.service";
+import {ConfigService} from '../../services/config.service';
 
 @Injectable()
 export class CurrentGameEffects {
@@ -267,17 +267,18 @@ export class CurrentGameEffects {
         const financeRecords = [];
         leagues.forEach((league, index) => {
           clubArrays[index].forEach((club: Club) => {
-            const leaguePosIndex = tableArrays[index].findIndex((tableRec: LeagueTable) => tableRec.clubName === club.nameEn
-              || tableRec.clubName === club.nameRu);
+            const leaguePosIndex = tableArrays[index].findIndex((tableRec: LeagueTable) =>
+              tableRec.club.nameEn === club.nameEn);
             financeRecords.push(addFinanceRecord({
               clubNameEn: club.nameEn,
-              description: `Призовые за ${leaguePosIndex + 1} место в ${league.nameRu}`,
+              description: $localize `Призовые за ${leaguePosIndex + 1} место в ${league[this.config.name]}`,
               expense: null,
               income: this.finService.calculateClubsLeaguePrizeMoney(league.tier, leaguePosIndex + 1, tableArrays[index].length) * 1000000
             }));
             const clubsCupResult: CupResult =
               cupResults.find(results => results.clubNameEn === club.nameEn);
-            const desc = clubsCupResult.eliminated ? `Призовые за ${clubsCupResult.eliminated} раунд кубка` : `Призовые за победу в кубке`;
+            const desc = clubsCupResult.eliminated ?
+              $localize `Призовые за ${clubsCupResult.eliminated} раунд кубка` : $localize `Призовые за победу в кубке`;
             financeRecords.push(addFinanceRecord({
               clubNameEn: club.nameEn,
               description: desc,
@@ -308,9 +309,9 @@ export class CurrentGameEffects {
           const table: LeagueTable[] = tables[index];
           if (table.length) {
             const topClubNames: string[] = table.filter((value: LeagueTable, place) => place < NUM_OF_CLUBS_IN_DIVISION_ROTATION)
-              .map((value: LeagueTable) => value.clubName);
+              .map((value: LeagueTable) => value.club.nameEn);
             const bottomClubNames: string[] = table.filter((value: LeagueTable, place) =>
-              place >= (table.length - NUM_OF_CLUBS_IN_DIVISION_ROTATION)).map((value: LeagueTable) => value.clubName);
+              place >= (table.length - NUM_OF_CLUBS_IN_DIVISION_ROTATION)).map((value: LeagueTable) => value.club.nameEn);
             rotationActions.push(rotateClubs({clubNames: topClubNames, direction: 'up'}));
             rotationActions.push(rotateClubs({clubNames: bottomClubNames, direction: 'down'}));
           }

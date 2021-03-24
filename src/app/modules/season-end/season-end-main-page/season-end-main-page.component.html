@@ -22,7 +22,7 @@
                     <ng-container matColumnDef="clubName">
                       <mat-header-cell *matHeaderCellDef class="" i18n="table header"> Клуб</mat-header-cell>
                       <mat-cell *matCellDef="let element" class=""
-                                [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.clubName}} </mat-cell>
+                                [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.club[config.name]}} </mat-cell>
                     </ng-container>
 
                     <!-- games Column -->
@@ -140,7 +140,7 @@
                     <ng-container matColumnDef="clubName">
                       <mat-header-cell *matHeaderCellDef class="" i18n> Клуб</mat-header-cell>
                       <mat-cell *matCellDef="let element" class=""
-                                [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.clubName}} </mat-cell>
+                                [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.club[config.name]}} </mat-cell>
                     </ng-container>
 
                     <!-- games Column -->

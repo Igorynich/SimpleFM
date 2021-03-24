@@ -52,7 +52,7 @@ export function sortTable(a: LeagueTable, b: LeagueTable) {
       if (b.gf === a.gf) {                              // забитые мячи
         if (b.wins === a.wins) {                        // победы
           if (b.draws === a.draws) {                    // ничьи
-            return b.clubName > a.clubName ? -1 : 1;    // алфавит
+            return b.club.nameEn > a.club.nameEn ? -1 : 1;    // алфавит
           }
           return b.draws - a.draws;
         }

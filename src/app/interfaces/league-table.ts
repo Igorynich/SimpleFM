@@ -1,6 +1,8 @@
+import {Club} from './club';
+
 export interface LeagueTable {
   position?: number;
-  clubName: string;
+  club: Club;
   games: number;
   wins: number;
   draws: number;

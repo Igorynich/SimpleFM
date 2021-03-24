@@ -72,8 +72,7 @@ export class JobService {
       this.store.select(selectLeagueTableByLeaguesNameEn, {leaguesNameEn: club.leagueNameEn})
     ]).pipe(take(1)).subscribe(([clubPowers, leagueTable]) => {    // clubPowers: {club: Club, power: number}[]  leagueTable: LeagueTable[]
       const clubPowerPosition = clubPowers.findIndex((value: {club: Club, power: number}) => value.club.nameEn === club.nameEn);
-      const clubLeaguePosition = leagueTable.findIndex((value: LeagueTable) => value.clubName === club.nameEn
-        || value.clubName === club.nameRu);
+      const clubLeaguePosition = leagueTable.findIndex((value: LeagueTable) => value.club.nameEn === club.nameEn);
       rating = clubPowerPosition - clubLeaguePosition;
     });
     return rating;

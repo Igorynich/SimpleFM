@@ -16,7 +16,7 @@ import {Match1} from '../../../interfaces/match1';
 import {Player} from '../../../interfaces/player';
 import {FormControl} from '@angular/forms';
 import {League} from '../../../interfaces/league';
-import {ConfigService} from "../../../services/config.service";
+import {ConfigService} from '../../../services/config.service';
 
 @CleanSubscriptions()
 @Component({
@@ -36,7 +36,6 @@ export class TablesMainPageComponent implements OnInit, OnDestroy {
   };
   leagueOrCupTab = 0;
   table$: Observable<LeagueTable[]>;
-  table: LeagueTable[];
   leaguePlayersStats$;
   // selectedLeagueTab;
   selectedLeagueName: FormControl;

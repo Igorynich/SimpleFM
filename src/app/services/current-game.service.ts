@@ -338,7 +338,7 @@ export class CurrentGameService {
           clubs.sort((a, b) => a.nameRu > b.nameRu ? 1 : -1);
           clubs.forEach((club: Club, i) => {
             table.push({
-              clubName: club.nameRu,
+              club,
               games: 0,
               wins: 0,
               draws: 0,

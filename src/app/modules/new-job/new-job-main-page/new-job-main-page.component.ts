@@ -30,7 +30,7 @@ export class NewJobMainPageComponent implements OnInit {
     this.offeringClub = this.jobService.findNewJobOfferingCLub();
     this.offeringClubLeaguePosition$ = this.store.select(selectLeagueTableByLeaguesNameEn, {leaguesNameEn: this.offeringClub.leagueNameEn})
       .pipe(map((table: LeagueTable[]) => {
-        return table.findIndex(value => value.clubName === this.offeringClub.nameRu || value.clubName === this.offeringClub.nameEn);
+        return table.findIndex(value => value.club.nameEn === this.offeringClub.nameEn);
       }));
   }
 
