@@ -483,7 +483,7 @@ export class AdminMainPageComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().pipe(take(1), switchMap(value => {
       if (value) {
-        return this.fs.deleteBugReport(report.id).pipe(retry(3));
+        return this.fs.deleteBugReport(report.id).pipe(retry(3), tap(x => console.log('BugRep delete', x)));
       }
       return of(null);
     })).subscribe();

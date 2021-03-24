@@ -209,7 +209,7 @@ export class FirebaseService {
       const countriesArray = [];
       value.map(item => {
         countriesArray.push({
-          // id: item.payload.doc?.id,
+          id: item.payload.doc?.id,
           ...item.payload.doc.data()
         });
       });
@@ -257,7 +257,7 @@ export class FirebaseService {
       const leaguesArray = [];
       value.map(item => {
         leaguesArray.push({
-          // id: item.payload.doc.id,
+          id: item.payload.doc.id,
           ...item.payload.doc.data()
         });
       });
@@ -305,7 +305,7 @@ export class FirebaseService {
       const clubsArray = [];
       value.map(item => {
         clubsArray.push({
-          // id: item.payload.doc.id,
+          id: item.payload.doc.id,
           ...item.payload.doc.data()
         });
       });
@@ -353,7 +353,7 @@ export class FirebaseService {
     }).snapshotChanges().pipe(map(value => {
       const playersArray: Player[] = value.map(item => {
         return {
-          // id: item.payload.doc.id,
+          id: item.payload.doc.id,
           ...item.payload.doc.data()
         };
       });
@@ -398,7 +398,7 @@ export class FirebaseService {
     }).snapshotChanges().pipe(map(value => {
       const bugsArr: BugReport[] = value.map(item => {
         return {
-          // id: item.payload.doc.id,
+          id: item.payload.doc.id,
           ...item.payload.doc.data()
         };
       });
@@ -431,7 +431,7 @@ export class FirebaseService {
       const playersArray = [];
       value.map(item => {
         playersArray.push({
-          // id: item.payload.doc.id,
+          id: item.payload.doc.id,
           ...item.payload.doc.data()
         });
       });
