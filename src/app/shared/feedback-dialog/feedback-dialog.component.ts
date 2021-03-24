@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {StorageService} from '../../services/storage.service';
@@ -12,7 +12,8 @@ import {LZString} from '../../utils/lz-string';
 @Component({
   selector: 'app-feedback-dialog',
   templateUrl: './feedback-dialog.component.html',
-  styleUrls: ['./feedback-dialog.component.css']
+  styleUrls: ['./feedback-dialog.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FeedbackDialogComponent implements OnInit {
 

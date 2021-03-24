@@ -11,6 +11,7 @@ import {Player} from '../../interfaces/player';
 import {Observable} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 import {PlayerStats} from '../../interfaces/player-stats';
+import {ConfigService} from '../../services/config.service';
 
 @Component({
   selector: 'app-players-list-dialog',
@@ -24,7 +25,8 @@ export class PlayersListDialogComponent implements OnInit {
 
   constructor(private store: Store<AppState>,
               private dialogRef: MatDialogRef<PlayersListDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: { clubName: string }) {
+              @Inject(MAT_DIALOG_DATA) public data: { clubName: string },
+              public config: ConfigService) {
   }
 
   ngOnInit(): void {

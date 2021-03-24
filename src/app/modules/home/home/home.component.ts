@@ -97,7 +97,7 @@ export class HomeComponent implements OnInit {
   loadSavedGame() {
     this.store.dispatch(loadSavedGame({data: this.savedGame}));
     this.userName.setValue(this.savedGame.userName);
-    this.snack.createSnackBar('Сохранение загружено');
+    this.snack.createSnackBar($localize `Сохранение загружено`);
     // TODO make better
     this.submitName();
   }

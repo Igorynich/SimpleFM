@@ -1,10 +1,10 @@
-<h3 class="text-center">Баг репорт от {{data.date | date: 'medium'}}</h3>
+<h3 class="text-center" i18n>Баг репорт от {{data.date | date: 'medium'}}</h3>
 <p>{{data.text}}</p>
 <div class="row justify-content-between">
   <div class="col-2">
-    <button mat-flat-button color="primary" (click)="close()">Закрыть</button>
+    <button mat-flat-button color="primary" (click)="close()" i18n>Закрыть</button>
   </div>
   <div class="col-2">
-    <button mat-flat-button color="warn" (click)="loadSave()">Загрузить</button>
+    <button mat-flat-button color="warn" (click)="loadSave()" i18n>Загрузить</button>
   </div>
 </div>

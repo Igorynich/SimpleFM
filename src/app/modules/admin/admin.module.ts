@@ -65,9 +65,6 @@ const routes = [
     MatListModule
   ],
   entryComponents: [
-    EditCountryDialogComponent,
-    EditLeagueDialogComponent,
-    AddCountryDialogComponent
   ]
 })
 export class AdminModule { }

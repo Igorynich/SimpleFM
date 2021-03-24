@@ -14,7 +14,7 @@
                 {{player.position}}
               </div>
               <div class="col-7">
-                {{player.nameRu}}
+                {{player[config.name]}}
               </div>
               <div class="col-2">
                 {{player.power}}
@@ -35,7 +35,7 @@
 </div>
 <div class="row justify-content-center">
   <div class="col-1">
-    <button mat-raised-button color="primary" [mat-dialog-close]="null">Закрыть</button>
+    <button mat-raised-button color="primary" [mat-dialog-close]="null" i18n>Закрыть</button>
   </div>
 </div>
 

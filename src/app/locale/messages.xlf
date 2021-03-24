@@ -69,6 +69,13 @@
           <context context-type="linenumber">49,51</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="1162851688320870368" datatype="html">
+        <source>Сохранение загружено</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/home/home/home.component.ts</context>
+          <context context-type="linenumber">100</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="8bfbf1e5e392c56354cd3c8b368a3eef99ec61c5" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{offeringClub[config.name]}}"/> (<x id="INTERPOLATION_1" equiv-text="{{offeringClubLeaguePosition$ | async}}"/> место в <x id="INTERPOLATION_2" equiv-text="{{offeringClub[config.leagueName]}}"/>) - приглашает вас занять место главного тренера</source>
         <context-group purpose="location">
@@ -674,6 +681,35 @@
           <context context-type="sourcefile">src/app/modules/transfer-market/sell-player-dialog/sell-player-dialog.component.html</context>
           <context context-type="linenumber">37</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/players-list-dialog/players-list-dialog.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/report-dialog/report-dialog.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7715363419263983005" datatype="html">
+        <source>Продать <x id="PH" equiv-text="player[this.config.name]"/>(<x id="PH_1" equiv-text="player.position"/>-<x id="PH_2" equiv-text="player.power"/>) за <x id="PH_3" equiv-text="this.currencyPipe.transform(player.price)"/>M?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/transfer-market/sell-player-dialog/sell-player-dialog.component.ts</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6391122910344454350" datatype="html">
+        <source>Больше нельзя продавать игроков на этой неделе</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/transfer-market/sell-player-dialog/sell-player-dialog.component.ts</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8213008303743484791" datatype="html">
+        <source>Мало игроков этой позиции</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/transfer-market/sell-player-dialog/sell-player-dialog.component.ts</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="dd602d13f46d13b6652d10d7b3097b1cb96818be" datatype="html">
         <source> Сез. <x id="INTERPOLATION" equiv-text="{{transfer.season + 1}}"/> </source>
@@ -777,6 +813,48 @@
           <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="49dcd59da5ce34fe2010530997710d517f9a6d49" datatype="html">
+        <source>Ваше замечание (предложение)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/feedback-dialog/feedback-dialog.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="52d1d65e69afa84f9bd84c9316d50a18b7f3cff0" datatype="html">
+        <source>Напишите, о чем вы хотели сообщить</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/feedback-dialog/feedback-dialog.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="f1234dd1ed35d6145006c2d0678f4ac12c22b885" datatype="html">
+        <source>Напишите, где вы заметили ошибку, как ее можно найти</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/feedback-dialog/feedback-dialog.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="63272194c0c817bfd712ad8821f1d2c95f02be41" datatype="html">
+        <source>Отправить</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/feedback-dialog/feedback-dialog.component.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="502e95ad0a8bb0984c6571c79f29f1265a1e6563" datatype="html">
+        <source>Футбольный клуб <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span style=&quot;color: blue; font-size: large&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{data[config.name]}}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> назначил на пост главного тренера <x id="START_TAG_SPAN_1" ctype="x-span_1" equiv-text="&lt;span style=&quot;color: red; font-size: large&quot;&gt;"/><x id="INTERPOLATION_1" equiv-text="{{userService.userName}}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/info-dialog/info-dialog.component.html</context>
+          <context context-type="linenumber">1,2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7e6c975ebea8b5f8b120905ca7acf9f8edf59d8e" datatype="html">
+        <source>OK</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/info-dialog/info-dialog.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="0752c7fcaedb826f1bc35d16419cddb06f7f3ec2" datatype="html">
         <source> <x id="INTERPOLATION" equiv-text="{{(matchStats$ | async).attendance}}"/> зрителей(<x id="INTERPOLATION_1" equiv-text="{{(homeClub$ | async).stadium}}"/>) </source>
         <context-group purpose="location">
@@ -791,6 +869,20 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/navigate-to-office/navigate-to-office.component.html</context>
           <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="915393e57ac574a0d99cf2bb0928da4e28c6b876" datatype="html">
+        <source>Баг репорт от <x id="INTERPOLATION" equiv-text="{{data.date | date: &apos;medium&apos;}}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/report-dialog/report-dialog.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4bc97f6114b26842c6de43a007ab81bbda605f48" datatype="html">
+        <source>Загрузить</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/report-dialog/report-dialog.component.html</context>
+          <context context-type="linenumber">8</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6476492523106928457" datatype="html">

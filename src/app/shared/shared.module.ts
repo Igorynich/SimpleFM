@@ -49,7 +49,6 @@ import { ReportDialogComponent } from './report-dialog/report-dialog.component';
     MatchResultComponent
   ],
   entryComponents: [
-    ConfirmationDialogComponent
   ]
 })
 export class SharedModule { }

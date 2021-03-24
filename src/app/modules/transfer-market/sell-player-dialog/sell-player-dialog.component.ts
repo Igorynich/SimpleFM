@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {Player} from '../../../interfaces/player';
 import {Observable} from 'rxjs';
 import {Store} from '@ngrx/store';
@@ -13,7 +13,8 @@ import {ConfigService} from '../../../services/config.service';
 @Component({
   selector: 'app-sell-player-dialog',
   templateUrl: './sell-player-dialog.component.html',
-  styleUrls: ['./sell-player-dialog.component.css']
+  styleUrls: ['./sell-player-dialog.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SellPlayerDialogComponent implements OnInit {
 
@@ -34,7 +35,7 @@ export class SellPlayerDialogComponent implements OnInit {
   sellPlayerClick(player: Player) {
     // TODO different dialog component for transfer confirmation with black jack and whores
     const dial = this.dialog.open(ConfirmationDialogComponent, {
-      data: {header: `Продать ${player.nameRu}(${player.position}-${player.power}) за ${this.currencyPipe.transform(player.price)}M?`}
+      data: {header: $localize `Продать ${player[this.config.name]}(${player.position}-${player.power}) за ${this.currencyPipe.transform(player.price)}M?`}
     });
     dial.afterClosed().pipe(take(1)).subscribe(value => {
       if (value) {
@@ -53,9 +54,9 @@ export class SellPlayerDialogComponent implements OnInit {
 
   getSellButtonTooltip(player: Player): string {
     if (this.playerNotEligibleByWeeklyLimit(player)) {
-      return 'Больше нельзя продавать игроков на этой неделе';
+      return $localize `Больше нельзя продавать игроков на этой неделе`;
     } else if (this.playerNotEligibleByPosition(player)) {
-      return 'Мало игроков этой позиции';
+      return $localize `Мало игроков этой позиции`;
     }
     return '';
   }

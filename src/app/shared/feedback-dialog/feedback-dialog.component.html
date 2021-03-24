@@ -7,13 +7,13 @@
   <div class="col">
     <form [formGroup]="form">
       <mat-form-field *ngIf="data.type === 'feedback'" class="w-100">
-        <mat-label>Ваше замечание (предложение)</mat-label>
-        <textarea matInput placeholder="Напишите, о чем вы хотели сообщить"
+        <mat-label i18n>Ваше замечание (предложение)</mat-label>
+        <textarea matInput placeholder="Напишите, о чем вы хотели сообщить" i18n-placeholder
                   formControlName="text" autofocus cdkTextareaAutosize rows="5" cdkAutosizeMaxRows="10"></textarea>
       </mat-form-field>
       <mat-form-field *ngIf="data.type === 'bug'" class="w-100">
         <mat-label>Описание ошибки</mat-label>
-        <textarea matInput placeholder="Напишите, где вы заметили ошибку, как ее можно найти"
+        <textarea matInput placeholder="Напишите, где вы заметили ошибку, как ее можно найти" i18n-placeholder
                   formControlName="text" autofocus cdkTextareaAutosize rows="5" cdkAutosizeMaxRows="10"></textarea>
       </mat-form-field>
     </form>
@@ -21,6 +21,6 @@
 </div>
 <div class="row justify-content-center">
   <div class="col-4">
-    <button mat-raised-button (click)="send()" class="w-100">Отправить</button>
+    <button mat-raised-button (click)="send()" class="w-100" i18n>Отправить</button>
   </div>
 </div>

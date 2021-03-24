@@ -7,7 +7,7 @@
     "ng:serve": "ng serve -o",
     "ng:serve-en": "ng serve -o --configuration=en",
     "ng:serve:electron": "ng serve -c=electron",
-    "i18n-extract": "ng xi18n --output-path src/app/locale && xliffmerge --profile xliffmerge.json en",
+    "i18n-extract": "ng extract-i18n --output-path src/app/locale && xliffmerge --profile xliffmerge.json en",
     "electron:start": "npm-run-all -p ng:serve:electron electron:serve",
     "build": "ng build --prod=true --base-href ./ --stats-json",
     "test": "ng test",

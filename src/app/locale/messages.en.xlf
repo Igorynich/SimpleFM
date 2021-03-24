@@ -10,6 +10,22 @@
           <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="915393e57ac574a0d99cf2bb0928da4e28c6b876" datatype="html">
+        <source>Баг репорт от <x id="INTERPOLATION" equiv-text="{{data.date | date: 'medium'}}"/></source>
+        <target>Bug report from <x id="INTERPOLATION" equiv-text="{{data.date | date: 'medium'}}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/report-dialog/report-dialog.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4bc97f6114b26842c6de43a007ab81bbda605f48" datatype="html">
+        <source>Загрузить</source>
+        <target>Load</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/report-dialog/report-dialog.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="6476492523106928457" datatype="html">
         <source>Увеличение вместительности стадиона на <x id="PH" equiv-text="step"/></source>
         <target>Increased stadium capacity by <x id="PH" equiv-text="step"/></target>
@@ -655,6 +671,38 @@
           <context context-type="sourcefile">src/app/modules/transfer-market/sell-player-dialog/sell-player-dialog.component.html</context>
           <context context-type="linenumber">37</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/players-list-dialog/players-list-dialog.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/report-dialog/report-dialog.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7715363419263983005" datatype="html">
+        <source>Продать <x id="PH" equiv-text="player[this.config.name]"/>(<x id="PH_1" equiv-text="player.position"/>-<x id="PH_2" equiv-text="player.power"/>) за <x id="PH_3" equiv-text="this.currencyPipe.transform(player.price)"/>M?</source>
+        <target>Sell <x id="PH" equiv-text="player[this.config.name]"/>(<x id="PH_1" equiv-text="player.position"/>-<x id="PH_2" equiv-text="player.power"/>) for <x id="PH_3" equiv-text="this.currencyPipe.transform(player.price)"/>M?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/transfer-market/sell-player-dialog/sell-player-dialog.component.ts</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6391122910344454350" datatype="html">
+        <source>Больше нельзя продавать игроков на этой неделе</source>
+        <target>Can't sell more players this week</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/transfer-market/sell-player-dialog/sell-player-dialog.component.ts</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8213008303743484791" datatype="html">
+        <source>Мало игроков этой позиции</source>
+        <target>Not enough players of this position</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/transfer-market/sell-player-dialog/sell-player-dialog.component.ts</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="c0d76a904d0734f33b10167928a2be2a24324bf4" datatype="html">
         <source>Продать игрока</source>
@@ -734,6 +782,54 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/confirmation-dialog/confirmation-dialog.component.ts</context>
           <context context-type="linenumber">19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="49dcd59da5ce34fe2010530997710d517f9a6d49" datatype="html">
+        <source>Ваше замечание (предложение)</source>
+        <target>Your comment (suggestion)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/feedback-dialog/feedback-dialog.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="52d1d65e69afa84f9bd84c9316d50a18b7f3cff0" datatype="html">
+        <source>Напишите, о чем вы хотели сообщить</source>
+        <target>Write your message</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/feedback-dialog/feedback-dialog.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="f1234dd1ed35d6145006c2d0678f4ac12c22b885" datatype="html">
+        <source>Напишите, где вы заметили ошибку, как ее можно найти</source>
+        <target>Write where did you find a bug, how can it be recreated</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/feedback-dialog/feedback-dialog.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="63272194c0c817bfd712ad8821f1d2c95f02be41" datatype="html">
+        <source>Отправить</source>
+        <target>Send</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/feedback-dialog/feedback-dialog.component.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="502e95ad0a8bb0984c6571c79f29f1265a1e6563" datatype="html">
+        <source>Футбольный клуб <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span style=&quot;color: blue; font-size: large&quot;>"/><x id="INTERPOLATION" equiv-text="{{data[config.name]}}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/> назначил на пост главного тренера <x id="START_TAG_SPAN_1" ctype="x-span_1" equiv-text="&lt;span style=&quot;color: red; font-size: large&quot;>"/><x id="INTERPOLATION_1" equiv-text="{{userService.userName}}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/>!</source>
+        <target>Football Club <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span style=&quot;color: blue; font-size: large&quot;>"/><x id="INTERPOLATION" equiv-text="{{data[config.name]}}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/> announces <x id="START_TAG_SPAN_1" ctype="x-span_1" equiv-text="&lt;span style=&quot;color: red; font-size: large&quot;>"/><x id="INTERPOLATION_1" equiv-text="{{userService.userName}}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/> as their new Manager!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/info-dialog/info-dialog.component.html</context>
+          <context context-type="linenumber">1,2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7e6c975ebea8b5f8b120905ca7acf9f8edf59d8e" datatype="html">
+        <source>OK</source>
+        <target>OK</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/info-dialog/info-dialog.component.html</context>
+          <context context-type="linenumber">5</context>
         </context-group>
       </trans-unit>
       <trans-unit id="d95e7faf10a7b1fa7dd1bba8481e078c93077ce1" datatype="html">
@@ -1010,6 +1106,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/home/home/home.component.html</context>
           <context context-type="linenumber">49</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1162851688320870368" datatype="html">
+        <source>Сохранение загружено</source>
+        <target>Save loaded</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/home/home/home.component.ts</context>
+          <context context-type="linenumber">100</context>
         </context-group>
       </trans-unit>
     </body>
