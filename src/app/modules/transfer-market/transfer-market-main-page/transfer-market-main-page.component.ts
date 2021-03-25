@@ -19,6 +19,7 @@ import {take} from 'rxjs/operators';
 import {SellPlayerDialogComponent} from '../sell-player-dialog/sell-player-dialog.component';
 import {SnackBarService} from '../../../services/snack-bar.service';
 import {Transfer1} from '../../../interfaces/transfer1';
+import {ConfigService} from '../../../services/config.service';
 
 @CleanSubscriptions()
 @Component({
@@ -38,7 +39,8 @@ export class TransferMarketMainPageComponent implements OnInit, OnDestroy {
               private store: Store<AppState>,
               private dialog: MatDialog,
               private currencyPipe: CurrencyPipe,
-              private snack: SnackBarService) { }
+              private snack: SnackBarService,
+              private config: ConfigService) { }
 
   ngOnInit(): void {
     // this.curClub$ = this.store.select(selectCurrentClub);
@@ -52,7 +54,7 @@ export class TransferMarketMainPageComponent implements OnInit, OnDestroy {
   buyPlayerClick(player: Player) {
     // TODO different dialog component for transfer confirmation with black jack and whores
     const dial = this.dialog.open(ConfirmationDialogComponent, {
-      data: {header: `Купить ${player.nameRu}(${player.position}-${player.power}) за ${this.currencyPipe.transform(player.price)}M?`}
+      data: {header: $localize `Купить ${player[this.config.name]}(${player.position}-${player.power}) за ${this.currencyPipe.transform(player.price)}M?`}
     });
     clearSubscription(this._dialogSub);
     this._dialogSub = dial.afterClosed().pipe(take(1)).subscribe(value => {
@@ -72,7 +74,7 @@ export class TransferMarketMainPageComponent implements OnInit, OnDestroy {
       if (value) {
         const newClubForAPlayer = this.transferService.findABuyerForAPlayer(value);
         this.store.dispatch(playerTransferToAClub({player: value, clubsNameEn: newClubForAPlayer.nameEn}));
-        this.snack.createSnackBar(`${value.nameRu} был продан в ${newClubForAPlayer.nameRu} за ${value.price}M`);
+        this.snack.createSnackBar($localize `${value[this.config.name]} был продан в ${newClubForAPlayer[this.config.name]} за ${value.price}M`);
       }
     });
   }

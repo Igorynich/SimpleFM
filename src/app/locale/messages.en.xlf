@@ -428,171 +428,217 @@
         <source> Поз</source>
         <target> Pos</target>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/season-end/championship-season-results/championship-season-results.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/season-end/players-season-results/players-season-results.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">16</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">134</context>
-        </context-group>
-        <note priority="1" from="description">table header</note>
       </trans-unit>
       <trans-unit id="1def93b6db13cc5a94b40352d8c8429f7c31ce44" datatype="html">
         <source> Клуб</source>
         <target> Club</target>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/season-end/championship-season-results/championship-season-results.component.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/season-end/players-season-results/players-season-results.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
           <context context-type="linenumber">11</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">23</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">141</context>
-        </context-group>
-        <note priority="1" from="description">table header</note>
       </trans-unit>
       <trans-unit id="0157717d03ad08c7df433fee45f7fe6ab19511c8" datatype="html">
         <source> И</source>
         <target> G</target>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/season-end/championship-season-results/championship-season-results.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/season-end/players-season-results/players-season-results.component.html</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">30</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">148</context>
-        </context-group>
-        <note priority="1" from="description">table header</note>
       </trans-unit>
       <trans-unit id="7e98f714ffb9d3d7547a778128e5709e6de2ed24" datatype="html">
         <source> В</source>
         <target> W</target>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/season-end/championship-season-results/championship-season-results.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/season-end/players-season-results/players-season-results.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
           <context context-type="linenumber">27</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">37</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">155</context>
-        </context-group>
-        <note priority="1" from="description">table header</note>
       </trans-unit>
       <trans-unit id="7831c7fbd43be3ca89c9387e09d4f1a6a1eddee4" datatype="html">
         <source> Н</source>
         <target> D</target>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/season-end/championship-season-results/championship-season-results.component.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/season-end/players-season-results/players-season-results.component.html</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
           <context context-type="linenumber">34</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">44</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">162</context>
-        </context-group>
-        <note priority="1" from="description">table header</note>
       </trans-unit>
       <trans-unit id="a99ae0a9158003177bd0be9ecf7c976cd085519a" datatype="html">
         <source> П</source>
         <target> L</target>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/season-end/championship-season-results/championship-season-results.component.html</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/season-end/players-season-results/players-season-results.component.html</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
           <context context-type="linenumber">41</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">51</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">169</context>
-        </context-group>
-        <note priority="1" from="description">table header</note>
       </trans-unit>
       <trans-unit id="568dfc93c4b52cb92bdd722111e02b951d9487db" datatype="html">
         <source> ЗМ</source>
         <target> GF</target>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/season-end/championship-season-results/championship-season-results.component.html</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/season-end/players-season-results/players-season-results.component.html</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
           <context context-type="linenumber">48</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">58</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">176</context>
-        </context-group>
-        <note priority="1" from="description">table header</note>
       </trans-unit>
       <trans-unit id="91ede02147c89e04219f2f092a0277a76322b262" datatype="html">
         <source> ПМ</source>
         <target> GA</target>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/season-end/championship-season-results/championship-season-results.component.html</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/season-end/players-season-results/players-season-results.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
           <context context-type="linenumber">55</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">65</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">183</context>
-        </context-group>
-        <note priority="1" from="description">table header</note>
       </trans-unit>
       <trans-unit id="35d9e6bf726179f60c1de1a56a150d52d7c79a68" datatype="html">
         <source> РМ</source>
         <target> GD</target>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/season-end/championship-season-results/championship-season-results.component.html</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/season-end/players-season-results/players-season-results.component.html</context>
+          <context context-type="linenumber">63</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
           <context context-type="linenumber">62</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">72</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">190</context>
-        </context-group>
-        <note priority="1" from="description">table header</note>
       </trans-unit>
       <trans-unit id="f04544fb80b7132bcacd4c22eeb3fad3ece74472" datatype="html">
         <source> О</source>
         <target> P</target>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/season-end/championship-season-results/championship-season-results.component.html</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/season-end/players-season-results/players-season-results.component.html</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
           <context context-type="linenumber">69</context>
         </context-group>
+      </trans-unit>
+      <trans-unit id="6e97cbb668dfa65d54c1905532915555fbcb4f40" datatype="html">
+        <source> Бомбардиры: <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span *ngFor=&quot;let pl of (bestScorersForEachLeague$ | async)[i].goals.players&quot;>"/><x id="INTERPOLATION" equiv-text="{{pl.nameRu}}"/> <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/> - <x id="INTERPOLATION_1" equiv-text="{{(bestScorersForEachLeague$ | async)[i].goals.q}}"/> голов </source>
+        <target> Goalscorers: <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span *ngFor=&quot;let pl of (bestScorersForEachLeague$ | async)[i].goals.players&quot;>"/><x id="INTERPOLATION" equiv-text="{{pl.nameRu}}"/> <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/> - <x id="INTERPOLATION_1" equiv-text="{{(bestScorersForEachLeague$ | async)[i].goals.q}}"/> goals </target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="sourcefile">src/app/modules/season-end/championship-season-results/championship-season-results.component.html</context>
+          <context context-type="linenumber">89,92</context>
         </context-group>
+      </trans-unit>
+      <trans-unit id="aacd09779bf0f4cd49a48856bc0b0275b49134dc" datatype="html">
+        <source> Ассистенты: <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span *ngFor=&quot;let pl of (bestScorersForEachLeague$ | async)[i].assists.players&quot;>"/><x id="INTERPOLATION" equiv-text="{{pl.nameRu}}"/> <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/> - <x id="INTERPOLATION_1" equiv-text="{{(bestScorersForEachLeague$ | async)[i].assists.q}}"/> пасов </source>
+        <target> Assistants: <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span *ngFor=&quot;let pl of (bestScorersForEachLeague$ | async)[i].assists.players&quot;>"/><x id="INTERPOLATION" equiv-text="{{pl.nameRu}}"/> <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/> - <x id="INTERPOLATION_1" equiv-text="{{(bestScorersForEachLeague$ | async)[i].assists.q}}"/> assists </target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">197</context>
+          <context context-type="sourcefile">src/app/modules/season-end/championship-season-results/championship-season-results.component.html</context>
+          <context context-type="linenumber">94,97</context>
         </context-group>
-        <note priority="1" from="description">table header</note>
+      </trans-unit>
+      <trans-unit id="a19ffab92a6a448ce2fdbd83ea13cf4ec94eb57f" datatype="html">
+        <source> Г+П: <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span *ngFor=&quot;let pl of (bestScorersForEachLeague$ | async)[i].ga.players; let i1 = index&quot;>"/><x id="INTERPOLATION" equiv-text="{{pl.nameRu}}"/>(<x id="INTERPOLATION_1" equiv-text="{{(bestScorersForEachLeague$ | async)[i].ga.sum[i1]}}"/>) <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/> - <x id="INTERPOLATION_2" equiv-text="{{(bestScorersForEachLeague$ | async)[i].ga.q}}"/> балов </source>
+        <target> G+A: <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span *ngFor=&quot;let pl of (bestScorersForEachLeague$ | async)[i].ga.players; let i1 = index&quot;>"/><x id="INTERPOLATION" equiv-text="{{pl.nameRu}}"/>(<x id="INTERPOLATION_1" equiv-text="{{(bestScorersForEachLeague$ | async)[i].ga.sum[i1]}}"/>) <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/> - <x id="INTERPOLATION_2" equiv-text="{{(bestScorersForEachLeague$ | async)[i].ga.q}}"/> points </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/season-end/championship-season-results/championship-season-results.component.html</context>
+          <context context-type="linenumber">99,102</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3dae6f2bd7bfc9630705ba1b7656f7b2a3bd5668" datatype="html">
+        <source> Призовые за выступление в лиге составили <x id="INTERPOLATION" equiv-text="{{playersLeaguePrizeMoney$ | async | currency}}"/> </source>
+        <target> Prize Money for league participation was <x id="INTERPOLATION" equiv-text="{{playersLeaguePrizeMoney$ | async | currency}}"/> </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/season-end/players-season-results/players-season-results.component.html</context>
+          <context context-type="linenumber">81,83</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="bbe9aca9a00a3d14c3fee9602fc05a8963bb1749" datatype="html">
+        <source> <x id="INTERPOLATION" equiv-text="{{(curClub$ | async)[config.name]}}"/> под руководством <x id="INTERPOLATION_1" equiv-text="{{userService.userName}}"/> выиграл Кубок! </source>
+        <target> <x id="INTERPOLATION" equiv-text="{{(curClub$ | async)[config.name]}}"/> with <x id="INTERPOLATION_1" equiv-text="{{userService.userName}}"/> as their Manager won The Cup! </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/season-end/players-season-results/players-season-results.component.html</context>
+          <context context-type="linenumber">86,88</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="e7703712db29be1a9c417ad9bb4f63de8c53c6f7" datatype="html">
+        <source> <x id="INTERPOLATION" equiv-text="{{(curClub$ | async)[config.name]}}"/> под руководством <x id="INTERPOLATION_1" equiv-text="{{userService.userName}}"/> добрался до <x id="INTERPOLATION_2" equiv-text="{{(playersCupResult$ | async).eliminated}}"/> раунда кубка! </source>
+        <target> <x id="INTERPOLATION" equiv-text="{{(curClub$ | async)[config.name]}}"/> with <x id="INTERPOLATION_1" equiv-text="{{userService.userName}}"/> as their Manager got to round <x id="INTERPOLATION_2" equiv-text="{{(playersCupResult$ | async).eliminated}}"/> of The Cup! </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/season-end/players-season-results/players-season-results.component.html</context>
+          <context context-type="linenumber">91,94</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="55ee9be300a04a5e231a67be7d5a892fb2624785" datatype="html">
+        <source> Призовые за выступление в кубке составили <x id="INTERPOLATION" equiv-text="{{playersCupPrizeMoney$ | async | currency}}"/> </source>
+        <target> Prize Money for cup participation was <x id="INTERPOLATION" equiv-text="{{playersCupPrizeMoney$ | async | currency}}"/> </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/season-end/players-season-results/players-season-results.component.html</context>
+          <context context-type="linenumber">97,99</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="8980f366dfa01518ba580b43060f508b0d135651" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{tour}}"/> тур(неделя <x id="INTERPOLATION_1" equiv-text="{{week}}"/>)</source>
@@ -753,6 +799,22 @@
           <context context-type="linenumber">14</context>
         </context-group>
         <note priority="1" from="description">tab label</note>
+      </trans-unit>
+      <trans-unit id="8473719738473089427" datatype="html">
+        <source>Купить <x id="PH" equiv-text="player[this.config.name]"/>(<x id="PH_1" equiv-text="player.position"/>-<x id="PH_2" equiv-text="player.power"/>) за <x id="PH_3" equiv-text="this.currencyPipe.transform(player.price)"/>M?</source>
+        <target>Buy <x id="PH" equiv-text="player[this.config.name]"/>(<x id="PH_1" equiv-text="player.position"/>-<x id="PH_2" equiv-text="player.power"/>) for <x id="PH_3" equiv-text="this.currencyPipe.transform(player.price)"/>M?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/transfer-market/transfer-market-main-page/transfer-market-main-page.component.ts</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1071360595099685461" datatype="html">
+        <source><x id="PH" equiv-text="value[this.config.name]"/> был продан в <x id="PH_1" equiv-text="newClubForAPlayer[this.config.name]"/> за <x id="PH_2" equiv-text="value.price"/>M</source>
+        <target><x id="PH" equiv-text="value[this.config.name]"/> has been sold to <x id="PH_1" equiv-text="newClubForAPlayer[this.config.name]"/> for <x id="PH_2" equiv-text="value.price"/>M</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/transfer-market/transfer-market-main-page/transfer-market-main-page.component.ts</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="a5b850aa9ad7205ab7d62d7180431d7fb238778a" datatype="html">
         <source> <x id="INTERPOLATION" equiv-text="{{player.price | currency}}"/>M </source>
@@ -953,53 +1015,12 @@
           <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="04dcab4e00d80544868fa75b26e3a317d6992922" datatype="html">
-        <source> Призовые за выступление в лиге составили <x id="INTERPOLATION" equiv-text="{{playersLeaguePrizeMoney$ | async | currency}}"/> </source>
-        <target>
-                  Prize money for League Participation was <x id="INTERPOLATION" equiv-text="{{playersLeaguePrizeMoney$ | async | currency}}"/>
-                </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">90</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="9e680dc1d8b691ada345551fe38de6cd9abdbd59" datatype="html">
-        <source> <x id="INTERPOLATION" equiv-text="{{(curClub$ | async)[config.name]}}"/> под руководством <x id="INTERPOLATION_1" equiv-text="{{userService.userName}}"/> выиграл Кубок! </source>
-        <target>
-                  <x id="INTERPOLATION" equiv-text="{{(curClub$ | async)[config.name]}}"/> with <x id="INTERPOLATION_1" equiv-text="{{userService.userName}}"/> as their Manager, won The Cup!
-                </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">95</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="9ae0296c7398cc64817e56b1e1a637e1b20a50db" datatype="html">
-        <source> <x id="INTERPOLATION" equiv-text="{{(curClub$ | async)[config.name]}}"/> под руководством <x id="INTERPOLATION_1" equiv-text="{{userService.userName}}"/> добрался до <x id="INTERPOLATION_2" equiv-text="{{(playersCupResult$ | async).eliminated}}"/> раунда кубка! </source>
-        <target>
-                  <x id="INTERPOLATION" equiv-text="{{(curClub$ | async)[config.name]}}"/> with <x id="INTERPOLATION_1" equiv-text="{{userService.userName}}"/> as their Manager got to round
-                  <x id="INTERPOLATION_2" equiv-text="{{(playersCupResult$ | async).eliminated}}"/> of The Cup!
-                </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">100</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="b46b1540c0c74eb659306fb88213c5246d082e31" datatype="html">
-        <source> Призовые за выступление в кубке составили <x id="INTERPOLATION" equiv-text="{{playersCupPrizeMoney$ | async | currency}}"/> </source>
-        <target>
-                  Prize money for Cup Participation was <x id="INTERPOLATION" equiv-text="{{playersCupPrizeMoney$ | async | currency}}"/>
-                </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">106</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="e2cc399f2e6330cca61f33b3e7132a16d093b56a" datatype="html">
         <source>Далее</source>
         <target>Continue</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">112</context>
+          <context context-type="linenumber">13</context>
         </context-group>
       </trans-unit>
       <trans-unit id="b31d71ba2afe75c1072b4e66e7f1318747e1176d" datatype="html">
@@ -1007,59 +1028,23 @@
         <target>Championship Season Results</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">117</context>
+          <context context-type="linenumber">18</context>
         </context-group>
       </trans-unit>
       <trans-unit id="efe386e9a5070557e0f20ea80b375b8bab0e3be3" datatype="html">
         <source>Победитель лиги: <x id="INTERPOLATION" equiv-text="{{(leagueWinner$ | async)[config.name]}}"/></source>
         <target>League Winner: <x id="INTERPOLATION" equiv-text="{{(leagueWinner$ | async)[config.name]}}"/></target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">120</context>
+          <context context-type="sourcefile">src/app/modules/season-end/championship-season-results/championship-season-results.component.html</context>
+          <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit>
       <trans-unit id="04d9633e47daa03a886955217201b59f08bbdbf8" datatype="html">
         <source>Победитель кубка: <x id="INTERPOLATION" equiv-text="{{(cupWinner$ | async)[config.name]}}"/></source>
         <target>Cup Winner: <x id="INTERPOLATION" equiv-text="{{(cupWinner$ | async)[config.name]}}"/></target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">125</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="c2985d8b982090328cf23a14aa4f9451ca2d54bd" datatype="html">
-        <source> Бомбардиры: <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span *ngFor=&quot;let pl of (bestScorersForEachLeague$ | async)[i].goals.players&quot;>"/><x id="INTERPOLATION" equiv-text="{{pl.nameRu}}"/> <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/> - <x id="INTERPOLATION_1" equiv-text="{{(bestScorersForEachLeague$ | async)[i].goals.q}}"/> голов </source>
-        <target>
-                    Goalscorers:
-                    <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span>"/><x id="INTERPOLATION" equiv-text="{{pl.nameRu}}"/> <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/>
-                    - <x id="INTERPOLATION_1" equiv-text="{{(bestScorersForEachLeague$ | async)[i].goals.q}}"/> goals
-                  </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">206</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="97bac3ae1ed3a45d466c4d78e068806ccf33324f" datatype="html">
-        <source> Ассистенты: <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span *ngFor=&quot;let pl of (bestScorersForEachLeague$ | async)[i].assists.players&quot;>"/><x id="INTERPOLATION" equiv-text="{{pl.nameRu}}"/> <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/> - <x id="INTERPOLATION_1" equiv-text="{{(bestScorersForEachLeague$ | async)[i].assists.q}}"/> пасов </source>
-        <target>
-                    Assistants:
-                    <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span>"/><x id="INTERPOLATION" equiv-text="{{pl.nameRu}}"/> <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/>
-                    - <x id="INTERPOLATION_1" equiv-text="{{(bestScorersForEachLeague$ | async)[i].assists.q}}"/> assists
-                  </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">211</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="a607854c207d92c797eafe307b7382ebcbc8140f" datatype="html">
-        <source> Г+П: <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span *ngFor=&quot;let pl of (bestScorersForEachLeague$ | async)[i].ga.players; let i1 = index&quot;>"/><x id="INTERPOLATION" equiv-text="{{pl.nameRu}}"/>(<x id="INTERPOLATION_1" equiv-text="{{(bestScorersForEachLeague$ | async)[i].ga.sum[i1]}}"/>) <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/> - <x id="INTERPOLATION_2" equiv-text="{{(bestScorersForEachLeague$ | async)[i].ga.q}}"/> балов </source>
-        <target>
-                    G+A:
-                    <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span>"/><x id="INTERPOLATION" equiv-text="{{pl.nameRu}}"/>(<x id="INTERPOLATION_1" equiv-text="{{(bestScorersForEachLeague$ | async)[i].ga.sum[i1]}}"/>) <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/>
-                    - <x id="INTERPOLATION_2" equiv-text="{{(bestScorersForEachLeague$ | async)[i].ga.q}}"/> points
-                  </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">216</context>
+          <context context-type="sourcefile">src/app/modules/season-end/championship-season-results/championship-season-results.component.html</context>
+          <context context-type="linenumber">8</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4b6e61a972d89dd6181cfee6cc15e1285815e182" datatype="html">
@@ -1067,7 +1052,7 @@
         <target>Start New Season</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/season-end/season-end-main-page/season-end-main-page.component.html</context>
-          <context context-type="linenumber">224</context>
+          <context context-type="linenumber">22</context>
         </context-group>
       </trans-unit>
       <trans-unit id="e36df2c2fdb955a44c01110b4712bc23688595dd" datatype="html">

@@ -7,6 +7,8 @@ import {SharedModule} from '../../shared/shared.module';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatButtonModule} from '@angular/material/button';
 import {MatTableModule} from '@angular/material/table';
+import { PlayersSeasonResultsComponent } from './players-season-results/players-season-results.component';
+import { ChampionshipSeasonResultsComponent } from './championship-season-results/championship-season-results.component';
 
 
 const routes = [
@@ -17,7 +19,7 @@ const routes = [
 ];
 
 @NgModule({
-  declarations: [SeasonEndMainPageComponent],
+  declarations: [SeasonEndMainPageComponent, PlayersSeasonResultsComponent, ChampionshipSeasonResultsComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
