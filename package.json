@@ -9,7 +9,7 @@
     "ng:serve:electron": "ng serve -c=electron",
     "i18n-extract": "ng extract-i18n --output-path src/app/locale && xliffmerge --profile xliffmerge.json en",
     "electron:start": "npm-run-all -p ng:serve:electron electron:serve",
-    "build": "ng build --prod=true --base-href ./ --stats-json",
+    "build": "ng build --prod=true --base-href ./ --stats-json --verbose",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
@@ -19,7 +19,8 @@
     "electron:windows": "npm-run-all electron:serve-tsc build electron:build",
     "robotjs:rebuild": "npm rebuild --runtime=electron --target=7.1.7 --disturl=https://atom.io/download/atom-shell --abi=75",
     "bundle-report": "webpack-bundle-analyzer dist/SimpleFM/stats-es2015.json",
-    "http-serv": "http-server -p 8080 dist/SimpleFM"
+    "http-serv": "http-server -p 8080 -c-1 dist/SimpleFM",
+    "gh-pages": "ng deploy --base-href=/SimpleFM/"
   },
   "private": true,
   "dependencies": {

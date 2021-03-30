@@ -9,7 +9,10 @@
       "i18n": {
         "sourceLocale": "ru",
         "locales": {
-          "en": "src/app/locale/messages.en.xlf"
+          "en": {
+            "translation": "src/app/locale/messages.en.xlf",
+            "baseHref": ""
+          }
         }
       },
       "root": "",
@@ -57,10 +60,17 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-              "optimization": true,
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": false,
+                  "inlineCritical": true
+                },
+                "fonts": true
+              },
               "outputHashing": "all",
               "sourceMap": false,
-              "namedChunks": false,
+              "namedChunks": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -68,7 +78,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "10mb"
+                  "maximumError": "20mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -107,7 +117,9 @@
               ]
             },
             "en": {
-              "localize": ["en"]
+              "localize": [
+                "en"
+              ]
             }
           }
         },
@@ -179,7 +191,7 @@
           }
         },
         "deploy": {
-          "builder": "@angular/fire:deploy",
+          "builder": "angular-cli-ghpages:deploy",
           "options": {}
         }
       }
