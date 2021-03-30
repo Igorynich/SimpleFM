@@ -1,5 +1,6 @@
 <div class="row">
   <div class="col">
-    <button mat-raised-button color="primary" (click)="navigateToOffice()" i18n>Назад</button>
+    <button mat-raised-button color="primary" (click)="navigateToOffice()" i18n [disabled]="isDisabled()"
+      matTooltip="Вернуться в кабинет" i18n-matTooltip>Назад</button>
   </div>
 </div>

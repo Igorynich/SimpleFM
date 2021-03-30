@@ -1,3 +1,4 @@
+<h3 class="text-center header" i18n>Финансовые операции за сезон {{curSeason$ | async}}</h3>
 <div class="row" *ngFor="let week of weeksTo(curWeek$ | async)">
   <div class="col-2" i18n>
     Неделя {{week}}
@@ -17,10 +18,5 @@
   <div class="col" [ngClass]="{'red': (curClub$ | async).budget < 0,
    'green': (curClub$ | async).budget > 0}" i18n>
     Бюджет: {{(curClub$ | async).budget | currency}}M
-  </div>
-</div>
-<div class="row justify-content-end">
-  <div class="col-1">
-    <app-navigate-to-office></app-navigate-to-office>
   </div>
 </div>

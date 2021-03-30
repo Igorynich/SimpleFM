@@ -1,4 +1,6 @@
-<div class="row schedule-header">
+<h3 i18n class="header">Расписание {{curSeason$ | async}}-го сезона</h3>
+
+<div class="row schedule-header m-0">
   <div class="col-2" i18n="schedule header">
     Неделя
   </div>
@@ -16,16 +18,10 @@
   </div>
 </div>
 
-<div class="row schedule-body">
+<div class="row schedule-body m-0">
   <div class="col">
     <app-schedule-list-item [match]="match" [week]="i + 1"
                             *ngFor="let match of (curClubsSchedule$ | async); let i = index">
     </app-schedule-list-item>
-  </div>
-</div>
-
-<div class="row justify-content-end">
-  <div class="col-1">
-    <app-navigate-to-office></app-navigate-to-office>
   </div>
 </div>

@@ -4,7 +4,7 @@
       <app-transfer-list [listedPlayers]="listedPlayers$ | async" (buy)="buyPlayerClick($event)"
                          (remove)="removePlayerFromList($event)">
       </app-transfer-list>
-      <div class="row">
+      <div class="row m-0">
         <div class="col">
           <button mat-raised-button (click)="sellPlayerClick()" i18n>Продать игрока</button>
         </div>
@@ -17,9 +17,3 @@
     </ng-template>
   </mat-tab>
 </mat-tab-group>
-
-<div class="row justify-content-end">
-  <div class="col-1">
-    <app-navigate-to-office></app-navigate-to-office>
-  </div>
-</div>

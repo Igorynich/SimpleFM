@@ -19,6 +19,8 @@ import { PlayerListComponent } from './players/player-list/player-list.component
 import { PlayerListItemComponent } from './players/player-list-item/player-list-item.component';
 import { CupTableComponent } from './cup/cup-table/cup-table.component';
 import { CupMatchItemComponent } from './cup/cup-match-item/cup-match-item.component';
+import {OrganizationChartModule} from 'primeng/organizationchart';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 const routes = [
   {
@@ -51,6 +53,8 @@ const routes = [
     MatSelectModule,
     ReactiveFormsModule,
     NgSelectModule,
+    OrganizationChartModule,
+    MatTooltipModule,
   ]
 })
 export class TablesModule { }

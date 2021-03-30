@@ -24,6 +24,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   overflow: auto;
 }
 
+.header {
+  @apply text-lg mb-4 text-center;
+}
+
 .hover {
   cursor: pointer;
 }

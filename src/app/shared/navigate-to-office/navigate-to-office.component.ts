@@ -21,4 +21,8 @@ export class NavigateToOfficeComponent implements OnInit {
       console.error(reason);
     });
   }
+
+  isDisabled() {
+    return this.router.url === `/${ROUTES.OFFICE}`;
+  }
 }

@@ -7,7 +7,15 @@ module.exports = {
   },
   darkMode: 'class', // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      width: {
+        '42': '10.5rem'
+      },
+      lineHeight: {
+        'extra-loose': '2.5',
+        'mega-loose': '3',
+      }
+    },
   },
   variants: {
     extend: {},

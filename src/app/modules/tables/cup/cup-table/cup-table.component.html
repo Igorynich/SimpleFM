@@ -1,29 +1,32 @@
-<div class="row align-items-center">
-  <div class="col" *ngFor="let round of cupSchedule; let i = index">
-    <p i18n>Раунд {{i + 1}}(неделя {{cupRoundToWeek(i + 1)}})</p>
-    <app-cup-match-item [match]="match" [index]="i" *ngFor="let match of round"></app-cup-match-item>
-    <!--<div class="row my-3 mx-3" *ngFor="let match of round"
-         [ngStyle]="{'height.px': 100 * (i + 1), 'border': '2px dashed black'}">
-      <div class="col-12 text-center">
-              <span [ngStyle]="{'line-height.px': 25 * (i + 1)}"
-                    [ngClass]="{'my-club': (isMyClub$(match).home | async)}">
-                {{match.home?.nameRu || '-&#45;&#45;'}}
-              </span>
+<div class="row mr-0">
+  <div class="col">
+    <div class="flex flex-row">
+      <div class="flex-auto" *ngFor="let round of cupSchedule; let i = index">
+        <p i18n class="w-100 text-center">Неделя {{cupRoundToWeek(i + 1)}}</p>
+        <div class="flex flex-col">
+          <app-cup-match-item [match]="match" [roundIndex]="i" *ngFor="let match of round; let j = index"
+                              [numOfRounds]="cupSchedule.length" [matchIndex]="j"></app-cup-match-item>
+        </div>
       </div>
-      <div class="col-12 text-center align-middle">
-              <span [ngStyle]="{'line-height.px': 25 * (i + 1)}" *ngIf="cupScheduleStats[match.id]?.result"
-                    [appMatchTooltip]="match1ToMatch(match)">{{cupScheduleStats[match.id].result}}</span>
-        <span [ngStyle]="{'line-height.px': 25 * (i + 1)}" *ngIf="!cupScheduleStats[match.id]?.result">
-                vs
-              </span>
-      </div>
-      <div class="col-12 text-center">
-              <span [ngStyle]="{'line-height.px': 25 * (i + 1)}"
-                    [ngClass]="{'my-club': (isMyClub$(match).away | async)}">
-                {{match.away?.nameRu || '-&#45;&#45;'}}
-              </span>
-      </div>
-      &lt;!&ndash;<mat-divider></mat-divider>&ndash;&gt;
-    </div>-->
+    </div>
   </div>
 </div>
+
+<!--<div class="row overflow-auto w-100 main-container">-->
+  <!--<div class="col h-100  w-100">
+    <p-organizationChart [value]="cupTreeNode" class="h-100 w-100">
+      <ng-template let-node pTemplate="match">
+        <div class="node-header p-corner-top">{{node.label}}</div>
+        <div class="node-content">
+          <app-cup-match-item [match]="node.data"></app-cup-match-item>
+        </div>
+      </ng-template>
+    </p-organizationChart>
+  </div>-->
+
+  <!--<p-organizationChart [value]="data2"></p-organizationChart>-->
+  <!--<div class="col" *ngFor="let round of cupSchedule; let i = index">
+    <p i18n>Раунд {{i + 1}}(неделя {{cupRoundToWeek(i + 1)}})</p>
+    <app-cup-match-item [match]="match" [index]="i" *ngFor="let match of round"></app-cup-match-item>
+  </div>-->
+<!--</div>-->

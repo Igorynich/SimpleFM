@@ -18,10 +18,14 @@ import {ConfigService} from '../../../../services/config.service';
 export class CupMatchItemComponent implements OnInit {
 
   @Input() match: Match1;
-  @Input() index: number;
+  @Input() roundIndex = 0;
+  @Input() numOfRounds;
+  @Input() matchIndex = 0;
 
   curClub$: Observable<Club>;
   matchStats$: Observable<MatchStats1>;
+
+  readonly BASE_WIDTH_REM = 6;
 
   constructor(private store: Store<AppState>,
               public config: ConfigService) { }
@@ -40,5 +44,26 @@ export class CupMatchItemComponent implements OnInit {
       home: this.curClub$.pipe(map(value => value.nameEn === match.home?.nameEn)),
       away: this.curClub$.pipe(map(value => value.nameEn === match.away?.nameEn))
     };
+  }
+
+  getHeightInRem(): number {
+    return this.BASE_WIDTH_REM * Math.pow(2, this.roundIndex);
+  }
+
+  getMatchHeader(): string {
+    switch (this.numOfRounds - this.roundIndex) {
+      case 1: {
+        return $localize `Финал`;
+      }
+      case 2: {
+        return $localize `Полуфинал Матч ${this.matchIndex + 1}`;
+      }
+      case 3: {
+        return $localize `1/4 финала Матч ${this.matchIndex + 1}`;
+      }
+      default: {
+        return $localize `Раунд ${this.roundIndex + 1} Матч ${this.matchIndex + 1}`;
+      }
+    }
   }
 }

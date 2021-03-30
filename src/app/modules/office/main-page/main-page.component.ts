@@ -19,7 +19,7 @@ import {combineLatest, Observable, of, Subscription} from 'rxjs';
 import {Club} from '../../../interfaces/club';
 import {switchMap, take} from 'rxjs/operators';
 import {CleanSubscriptions} from '../../../utils/clean-subscriptions';
-import {ConfigService} from "../../../services/config.service";
+import {ConfigService} from '../../../services/config.service';
 
 @CleanSubscriptions()
 @Component({

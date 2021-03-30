@@ -1,7 +1,7 @@
 <div class="tables-schedule-body">
 
   <mat-tab-group mat-align-tabs="start" [(selectedIndex)]="leagueOrCupTab">
-    <mat-tab i18n-label="tab label" label="Лига">
+    <mat-tab i18n-label="tab label" label="Лига" class="h-100">
       <ng-select class="w-25" [items]="allLeagues$ | async"
                  [formControl]="selectedLeagueName"
                  bindLabel="{{config.name}}"
@@ -26,7 +26,7 @@
         </mat-tab>
 
         <mat-tab label="Голеадоры" i18n-label="tab label">
-          <app-player-list [playersStats]="leaguePlayersStats$ | async" [type]="'goals'"></app-player-list>
+              <app-player-list [playersStats]="leaguePlayersStats$ | async" [type]="'goals'"></app-player-list>
         </mat-tab>
         <mat-tab label="Ассистенты" i18n-label="tab label">
           <app-player-list [playersStats]="leaguePlayersStats$ | async" [type]="'assists'"></app-player-list>
@@ -37,15 +37,9 @@
       </mat-tab-group>
     </mat-tab>
 
-    <mat-tab label="Кубок" i18n-label="tab label">
-      <app-cup-table [cupSchedule]="cupSchedule$ | async"></app-cup-table>
+    <mat-tab label="Кубок" i18n-label="tab label" class="overflow-auto h-100 w-100">
+      <app-cup-table [cupSchedule]="cupSchedule$ | async" class="overflow-auto h-100 w-100"></app-cup-table>
     </mat-tab>
   </mat-tab-group>
-
-  <div class="row justify-content-end">
-    <div class="col-1">
-      <app-navigate-to-office></app-navigate-to-office>
-    </div>
-  </div>
 </div>
 

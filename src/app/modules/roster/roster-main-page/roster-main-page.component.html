@@ -1,34 +1,36 @@
-<div class="row">
-  <div class="col-6">
+<h3 i18n class="text-center header">Ваши игроки</h3>
+
+<div class="row justify-content-center">
+  <div class="col-10">
     <div class="row justify-content-between">
-      <div class="col-1 text-center" i18n="roster header">
+      <div class="col-1 text-center leading-mega-loose" i18n="roster header" matTooltip="Позиция на поле" i18n-matTooltip matTooltipPosition="above">
         Позиция
       </div>
-      <div class="col-6 text-center" i18n="roster header">
+      <div class="col-6 text-center leading-mega-loose" i18n="roster header" matTooltip="Имя игрока" i18n-matTooltip matTooltipPosition="above">
         Имя
       </div>
-      <div class="col-2 text-center" i18n="roster header">
+      <div class="col-2 text-left leading-mega-loose" i18n="roster header" matTooltip="Сила игрока(изменение за сезон)" i18n-matTooltip matTooltipPosition="above">
         Сила
       </div>
-      <div class="col-1 text-center" i18n="roster header">
+      <div class="col-1 left leading-mega-loose" i18n="roster header" matTooltip="Сыграно игр в этом сезоне" i18n-matTooltip matTooltipPosition="above">
         Игр
       </div>
-      <div class="col-1 text-center" i18n="roster header">
+      <div class="col-1 text-center leading-mega-loose" i18n="roster header" matTooltip="Гол+пас" i18n-matTooltip matTooltipPosition="above">
         Г+П
       </div>
-      <div class="col-1 text-center" i18n="roster header">
+      <div class="col-1 text-center" i18n="roster header" matTooltip="Рост силы после последней игры" i18n-matTooltip matTooltipPosition="above">
         Посл. игра
       </div>
     </div>
   </div>
 </div>
 
-<div class="row">
-  <div class="col-6" cdkDropList (cdkDropListDropped)="drop($event)" cdkDropListSortingDisabled>
+<div class="row justify-content-center">
+  <div class="col-10" cdkDropList (cdkDropListDropped)="drop($event)" cdkDropListSortingDisabled>
     <div class="row" *ngFor="let player of players; let i = index;" cdkDrag>
       <!--<div class="col drag-placeholder" *cdkDragPlaceholder>dragged</div>-->
-      <div class="col" [ngClass]="getListClass(player, i)" (mouseenter)="mouseEntered(i)">
-        <div class="row justify-content-between">
+      <div class="col p-0" [ngClass]="getListClass(player, i)" (mouseenter)="mouseEntered(i)">
+        <div class="row justify-content-between m-0 p-0">
           <div class="col-1 text-right">
             {{player.position}}
           </div>
@@ -60,10 +62,8 @@
   </div>
 </div>
 
-
-<div class="row justify-content-end">
-  <div class="col-1">
-    <app-navigate-to-office></app-navigate-to-office>
+<div class="row mt-4 justify-content-center">
+  <div class="flex flex-initial">
+    <app-tooltips [text]="'Перетаскивайте игроков, чтобы изменить стартовый состав.'" i18n-text></app-tooltips>
   </div>
 </div>
-

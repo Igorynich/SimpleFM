@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {
   AppState,
-  selectCurrentClub,
+  selectCurrentClub, selectCurrentSeason,
   selectScheduleByClubsNameEn
 } from '../../../store/selectors/current-game.selectors';
 import {map, switchMap} from 'rxjs/operators';
@@ -19,11 +19,13 @@ import {Match} from '../../../interfaces/match';
 export class ScheduleMainPageComponent implements OnInit {
 
   curClubsSchedule$: Observable<Match[]>;
+  curSeason$: Observable<number>;
 
   constructor(private store: Store<AppState>) {
   }
 
   ngOnInit(): void {
+    this.curSeason$ = this.store.select(selectCurrentSeason);
     this.curClubsSchedule$ = this.store.select(selectCurrentClub).pipe(switchMap(curClub =>
       this.store.select(selectScheduleByClubsNameEn, {clubsNameEn: curClub.nameEn})), map(schedule => {
       return schedule;

@@ -7,7 +7,7 @@ import {AppState, selectCurrentClub, selectMatchStatsByMatchId} from '../../../.
 import {Store} from '@ngrx/store';
 import {MatchStats1} from '../../../../interfaces/match-stats1';
 import {Match} from '../../../../interfaces/match';
-import {ConfigService} from "../../../../services/config.service";
+import {ConfigService} from '../../../../services/config.service';
 
 @Component({
   selector: 'app-schedule-match-item',

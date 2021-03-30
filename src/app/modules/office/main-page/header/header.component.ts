@@ -16,7 +16,8 @@ import { logOut } from 'src/app/store/actions/current-game.actions';
 import {clearSubscription} from '../../../../utils/clean-subscriptions';
 import {MatDialog} from '@angular/material/dialog';
 import {FeedbackDialogComponent} from '../../../../shared/feedback-dialog/feedback-dialog.component';
-import {ConfigService} from "../../../../services/config.service";
+import {ConfigService} from '../../../../services/config.service';
+import {ConfirmationDialogComponent} from '../../../../shared/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-header',
@@ -65,10 +66,17 @@ export class HeaderComponent implements OnInit {
   }
 
   logOut() {
-    this.router.navigate(['']).then(value => {
-      this.userService.logOut();
-    }).catch(reason => {
-      console.error(reason);
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '350px'
+    });
+    dialogRef.afterClosed().pipe(take(1)).subscribe(res => {
+      if (res) {
+        this.router.navigate(['']).then(value => {
+          this.userService.logOut();
+        }).catch(reason => {
+          console.error(reason);
+        });
+      }
     });
   }
 

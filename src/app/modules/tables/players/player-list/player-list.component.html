@@ -1,9 +1,9 @@
 <mat-list>
   <mat-list-item
     *ngFor="let goalscorersRecord of playersStats | keyvalue: compareFunc; let i = index;"
-    [ngClass]="{'hidden': i >= 10}">
+    [ngClass]="{'hidden': i >= 10}" class="list-item-length">
 
-    <app-player-list-item [playerRecord]="goalscorersRecord" [type]="type" [index]="i"></app-player-list-item>
+    <app-player-list-item [playerRecord]="goalscorersRecord" [type]="type" [index]="i" class="w-100"></app-player-list-item>
 
     <mat-divider *ngIf="i === 0"></mat-divider>
 

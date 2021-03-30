@@ -1,0 +1,10 @@
+.left-border {
+
+}
+
+:host {
+    /*border-left: dodgerblue thin solid;
+    border-top: dodgerblue thin solid;
+    border-bottom: dodgerblue thin solid;
+    margin-right: 0 !important;*/
+}

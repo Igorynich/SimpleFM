@@ -5,6 +5,7 @@ import {RouterModule} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
 import {SharedModule} from '../../shared/shared.module';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 const routes = [
   {
@@ -21,6 +22,7 @@ const routes = [
     MatButtonModule,
     SharedModule,
     DragDropModule,
+    MatTooltipModule,
   ]
 })
 export class RosterModule { }

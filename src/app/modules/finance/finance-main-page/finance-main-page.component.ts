@@ -3,7 +3,7 @@ import {Store} from '@ngrx/store';
 import {
   AppState,
   selectClubsRosterStats,
-  selectCurrentClub, selectCurrentWeek,
+  selectCurrentClub, selectCurrentSeason, selectCurrentWeek,
   selectFinanceRecordsByClubsNameEn
 } from '../../../store/selectors/current-game.selectors';
 import {switchMap} from 'rxjs/operators';
@@ -20,12 +20,14 @@ export class FinanceMainPageComponent implements OnInit {
 
   curClub$: Observable<Club>;
   curWeek$: Observable<number>;
+  curSeason$: Observable<number>;
   financeRecords$: Observable<{[week: number]: FinanceRecord[]}>;
 
   constructor(private store: Store<AppState>) { }
 
   ngOnInit(): void {
     this.curWeek$ = this.store.select(selectCurrentWeek);
+    this.curSeason$ = this.store.select(selectCurrentSeason);
     this.curClub$ = this.store.select(selectCurrentClub);
     this.financeRecords$ = this.curClub$.pipe(switchMap(curClub => {
       return this.store.select(selectFinanceRecordsByClubsNameEn, {clubsNameEn: curClub.nameEn});

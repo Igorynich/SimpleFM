@@ -2,10 +2,10 @@
   <div class="col-12">
     <div class="row justify-content-end">
       <div class="col-2">
-        <button mat-mini-fab color="primary" i18n-matTooltip matTooltip="Замечания и предложения" (click)="supportButtonClick()">
-          <mat-icon>contact_support</mat-icon>
+        <button mat-icon-button color="primary" i18n-matTooltip matTooltip="Замечания и предложения" (click)="supportButtonClick()">
+          <mat-icon>mail_outline</mat-icon>
         </button>
-        <button mat-mini-fab color="primary" i18n-matTooltip matTooltip="Сообщить об ошибке" (click)="bugReportButtonClick()">
+        <button mat-icon-button color="primary" i18n-matTooltip matTooltip="Сообщить об ошибке" (click)="bugReportButtonClick()">
           <mat-icon>bug_report</mat-icon>
         </button>
       </div>
@@ -49,14 +49,17 @@
   </div>
   <div class="col-12">
     <div class="row justify-content-end">
+      <div class="col-2">
+        <app-navigate-to-office></app-navigate-to-office>
+      </div>
       <div class="col-8 d-flex justify-content-center">
-        <button mat-raised-button color="accent" (click)="goToNextWeek()" class="" i18n>
+        <button mat-raised-button color="accent" (click)="goToNextWeek()" class="" i18n matTooltip="Перейти к след. неделе" i18n-matTooltip>
           След. неделя
         </button>
       </div>
       <div class="col-2">
         <button mat-raised-button color="warning" (click)="logOut()" class="float-right ml-3"
-                *ngIf="userService.isLogged()" i18n>
+                *ngIf="userService.isLogged()" i18n matTooltip="Выйти из игры" i18n-matTooltip>
           Выйти
         </button>
         <button mat-raised-button color="accent" (click)="navigateToAdmin()" class="float-right"

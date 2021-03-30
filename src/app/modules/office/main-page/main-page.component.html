@@ -9,7 +9,7 @@
         </div>
       </div>
       <div class="row justify-content-center h-75" *ngIf="!loading">
-        <div class="col-12" *ngIf="router.url !== '/' + ROUTES.OFFICE">
+        <div class="col-12 h-100" *ngIf="router.url !== '/' + ROUTES.OFFICE">
           <mat-card class="office-card--bot-panel h-100">
             <router-outlet></router-outlet>
           </mat-card>

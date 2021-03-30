@@ -1,3 +1,7 @@
 .hidden {
   display: none !important;
 }
+
+.list-item-length {
+  height: 2.5rem !important;
+}

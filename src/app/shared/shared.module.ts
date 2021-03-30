@@ -17,6 +17,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import { ReportDialogComponent } from './report-dialog/report-dialog.component';
+import { TooltipsComponent } from './tooltips/tooltips.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 
 
@@ -30,7 +32,8 @@ import { ReportDialogComponent } from './report-dialog/report-dialog.component';
     MatchResultComponent,
     PlayersListDialogComponent,
     FeedbackDialogComponent,
-    ReportDialogComponent
+    ReportDialogComponent,
+    TooltipsComponent
   ],
   imports: [
     CommonModule,
@@ -41,12 +44,14 @@ import { ReportDialogComponent } from './report-dialog/report-dialog.component';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatIconModule
+    MatIconModule,
+    MatTooltipModule
   ],
   exports: [
     NavigateToOfficeComponent,
     MatchTooltipDirective,
-    MatchResultComponent
+    MatchResultComponent,
+    TooltipsComponent
   ],
   entryComponents: [
   ]
