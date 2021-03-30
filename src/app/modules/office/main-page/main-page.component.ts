@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+// import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UserService} from '../../../services/user.service';
 import {ActivatedRoute, Event, NavigationEnd, NavigationStart, Router} from '@angular/router';
 import {ROUTES} from '../../../constants/routes';
@@ -20,6 +20,7 @@ import {Club} from '../../../interfaces/club';
 import {switchMap, take} from 'rxjs/operators';
 import {CleanSubscriptions} from '../../../utils/clean-subscriptions';
 import {ConfigService} from '../../../services/config.service';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 
 @CleanSubscriptions()
 @Component({
