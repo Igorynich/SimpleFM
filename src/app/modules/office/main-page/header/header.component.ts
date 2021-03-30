@@ -1,4 +1,3 @@
-import { Component, OnInit } from '@angular/core';
 import {UserService} from '../../../../services/user.service';
 import {
   AppState,
@@ -18,6 +17,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {FeedbackDialogComponent} from '../../../../shared/feedback-dialog/feedback-dialog.component';
 import {ConfigService} from '../../../../services/config.service';
 import {ConfirmationDialogComponent} from '../../../../shared/confirmation-dialog/confirmation-dialog.component';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-header',

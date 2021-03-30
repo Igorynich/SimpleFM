@@ -18,7 +18,8 @@
     "electron:build": "electron-builder build --windows",
     "electron:windows": "npm-run-all electron:serve-tsc build electron:build",
     "robotjs:rebuild": "npm rebuild --runtime=electron --target=7.1.7 --disturl=https://atom.io/download/atom-shell --abi=75",
-    "bundle-report": "webpack-bundle-analyzer dist/SimpleFM/stats-es2015.json"
+    "bundle-report": "webpack-bundle-analyzer dist/SimpleFM/stats-es2015.json",
+    "http-serv": "http-server -p 8080 dist/SimpleFM"
   },
   "private": true,
   "dependencies": {
@@ -36,6 +37,7 @@
     "@angular/platform-browser": "~11.2.6",
     "@angular/platform-browser-dynamic": "~11.2.6",
     "@angular/router": "~11.2.6",
+    "@angular/service-worker": "~11.2.6",
     "@fullcalendar/core": "^4.4.2",
     "@fullcalendar/daygrid": "^4.4.2",
     "@ng-select/ng-select": "^6.1",

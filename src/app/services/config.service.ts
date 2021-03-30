@@ -11,7 +11,8 @@ export class ConfigService {
   }
 
   get locale(): string {
-    return capitalize(this.localeId);
+    const lang = this.localeId.toLowerCase().includes('en') ? 'en' : (this.localeId.includes('ru') ? 'ru' : 'en');
+    return capitalize(lang);
   }
 
   get name(): string {

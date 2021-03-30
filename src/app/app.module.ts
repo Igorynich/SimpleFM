@@ -14,6 +14,7 @@ import {currentGameReducer} from './store/reducers/current-game.reducer';
 import {EffectsModule} from '@ngrx/effects';
 import {CurrentGameEffects} from './store/effects/current-game.effects';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     StoreModule.forRoot({currentGame: currentGameReducer}),
     EffectsModule.forRoot([CurrentGameEffects]),
     MatProgressSpinnerModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     // MatPasswordStrengthModule,
     // NgxAuthFirebaseUIModule.forRoot(environment.firebaseConfig)  // auth ui module
   ],

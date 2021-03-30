@@ -1,4 +1,3 @@
-import {Injectable} from '@angular/core';
 import {AngularFirestore, CollectionReference, QueryDocumentSnapshot} from '@angular/fire/firestore';
 import {Country} from '../interfaces/country';
 import {BehaviorSubject, from, Observable, of} from 'rxjs';
@@ -10,6 +9,7 @@ import {AngularFireAuth} from '@angular/fire/auth';
 import {StorageService} from './storage.service';
 import {BugReport} from '../interfaces/bug-report';
 import firebase from 'firebase';
+import {Injectable} from '@angular/core';
 
 export class PlayerQueryObj {
   club?: string;
@@ -44,7 +44,8 @@ export class FirebaseService {
   getScheduleShells(refreshCache = false): Observable<any> {
     if (!refreshCache) {
       const storedData = this.storage.getSavedData();
-      if (!!storedData?.scheduleShells) {
+      if (!!storedData?.scheduleShells && Object.keys(storedData?.scheduleShells).length) {
+        console.log('getScheduleShells returned from cache', storedData.countries);
         return of(storedData.scheduleShells);
       }
     }
@@ -52,10 +53,17 @@ export class FirebaseService {
       console.log('Schedules Collection', value);
       const scheduleEntity = {};
       value.forEach(item => {
-        // scheduleEntity[item.payload.doc.id] = item.payload.doc.data();
+        scheduleEntity[item.payload.doc.id] = item.payload.doc.data();
       });
       console.log('scheduleEntity', scheduleEntity);
       return scheduleEntity;
+    }), catchError(err => {
+      console.log('Err ScheduleShells', err);
+      this.progress.next({
+        loading: false,
+        loaded: false
+      });
+      return of([]);
     }));
   }
 

@@ -1,4 +1,3 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {AuthProvider} from 'ngx-auth-firebaseui';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
@@ -15,6 +14,7 @@ import { loadSavedGame } from 'src/app/store/actions/current-game.actions';
 import {CurrentGameState} from '../../../store/reducers/current-game.reducer';
 import {SnackBarService} from '../../../services/snack-bar.service';
 import {ConfigService} from '../../../services/config.service';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 
 @Component({
   selector: 'app-home',
