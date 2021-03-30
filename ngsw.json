@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1617136444681,
+  "timestamp": 1617137206899,
   "index": "/SimpleFM/index.html",
   "assetGroups": [
     {
@@ -50,7 +50,7 @@
         "/SimpleFM/schedule-schedule-module-es5.00d098d50e43c0eee5e0.js",
         "/SimpleFM/stadium-stadium-module-es2015.1f18c9838249f18df53b.js",
         "/SimpleFM/stadium-stadium-module-es5.1f18c9838249f18df53b.js",
-        "/SimpleFM/styles.90d49bb997937eb4e238.css",
+        "/SimpleFM/styles.83cc40b37d2199c2581b.css",
         "/SimpleFM/tables-tables-module-es2015.a3848b6c70a5264dce2e.js",
         "/SimpleFM/tables-tables-module-es5.a3848b6c70a5264dce2e.js",
         "/SimpleFM/transfer-market-transfer-market-module-es2015.3c988ab430a2da5f6cfb.js",
@@ -172,7 +172,7 @@
     "/SimpleFM/firebase-auth-es2015.9623963371b1e12e54d3.js": "fe6c6fdb566bfb28838db12b67b2f41c4edbd2a8",
     "/SimpleFM/firebase-auth-es5.9623963371b1e12e54d3.js": "fe6c6fdb566bfb28838db12b67b2f41c4edbd2a8",
     "/SimpleFM/hue.f8505bd4d6f3e3aa435b.png": "f81ae627637a684614aa726e206c73ce099a01fd",
-    "/SimpleFM/index.html": "776e2fe4dd4b8ee55abd10fac4c578499423397e",
+    "/SimpleFM/index.html": "455cce7afccee11b4ed547f278147e4cbbe87d5e",
     "/SimpleFM/main-es2015.d3c5c67c8f612ee599cd.js": "a362dfe208953cf8a86859029f518671671c7771",
     "/SimpleFM/main-es5.d3c5c67c8f612ee599cd.js": "4439130f739380c9506078b6ca77b1c3cb8b2881",
     "/SimpleFM/manifest.webmanifest": "02d5d0c42ec8efbfd1abf1038fe15d2c36868874",
@@ -201,7 +201,7 @@
     "/SimpleFM/soccer-field-background.7d3884e9c704129ca893.jpg": "7b4bf2f866067a41553576b50ba388c07350e8f4",
     "/SimpleFM/stadium-stadium-module-es2015.1f18c9838249f18df53b.js": "28696ba3945fb6688d3dbed8811f4bf75aafb18d",
     "/SimpleFM/stadium-stadium-module-es5.1f18c9838249f18df53b.js": "1419dfc8579295d7e218134785db4ff07f34ab74",
-    "/SimpleFM/styles.90d49bb997937eb4e238.css": "e4e01031e4bdb7d3840b38cbdac3e8727fe0dd22",
+    "/SimpleFM/styles.83cc40b37d2199c2581b.css": "6c1bd357332fd33d69f1173f2bb3f586866b62ee",
     "/SimpleFM/tables-tables-module-es2015.a3848b6c70a5264dce2e.js": "c2189c2c9368f84c0096eb49cb2eda69d20e80c6",
     "/SimpleFM/tables-tables-module-es5.a3848b6c70a5264dce2e.js": "b5df4eff6f20f1ab727740ace55fc55fd89198d4",
     "/SimpleFM/transfer-market-transfer-market-module-es2015.3c988ab430a2da5f6cfb.js": "92da1c9b236765cc7bed6c1718e4366085d92962",
