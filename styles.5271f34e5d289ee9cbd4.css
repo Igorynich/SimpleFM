@@ -24856,6 +24856,10 @@ select{
   align-self:center
 }
 
+.justify-between{
+  justify-content:space-between
+}
+
 .justify-self-center{
   justify-self:center
 }
