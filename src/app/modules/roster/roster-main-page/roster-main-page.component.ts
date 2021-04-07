@@ -103,13 +103,13 @@ export class RosterMainPageComponent implements OnInit, OnDestroy {
     const hasThreeDefs = starters.d.length >= 3;
     const hasTwoMids = starters.m.length >= 2;
     if (!hasSingleGk) {
-      this.snack.createSnackBar('Должен быть один голкипер');
+      this.snack.createSnackBar($localize `Должен быть один голкипер`);
     }
     if (!hasThreeDefs) {
-      this.snack.createSnackBar('Должно быть минимум 3 защитника');
+      this.snack.createSnackBar($localize `Должно быть минимум 3 защитника`);
     }
     if (!hasTwoMids) {
-      this.snack.createSnackBar('Должно быть минимум 2 полузащитника');
+      this.snack.createSnackBar($localize `Должно быть минимум 2 полузащитника`);
     }
     console.warn('Is Roster Legit', hasSingleGk && hasThreeDefs && hasTwoMids);
     return hasSingleGk && hasThreeDefs && hasTwoMids;

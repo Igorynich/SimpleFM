@@ -8,10 +8,10 @@ import {
   addGoalScorersForMatch,
   addMatch, addTransferRecord, advanceASeason,
   advanceAWeek,
-  expandStadium,
+  expandStadium, finishLoadingSavedGame,
   gotBaseData,
   gotClub,
-  gotPlayers, loading, loadSavedGame,
+  gotPlayers, loading,
   logOut,
   newJobTaken,
   oneMoreWeekOnCurrentJob,
@@ -127,7 +127,7 @@ const _currentGameReducer = createReducer(currentGameInitState,
     });
     return newState;
   }),
-  on(loadSavedGame, (state, {data}) => {
+  on(finishLoadingSavedGame, (state, {data}) => {
     console.warn('LOADED DATA', data);
     const newState = produce(state, (draft: CurrentGameState) => {
       // const objToArr = (obj) => Object.keys(obj).map(key => obj[key]);

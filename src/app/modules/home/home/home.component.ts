@@ -10,11 +10,11 @@ import {StorageService} from '../../../services/storage.service';
 import {Club} from '../../../interfaces/club';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../store/selectors/current-game.selectors';
-import { loadSavedGame } from 'src/app/store/actions/current-game.actions';
 import {CurrentGameState} from '../../../store/reducers/current-game.reducer';
 import {SnackBarService} from '../../../services/snack-bar.service';
 import {ConfigService} from '../../../services/config.service';
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {startLoadingSavedGame} from '../../../store/actions/current-game.actions';
 
 @Component({
   selector: 'app-home',
@@ -95,10 +95,9 @@ export class HomeComponent implements OnInit {
   }
 
   loadSavedGame() {
-    this.store.dispatch(loadSavedGame({data: this.savedGame}));
-    this.userName.setValue(this.savedGame.userName);
+    this.store.dispatch(startLoadingSavedGame({data: this.savedGame}));
+    /*this.userName.setValue(this.savedGame.userName);
     this.snack.createSnackBar($localize `Сохранение загружено`);
-    // TODO make better
-    this.submitName();
+    this.submitName();*/
   }
 }

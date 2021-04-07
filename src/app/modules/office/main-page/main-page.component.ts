@@ -20,6 +20,7 @@ import {Club} from '../../../interfaces/club';
 import {switchMap, take} from 'rxjs/operators';
 import {CleanSubscriptions} from '../../../utils/clean-subscriptions';
 import {ConfigService} from '../../../services/config.service';
+import {StorageService} from '../../../services/storage.service';
 
 @CleanSubscriptions()
 @Component({
@@ -75,7 +76,8 @@ export class MainPageComponent implements OnInit, OnDestroy {
               public game: CurrentGameService,
               private dialog: MatDialog,
               private store: Store<AppState>,
-              public config: ConfigService) { }
+              public config: ConfigService,
+              private storage: StorageService) { }
 
   ngOnInit() {
     console.log('OFFICE COMPONENTN');
@@ -96,7 +98,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
     ]).pipe(take(1)).subscribe(([currentWeek, curSeason, curPlayers]) => {
       console.log('Cur week', currentWeek);
       this.store.dispatch(loading({status: true}));
-      if (currentWeek === 1 && curSeason === 1) {
+      if (currentWeek === 1 && curSeason === 1 && !this.storage.isSavedGame) {
         this.store.dispatch(getBaseData());
       } else if (currentWeek === 1 && curSeason > 1) {
         this.store.dispatch(gotPlayers({players: curPlayers}));

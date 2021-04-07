@@ -2,11 +2,18 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="ru" datatype="plaintext" original="ng2.template">
     <body>
+      <trans-unit id="3f4a676bb52b712f15825a2ef1ff48cb391105eb" datatype="html">
+        <source>Финансовые операции за сезон <x id="INTERPOLATION" equiv-text="{{curSeason$ | async}}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/finance/finance-main-page/finance-main-page.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="d3c9a8ee5ce5ea6c4c5163a7f718c67e2fb0e607" datatype="html">
         <source> Неделя <x id="INTERPOLATION" equiv-text="{{week}}"/> </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/finance/finance-main-page/finance-main-page.component.html</context>
-          <context context-type="linenumber">2,4</context>
+          <context context-type="linenumber">3,5</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/schedule/schedule-list-item/schedule-list-item.component.html</context>
@@ -17,7 +24,7 @@
         <source> Бюджет: <x id="INTERPOLATION" equiv-text="{{(curClub$ | async).budget | currency}}"/>M </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/finance/finance-main-page/finance-main-page.component.html</context>
-          <context context-type="linenumber">18,20</context>
+          <context context-type="linenumber">19,21</context>
         </context-group>
       </trans-unit>
       <trans-unit id="e36df2c2fdb955a44c01110b4712bc23688595dd" datatype="html">
@@ -67,13 +74,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/home/home/home.component.html</context>
           <context context-type="linenumber">49,51</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="1162851688320870368" datatype="html">
-        <source>Сохранение загружено</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/home/home/home.component.ts</context>
-          <context context-type="linenumber">100</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8bfbf1e5e392c56354cd3c8b368a3eef99ec61c5" datatype="html">
@@ -132,25 +132,60 @@
           <context context-type="linenumber">27,28</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="5e72e03bf6ffe5d7b3c7245f27cca0e08de34820" datatype="html">
+        <source>Перейти к след. неделе</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/office/main-page/header/header.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="3900b852f4756aecb7c752b4b596d255246778aa" datatype="html">
         <source> След. неделя </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/office/main-page/header/header.component.html</context>
-          <context context-type="linenumber">54,55</context>
+          <context context-type="linenumber">57,58</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="531d883486b89a1fd253b9e3fd3c3e722a123199" datatype="html">
+      <trans-unit id="c0894bf9bc33f58145cb8b605ec9b4ea12b7c2ad" datatype="html">
+        <source>Доступно обновление</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/office/main-page/header/header.component.html</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="f67366967f7f83f5e9717c170a5d822bcf86ef92" datatype="html">
+        <source> Доступно обновление </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/office/main-page/header/header.component.html</context>
+          <context context-type="linenumber">65,66</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5cec9fc3ffdc45706c96723244c543f8a9ddfa08" datatype="html">
+        <source>Выйти из игры</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/office/main-page/header/header.component.html</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7849aac9c0891944e279fc6e6bdc8dad738e8523" datatype="html">
         <source> Выйти </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/office/main-page/header/header.component.html</context>
-          <context context-type="linenumber">60,61</context>
+          <context context-type="linenumber">71,72</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="f37f8d4eb90846a0f63c5414facc01f66926edeb" datatype="html">
+      <trans-unit id="d249968b839cd4d48532fc3e1a6a29dae5bae4f9" datatype="html">
         <source> Админка </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/office/main-page/header/header.component.html</context>
-          <context context-type="linenumber">64,65</context>
+          <context context-type="linenumber">76,77</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4053725531398905131" datatype="html">
+        <source>Для обновления нужно будет обновить страницу. Продолжить? (Игра будет сохранена)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/office/main-page/header/header.component.ts</context>
+          <context context-type="linenumber">136</context>
         </context-group>
       </trans-unit>
       <trans-unit id="43d103d6ee8b035f34f095a152ba66f10b700686" datatype="html">
@@ -167,35 +202,63 @@
           <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="84528633e944f396bdbe9ba12b0110e87543130c" datatype="html">
+        <source>Ваши игроки</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/roster/roster-main-page/roster-main-page.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="cd4b37cbdea813e82054c3eab3331af4a14c73e0" datatype="html">
+        <source>Позиция на поле</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/roster/roster-main-page/roster-main-page.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="edbbf0b6a3fa34d2595c27fae95d0cbe3783e5db" datatype="html">
         <source> Позиция </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/roster/roster-main-page/roster-main-page.component.html</context>
-          <context context-type="linenumber">5,6</context>
+          <context context-type="linenumber">7,8</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/transfer-market/transfer-list/transfer-list.component.html</context>
           <context context-type="linenumber">5,6</context>
         </context-group>
         <note priority="1" from="description">roster header</note>
+      </trans-unit>
+      <trans-unit id="deeb719dc756f9b2d2621e9555ff5281399a7fbe" datatype="html">
+        <source>Имя игрока</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/roster/roster-main-page/roster-main-page.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="6f9960abddac12c6758be054b581d999d9222bc1" datatype="html">
         <source> Имя </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/roster/roster-main-page/roster-main-page.component.html</context>
-          <context context-type="linenumber">8,9</context>
+          <context context-type="linenumber">10,11</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/transfer-market/transfer-list/transfer-list.component.html</context>
           <context context-type="linenumber">8,9</context>
         </context-group>
         <note priority="1" from="description">roster header</note>
+      </trans-unit>
+      <trans-unit id="46896e6eee5c9c97da2a3313e34a55a2043e1676" datatype="html">
+        <source>Сила игрока(изменение за сезон)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/roster/roster-main-page/roster-main-page.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="2f54e9d45259f657c78dd357659d9ce01b268a13" datatype="html">
         <source> Сила </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/roster/roster-main-page/roster-main-page.component.html</context>
-          <context context-type="linenumber">11,12</context>
+          <context context-type="linenumber">13,14</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/transfer-market/transfer-list/transfer-list.component.html</context>
@@ -203,29 +266,78 @@
         </context-group>
         <note priority="1" from="description">roster header</note>
       </trans-unit>
+      <trans-unit id="053b87988b19accfc2b014ce76f73ce6406fd769" datatype="html">
+        <source>Сыграно игр в этом сезоне</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/roster/roster-main-page/roster-main-page.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="af378111f0f169270b5be595fb02340a35d14472" datatype="html">
         <source> Игр </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/roster/roster-main-page/roster-main-page.component.html</context>
-          <context context-type="linenumber">14,15</context>
+          <context context-type="linenumber">16,17</context>
         </context-group>
         <note priority="1" from="description">roster header</note>
+      </trans-unit>
+      <trans-unit id="050437c25191ed17c00e9902476159cd538d3b52" datatype="html">
+        <source>Гол+пас</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/roster/roster-main-page/roster-main-page.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="269f5d782a14f7e3cf436456f857623a5595ef49" datatype="html">
         <source> Г+П </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/roster/roster-main-page/roster-main-page.component.html</context>
-          <context context-type="linenumber">17,18</context>
+          <context context-type="linenumber">19,20</context>
         </context-group>
         <note priority="1" from="description">roster header</note>
+      </trans-unit>
+      <trans-unit id="f2ba691984a5196faa1f310834849d207d0c593a" datatype="html">
+        <source>Рост силы после последней игры</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/roster/roster-main-page/roster-main-page.component.html</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="89e6ef25d12bb26a90a55c3de1b2f19edb8bfb29" datatype="html">
         <source> Посл. игра </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/roster/roster-main-page/roster-main-page.component.html</context>
-          <context context-type="linenumber">20,21</context>
+          <context context-type="linenumber">22,23</context>
         </context-group>
         <note priority="1" from="description">roster header</note>
+      </trans-unit>
+      <trans-unit id="911635f545548b0877b4221fc0b08580b58ad91e" datatype="html">
+        <source>Перетаскивайте игроков, чтобы изменить стартовый состав.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/roster/roster-main-page/roster-main-page.component.html</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8720843512461648175" datatype="html">
+        <source>Должен быть один голкипер</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/roster/roster-main-page/roster-main-page.component.ts</context>
+          <context context-type="linenumber">106</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7269150098158546837" datatype="html">
+        <source>Должно быть минимум 3 защитника</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/roster/roster-main-page/roster-main-page.component.ts</context>
+          <context context-type="linenumber">109</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4586087116107099882" datatype="html">
+        <source>Должно быть минимум 2 полузащитника</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/roster/roster-main-page/roster-main-page.component.ts</context>
+          <context context-type="linenumber">112</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="f918cf44f632286f8efd477e81b2e02c0753c2cc" datatype="html">
         <source> Неделя <x id="INTERPOLATION" equiv-text="{{week}}"/> </source>
@@ -256,11 +368,18 @@
         </context-group>
         <note priority="1" from="description">schedule when no opponent</note>
       </trans-unit>
+      <trans-unit id="16e0f3ad4c8bd88b6d6b28314b0c0708341c8c9b" datatype="html">
+        <source>Расписание <x id="INTERPOLATION" equiv-text="{{curSeason$ | async}}"/>-го сезона</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/schedule/schedule-main-page/schedule-main-page.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="445fa72b871580d6e83fcbb8ac4efec05a81ee70" datatype="html">
         <source> Неделя </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/schedule/schedule-main-page/schedule-main-page.component.html</context>
-          <context context-type="linenumber">3,4</context>
+          <context context-type="linenumber">5,6</context>
         </context-group>
         <note priority="1" from="description">schedule header</note>
       </trans-unit>
@@ -268,7 +387,7 @@
         <source> Турнир </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/schedule/schedule-main-page/schedule-main-page.component.html</context>
-          <context context-type="linenumber">6,7</context>
+          <context context-type="linenumber">8,9</context>
         </context-group>
         <note priority="1" from="description">schedule header</note>
       </trans-unit>
@@ -276,7 +395,7 @@
         <source> Оппонент </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/schedule/schedule-main-page/schedule-main-page.component.html</context>
-          <context context-type="linenumber">9,10</context>
+          <context context-type="linenumber">11,12</context>
         </context-group>
         <note priority="1" from="description">schedule header</note>
       </trans-unit>
@@ -284,7 +403,7 @@
         <source> Поле </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/schedule/schedule-main-page/schedule-main-page.component.html</context>
-          <context context-type="linenumber">12,13</context>
+          <context context-type="linenumber">14,15</context>
         </context-group>
         <note priority="1" from="description">schedule header</note>
       </trans-unit>
@@ -292,7 +411,7 @@
         <source> Результат </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/schedule/schedule-main-page/schedule-main-page.component.html</context>
-          <context context-type="linenumber">15,16</context>
+          <context context-type="linenumber">17,18</context>
         </context-group>
         <note priority="1" from="description">schedule header</note>
       </trans-unit>
@@ -322,7 +441,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
-          <context context-type="linenumber">4</context>
+          <context context-type="linenumber">6</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1def93b6db13cc5a94b40352d8c8429f7c31ce44" datatype="html">
@@ -337,7 +456,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">13</context>
         </context-group>
       </trans-unit>
       <trans-unit id="0157717d03ad08c7df433fee45f7fe6ab19511c8" datatype="html">
@@ -352,7 +471,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
-          <context context-type="linenumber">20</context>
+          <context context-type="linenumber">22</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7e98f714ffb9d3d7547a778128e5709e6de2ed24" datatype="html">
@@ -367,7 +486,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7831c7fbd43be3ca89c9387e09d4f1a6a1eddee4" datatype="html">
@@ -382,7 +501,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">36</context>
         </context-group>
       </trans-unit>
       <trans-unit id="a99ae0a9158003177bd0be9ecf7c976cd085519a" datatype="html">
@@ -397,7 +516,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">43</context>
         </context-group>
       </trans-unit>
       <trans-unit id="568dfc93c4b52cb92bdd722111e02b951d9487db" datatype="html">
@@ -412,7 +531,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">50</context>
         </context-group>
       </trans-unit>
       <trans-unit id="91ede02147c89e04219f2f092a0277a76322b262" datatype="html">
@@ -427,7 +546,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
-          <context context-type="linenumber">55</context>
+          <context context-type="linenumber">57</context>
         </context-group>
       </trans-unit>
       <trans-unit id="35d9e6bf726179f60c1de1a56a150d52d7c79a68" datatype="html">
@@ -442,7 +561,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">64</context>
         </context-group>
       </trans-unit>
       <trans-unit id="f04544fb80b7132bcacd4c22eeb3fad3ece74472" datatype="html">
@@ -457,7 +576,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">71</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6e97cbb668dfa65d54c1905532915555fbcb4f40" datatype="html">
@@ -562,14 +681,112 @@
         <source> против </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/tables/cup/cup-match-item/cup-match-item.component.html</context>
-          <context context-type="linenumber">15,16</context>
+          <context context-type="linenumber">17,18</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="83013ddb934068269c052b350c0f169b3d75a8ee" datatype="html">
-        <source>Раунд <x id="INTERPOLATION" equiv-text="{{i + 1}}"/>(неделя <x id="INTERPOLATION_1" equiv-text="{{cupRoundToWeek(i + 1)}}"/>)</source>
+      <trans-unit id="2983630798608483827" datatype="html">
+        <source>Финал</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/tables/cup/cup-match-item/cup-match-item.component.ts</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7789654064625553857" datatype="html">
+        <source>Полуфинал Матч <x id="PH" equiv-text="this.matchIndex + 1"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/tables/cup/cup-match-item/cup-match-item.component.ts</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="9132390806052402046" datatype="html">
+        <source>1/4 финала Матч <x id="PH" equiv-text="this.matchIndex + 1"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/tables/cup/cup-match-item/cup-match-item.component.ts</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7885574726575783394" datatype="html">
+        <source>Раунд <x id="PH" equiv-text="this.roundIndex + 1"/> Матч <x id="PH_1" equiv-text="this.matchIndex + 1"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/tables/cup/cup-match-item/cup-match-item.component.ts</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="9b9c648d9b217f727e6c4dde27f647b8011ee87c" datatype="html">
+        <source>Неделя <x id="INTERPOLATION" equiv-text="{{cupRoundToWeek(i + 1)}}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/tables/cup/cup-table/cup-table.component.html</context>
-          <context context-type="linenumber">3</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="fc652470a1e17fa38f28a935d8638a1e73ea306a" datatype="html">
+        <source>Позиция</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="9492386c180338fa3d613aa99de099eb9561e4a3" datatype="html">
+        <source>Клуб</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1b2c430c4f62afb973f694556a9b8bf8b51851f4" datatype="html">
+        <source>Игр</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5d4c6531ae30cf6fb1c0fbdcca35b3a3be1f3744" datatype="html">
+        <source>Выиграно</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="b79e8da10ebee3211d3669709082cd7352c3a331" datatype="html">
+        <source>Ничьи</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1f2975803a991c83b97a9e260126884316d06ced" datatype="html">
+        <source>Поражения</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="217169cee3b3603bf53347bff4345f76d1842f68" datatype="html">
+        <source>Забитые мячи</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7373bae9491635f553c7a6c3eb8219e8fe88b883" datatype="html">
+        <source>Пропущенные мячи</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ed8c3d1682676c519d5a93b753fb7283e78cacbf" datatype="html">
+        <source>Разница мячей</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="79c574970dfcd5f9cff6a8067b317ce5f3f16051" datatype="html">
+        <source>Очки</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/tables/league-table/league-table.component.html</context>
+          <context context-type="linenumber">71</context>
         </context-group>
       </trans-unit>
       <trans-unit id="0a30f5eaec3079ca6be6aad4406670e07fe4ba7a" datatype="html">
@@ -584,6 +801,13 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/tables/schedule/schedule-tour-matches-list/schedule-tour-matches-list.component.html</context>
           <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="bef6ff1b7b364653a953e5f30cb32869182fc92e" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{i + 1}}"/> тур</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/tables/schedule/schedule-tours-list/schedule-tours-list.component.html</context>
+          <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7f72f4406f2a8a2b85a92d367281ea379e695eb2" datatype="html">
@@ -868,11 +1092,18 @@
         <note priority="1" from="description"> Att:</note>
         <note priority="1" from="meaning">зрителей </note>
       </trans-unit>
+      <trans-unit id="7923ab10c3e99127072f86d8ef1eb30bc20948c8" datatype="html">
+        <source>Вернуться в кабинет</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/navigate-to-office/navigate-to-office.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="15761673e052961fb14afbac59d44ec8201f1e92" datatype="html">
         <source>Назад</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/navigate-to-office/navigate-to-office.component.html</context>
-          <context context-type="linenumber">3</context>
+          <context context-type="linenumber">4</context>
         </context-group>
       </trans-unit>
       <trans-unit id="915393e57ac574a0d99cf2bb0928da4e28c6b876" datatype="html">
@@ -889,54 +1120,68 @@
           <context context-type="linenumber">8</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="e979bba3a9ee130d959573fe22231a499f34186e" datatype="html">
+        <source>Подсказка!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/tooltips/tooltips.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="6476492523106928457" datatype="html">
         <source>Увеличение вместительности стадиона на <x id="PH" equiv-text="step"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/store/effects/current-game.effects.ts</context>
-          <context context-type="linenumber">153</context>
+          <context context-type="linenumber">156</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1566990732875550500" datatype="html">
         <source>Покупка <x id="PH" equiv-text="player[this.config.name]"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/store/effects/current-game.effects.ts</context>
-          <context context-type="linenumber">172</context>
+          <context context-type="linenumber">175</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/store/effects/current-game.effects.ts</context>
-          <context context-type="linenumber">212</context>
+          <context context-type="linenumber">215</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9049372037667218837" datatype="html">
         <source>Продажа <x id="PH" equiv-text="player[this.config.name]"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/store/effects/current-game.effects.ts</context>
-          <context context-type="linenumber">178</context>
+          <context context-type="linenumber">181</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/store/effects/current-game.effects.ts</context>
-          <context context-type="linenumber">206</context>
+          <context context-type="linenumber">209</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5758566848857010596" datatype="html">
         <source>Призовые за <x id="PH" equiv-text="leaguePosIndex + 1"/> место в <x id="PH_1" equiv-text="league[this.config.name]"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/store/effects/current-game.effects.ts</context>
-          <context context-type="linenumber">274</context>
+          <context context-type="linenumber">277</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3222264127316994079" datatype="html">
         <source>Призовые за <x id="PH" equiv-text="clubsCupResult.eliminated"/> раунд кубка</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/store/effects/current-game.effects.ts</context>
-          <context context-type="linenumber">281</context>
+          <context context-type="linenumber">284</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2454428176190866007" datatype="html">
         <source>Призовые за победу в кубке</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/store/effects/current-game.effects.ts</context>
-          <context context-type="linenumber">281</context>
+          <context context-type="linenumber">284</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1162851688320870368" datatype="html">
+        <source>Сохранение загружено</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/store/effects/current-game.effects.ts</context>
+          <context context-type="linenumber">347</context>
         </context-group>
       </trans-unit>
     </body>

@@ -89,7 +89,8 @@ export const generateStuffForANewSeason = createAction('Starts generation of sch
 
 export const cleanUpBeforeANewSeason = createAction('Cleans finances, gainsAndLosses, matches and stats before new season');
 
-export const loadSavedGame = createAction('Loads saved store', props<{data: CurrentGameState}>());
+export const startLoadingSavedGame = createAction('Starts Loading of saved store', props<{data: CurrentGameState}>());
+export const finishLoadingSavedGame = createAction('Loads saved store', props<{data: CurrentGameState}>());
 
 export const loading = createAction('loading status', props<{status: boolean}>());
 

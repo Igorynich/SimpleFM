@@ -9,7 +9,7 @@ import {Store} from '@ngrx/store';
 import {Club} from '../../../../interfaces/club';
 import {ActivatedRoute, Router} from '@angular/router';
 import { ROUTES } from 'src/app/constants/routes';
-import {interval, Observable, of, Subscription} from 'rxjs';
+import {interval, Observable, of, pipe, Subscription} from 'rxjs';
 import {filter, map, switchMap, take, tap} from 'rxjs/operators';
 import { logOut } from 'src/app/store/actions/current-game.actions';
 import {clearSubscription} from '../../../../utils/clean-subscriptions';
@@ -18,6 +18,9 @@ import {FeedbackDialogComponent} from '../../../../shared/feedback-dialog/feedba
 import {ConfigService} from '../../../../services/config.service';
 import {ConfirmationDialogComponent} from '../../../../shared/confirmation-dialog/confirmation-dialog.component';
 import {Component, OnInit} from '@angular/core';
+import {SwUpdate, UpdateAvailableEvent} from '@angular/service-worker';
+import {ConfirmationDialogData} from '../../../../interfaces/confirmation-dialog-data';
+import {StorageService} from '../../../../services/storage.service';
 
 @Component({
   selector: 'app-header',
@@ -29,6 +32,7 @@ export class HeaderComponent implements OnInit {
   currentClub$: Observable<Club>;
   currentWeek$: Observable<number>;
   currentSeason$: Observable<number>;
+  isUpdateAvailable = false;
   nextOpponent$: Observable<{
     opponent: Club, field: string
   }>;
@@ -42,7 +46,9 @@ export class HeaderComponent implements OnInit {
               private router: Router,
               private route: ActivatedRoute,
               private dialog: MatDialog,
-              public config: ConfigService) { }
+              public config: ConfigService,
+              private updates: SwUpdate,
+              private storage: StorageService) { }
 
   ngOnInit(): void {
     this.currentClub$ = this.store.select(selectCurrentClub);
@@ -55,7 +61,12 @@ export class HeaderComponent implements OnInit {
       }
       return this.store.select(selectNextOpponent, {clubsNameEn: curClub.nameEn});
     }));
-
+    this.updates.available.subscribe((event: UpdateAvailableEvent) => {
+      console.log('update event', event);
+      this.isUpdateAvailable = true;
+      console.log('current version is', event.current);
+      console.log('available version is', event.available);
+    });
   }
 
   // TODO: hide
@@ -118,5 +129,26 @@ export class HeaderComponent implements OnInit {
       width: '500px',
       data: {type: 'bug'}
     });
+  }
+
+  updateApp() {
+    const dialData: ConfirmationDialogData = {
+      header: $localize `Для обновления нужно будет обновить страницу. Продолжить? (Игра будет сохранена)`
+    };
+    this.dialog.open(ConfirmationDialogComponent, {
+      data: dialData
+    }).afterClosed().pipe(take(1), switchMap(value => {
+      if (value) {
+        return this.storage.saveStore();
+      }
+      return of(null);
+    })).subscribe(value => {
+      if (value) {
+        this.updates.activateUpdate().then(() => document.location.reload());
+      } else {
+        // update failed - show smthing?
+      }
+    });
+
   }
 }

@@ -3,14 +3,14 @@ import {Actions, createEffect, EffectNotification, ofType, OnRunEffects} from '@
 import {FirebaseService} from '../../services/firebase.service';
 import {
   addFinanceRecord, addTransferRecord, advanceASeason, advanceAWeek, cleanUpBeforeANewSeason,
-  expandStadium, generateStuffForANewSeason,
+  expandStadium, finishLoadingSavedGame, generateStuffForANewSeason,
   getBaseData,
   getClub, giveSeasonalPrizeMoney,
   gotBaseData,
   gotClub,
   gotPlayers, loading,
   logOut, makeDivisionRotations, playerTransferToAClub, playerTransferToCurClub, rotateClubs,
-  scheduleGenerated,
+  scheduleGenerated, startLoadingSavedGame,
   tablesGenerated
 } from '../actions/current-game.actions';
 import {concatMap, exhaustMap, filter, map, mergeMap, switchMap, take, takeUntil, tap, withLatestFrom} from 'rxjs/operators';
@@ -41,6 +41,9 @@ import {Player} from '../../interfaces/player';
 import {randomInteger} from '../../utils/helpers';
 import {StorageService} from '../../services/storage.service';
 import {ConfigService} from '../../services/config.service';
+import {ROUTES} from '../../constants/routes';
+import {SnackBarService} from '../../services/snack-bar.service';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class CurrentGameEffects {
@@ -332,6 +335,23 @@ export class CurrentGameEffects {
       })
     ));
 
+  loadSavedGame$ = createEffect(() =>
+      this.actions$.pipe(
+          ofType(startLoadingSavedGame),
+          map(({data}: {data: CurrentGameState}) => {
+            console.log('START LOADING', data);
+            // check if saved game is valid?
+            this.userService.userName = data.userName;
+            this.router.navigate([ROUTES.OFFICE]).then(value => {
+              this.storage.isSavedGame = true;
+              this.snack.createSnackBar($localize `Сохранение загружено`);
+            }).catch(reason => {
+              console.error('Navigation fail by ', reason);
+            });
+            return finishLoadingSavedGame({data});
+          })
+      ));
+
   constructor(private actions$: Actions,
               private fs: FirebaseService,
               private store: Store<AppState>,
@@ -341,7 +361,9 @@ export class CurrentGameEffects {
               private transferService: TransferService,
               private finService: FinanceService,
               private storage: StorageService,
-              private config: ConfigService) {
+              private config: ConfigService,
+              private snack: SnackBarService,
+              private router: Router) {
   }
 
 }

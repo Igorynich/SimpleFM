@@ -48,24 +48,35 @@
     </div>
   </div>
   <div class="col-12">
-    <div class="row justify-content-end">
+    <div class="row justify-between">
       <div class="col-2">
         <app-navigate-to-office></app-navigate-to-office>
       </div>
-      <div class="col-8 d-flex justify-content-center">
+      <div class="col-6 d-flex justify-content-center">
         <button mat-raised-button color="accent" (click)="goToNextWeek()" class="" i18n matTooltip="Перейти к след. неделе" i18n-matTooltip>
           След. неделя
         </button>
       </div>
-      <div class="col-2">
-        <button mat-raised-button color="warning" (click)="logOut()" class="float-right ml-3"
-                *ngIf="userService.isLogged()" i18n matTooltip="Выйти из игры" i18n-matTooltip>
-          Выйти
-        </button>
-        <button mat-raised-button color="accent" (click)="navigateToAdmin()" class="float-right"
-                *ngIf="userService.isAdmin()" i18n>
-          Админка
-        </button>
+      <div class="col-4">
+        <div class="row justify-content-end">
+          <div class="col-8" *ngIf="isUpdateAvailable">
+            <button mat-raised-button (click)="updateApp()" class="ml-3"
+                     i18n matTooltip="Доступно обновление" i18n-matTooltip>
+              Доступно обновление
+            </button>
+          </div>
+          <div class="col-4" *ngIf="userService.isLogged()">
+            <button mat-raised-button color="warning" (click)="logOut()" class="ml-3"
+                     i18n matTooltip="Выйти из игры" i18n-matTooltip>
+              Выйти
+            </button>
+          </div>
+          <div class="col" *ngIf="userService.isAdmin()">
+            <button mat-raised-button color="accent" (click)="navigateToAdmin()" class="" i18n>
+              Админка
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -32,7 +32,6 @@ import {mapReviver} from '../../../utils/local-storage';
 import {StorageService} from '../../../services/storage.service';
 import {CurrentGameState} from '../../../store/reducers/current-game.reducer';
 import {ReportDialogComponent} from '../../../shared/report-dialog/report-dialog.component';
-import {loadSavedGame} from '../../../store/actions/current-game.actions';
 import {UserService} from '../../../services/user.service';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../store/selectors/current-game.selectors';
@@ -41,6 +40,7 @@ import {Router} from '@angular/router';
 import {Transfer} from '../../../interfaces/transfer';
 import {FinanceRecord} from '../../../interfaces/finance-record';
 import {SnackBarService} from '../../../services/snack-bar.service';
+import {startLoadingSavedGame} from '../../../store/actions/current-game.actions';
 
 @CleanSubscriptions()
 @Component({
@@ -467,12 +467,12 @@ export class AdminMainPageComponent implements OnInit, OnDestroy {
     });
     dialRef.afterClosed().pipe(take(1)).subscribe(save => {
       if (!!save) {
-        this.store.dispatch(loadSavedGame({data: save}));
-        this.userService.userName = save.userName;
+        this.store.dispatch(startLoadingSavedGame({data: save}));
+        /*this.userService.userName = save.userName;
         this.snack.createSnackBar('Сохранение загружено');
         this.router.navigate([ROUTES.OFFICE]).catch(reason => {
           console.error('Navigation fail by ', reason);
-        });
+        });*/
       }
     });
   }

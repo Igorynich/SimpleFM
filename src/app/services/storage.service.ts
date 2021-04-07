@@ -17,6 +17,8 @@ import {objToArr} from '../utils/helpers';
 })
 export class StorageService {
 
+  private _isSavedGame = false;
+
   readonly STORAGE_NAME = 'simplefm';
   readonly STORAGE_FOR_DATA_NAME = 'simplefm_data';
   readonly SECONDS_TO_EXPIRATION = 2592000000;        // 30 days
@@ -25,7 +27,15 @@ export class StorageService {
               private store: Store<AppState>) {
   }
 
-  saveStore(): Observable<void> {
+  get isSavedGame() {
+    return this._isSavedGame;
+  }
+
+  set isSavedGame(value: boolean) {
+    this._isSavedGame = value;
+  }
+
+  saveStore(): Observable<boolean> {
     return this.store.select(selectCurrentGameState).pipe(take(1), map((curGame: CurrentGameState) => {
       console.warn('SAving to LS', curGame);
       /*const data = {
@@ -38,6 +48,7 @@ export class StorageService {
       };
       console.warn('SAving to LS1', data);*/
       setToLocalStorage(this.STORAGE_NAME, curGame);
+      return true;
     }));
   }
 
