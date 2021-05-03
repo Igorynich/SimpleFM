@@ -1,14 +1,14 @@
 <div class="row m-0">
-  <div class="col text-right" [ngClass]="{'my-club': (isMyClub$(match).home | async)}">
+  <div class="col text-right" [ngClass]="{'my-club': match.home.nameEn | isMyClub | async}">
     {{match.home[config.name]}}
   </div>
   <div class="flex flex-initial text-center">
-    <span *ngIf="(matchStats$ | async)?.result" [appMatchTooltip]="match1ToMatch(match)">
+    <span *ngIf="(matchStats$ | async)?.result" [appMatchTooltip]="match | match1ToMatch">
                 {{(matchStats$ | async).result}}
     </span>
     <span *ngIf="!(matchStats$ | async)?.result">-</span>
   </div>
-  <div class="col text-left" [ngClass]="{'my-club': (isMyClub$(match).away | async)}">
+  <div class="col text-left" [ngClass]="{'my-club': match.away.nameEn | isMyClub | async}">
     {{match.away[config.name]}}
   </div>
 </div>

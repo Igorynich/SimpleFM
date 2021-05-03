@@ -1,7 +1,7 @@
 <div class="row h-100 align-content-between">
   <div class="col-12">
-    <div class="row justify-content-end">
-      <div class="col-2">
+    <div class="row mx-2">
+      <div class="col-4">
         <button mat-icon-button color="primary" i18n-matTooltip matTooltip="Замечания и предложения" (click)="supportButtonClick()">
           <mat-icon>mail_outline</mat-icon>
         </button>
@@ -9,13 +9,13 @@
           <mat-icon>bug_report</mat-icon>
         </button>
       </div>
-      <div class="col-7 text-center">
-        <span class="current-week" i18n>Сезон {{currentSeason$ | async}}
+      <div class="col-4 text-center">
+        <span class="current-week" i18n matTooltip="Текущий сезон и неделя" i18n-matTooltip>Сезон {{currentSeason$ | async}}
           Неделя {{(currentWeek$ | async)}}</span>
       </div>
-      <div class="col-3">
+      <div class="col-4 user-info">
         <div class="row">
-          <div class="col">
+          <div class="col" matTooltip="Вы(ваш нынешний клуб)" i18n-matTooltip>
             <p class="text-right">{{userService.userName}} (<span>{{(currentClub$ | async)[config.name]}}</span>)</p>
           </div>
         </div>
@@ -23,12 +23,12 @@
           <div class="col-12">
             <span i18n>Следующий матч:</span>
           </div>
-          <div class="col-12">
+          <div class="col-12" matTooltip="Ваш следующий соперник" i18n-matTooltip>
             <span i18n>против {{(nextOpponent$ | async)?.opponent ? (nextOpponent$ | async)?.opponent[config.name] : ''}}
               ({{(nextOpponent$ | async)?.field}})</span>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="1">
           <div class="col-3">
             <button mat-raised-button (click)="goThroughXNextWeeks(42)" [disabled]="isGoingThrough">{{42}} weeks</button>
           </div>
@@ -48,30 +48,30 @@
     </div>
   </div>
   <div class="col-12">
-    <div class="row justify-between">
-      <div class="col-2">
+    <div class="row justify-between mx-2">
+      <div class="col-4 justify-self-start">
         <app-navigate-to-office></app-navigate-to-office>
       </div>
-      <div class="col-6 d-flex justify-content-center">
+      <div class="col-4 d-flex justify-content-center">
         <button mat-raised-button color="accent" (click)="goToNextWeek()" class="" i18n matTooltip="Перейти к след. неделе" i18n-matTooltip>
           След. неделя
         </button>
       </div>
       <div class="col-4">
         <div class="row justify-content-end">
-          <div class="col-8" *ngIf="isUpdateAvailable">
+          <div class="col-4" *ngIf="isUpdateAvailable">
             <button mat-raised-button (click)="updateApp()" class="ml-3"
                      i18n matTooltip="Доступно обновление" i18n-matTooltip>
               Доступно обновление
             </button>
           </div>
-          <div class="col-4" *ngIf="userService.isLogged()">
+          <div class="col-4 justify-self-end" *ngIf="userService.isLogged()">
             <button mat-raised-button color="warning" (click)="logOut()" class="ml-3"
                      i18n matTooltip="Выйти из игры" i18n-matTooltip>
               Выйти
             </button>
           </div>
-          <div class="col" *ngIf="userService.isAdmin()">
+          <div class="col-4 justify-self-end" *ngIf="userService.isAdmin()">
             <button mat-raised-button color="accent" (click)="navigateToAdmin()" class="" i18n>
               Админка
             </button>

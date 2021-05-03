@@ -44,14 +44,14 @@ export class MatchResultComponent implements OnInit {
     this.matchGaines$ = this.store.select(selectMatchGainsByMatchId, {matchId: this.match.id});
   }
 
-  isMyClub$(match: Match): {home: Observable<boolean>, away: Observable<boolean>} {
+  /*isMyClub$(match: Match): {home: Observable<boolean>, away: Observable<boolean>} {
     return {
       home: this.curClub$.pipe(map(value => value.nameEn === match.homeNameEn)),
       away: this.curClub$.pipe(map(value => value.nameEn === match.awayNameEn))
     };
-  }
+  }*/
 
-  keys(obj): string[] {
+  /*keys(obj): string[] {
     return Object.keys(obj);
-  }
+  }*/
 }

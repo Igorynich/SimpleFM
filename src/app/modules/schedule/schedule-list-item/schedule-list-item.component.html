@@ -6,21 +6,21 @@
       {match.isCupMatch, select, true {Кубок Англии} false {{{(currentClub$ | async)[config.leagueName]}}}}
       <!--{{match.isCupMatch ? 'Кубок Англии' : (currentClub$ | async)?.leagueNameRu}}-->
     </div>
-    <ng-container *ngIf="getMatchOpponent(match)?.club | async">
+    <ng-container *ngIf="(match | matchOpponent)?.club | async">
       <div class="col-5">
-        {{(getMatchOpponent(match).club | async)[config.name]!}}
-        <span *ngIf="match.isCupMatch">({{(getMatchOpponent(match).club | async)[config.leagueName]!}})</span>
+        {{((match | matchOpponent).club | async)[config.name]!}}
+        <span *ngIf="match.isCupMatch">({{((match | matchOpponent).club | async)[config.leagueName]!}})</span>
       </div>
       <div class="col-1 text-center">
-        {{getMatchOpponent(match).field | async}}
+        {{(match | matchOpponent).field | async}}
       </div>
       <div class="col-2 text-center">
-            <span [ngClass]="getMatchResultClass(match, matchStats$ | async) | async" [appMatchTooltip]="match" [showGains]="true">
-              {{getAdjustedResult(getMatchOpponent(match).field | async, matchStats$ | async)}}
+            <span [ngClass]="match | matchResultClass:(matchStats$ | async) | async" [appMatchTooltip]="match" [showGains]="true">
+              {{matchStats$ | async | adjustedMatchResult:((match | matchOpponent).field | async)}}
             </span>
       </div>
     </ng-container>
-    <ng-container *ngIf="!(getMatchOpponent(match)?.club | async)">
+    <ng-container *ngIf="!((match | matchOpponent)?.club | async)">
       <div class="col" i18n="schedule when no opponent">
         Прошел в след. раунд
       </div>

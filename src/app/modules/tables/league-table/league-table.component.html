@@ -5,15 +5,15 @@
       <div matColumnDef="position">
         <mat-header-cell *matHeaderCellDef class="w-5" i18n="table header" matTooltip="Позиция" i18n-matTooltip matTooltipPosition="before"> Поз</mat-header-cell>
         <mat-cell *matCellDef="let element; let i = index" class="w-5"
-                  [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{i + 1}} </mat-cell>
+                  [ngClass]="{'my-club': element.club.nameEn | isMyClub | async}"> {{i + 1}} </mat-cell>
       </div>
 
       <!-- ClubName Column -->
       <div matColumnDef="clubName">
         <mat-header-cell *matHeaderCellDef class="w-25" i18n="table header" matTooltip="Клуб" i18n-matTooltip matTooltipPosition="before"> Клуб</mat-header-cell>
         <mat-cell *matCellDef="let element" class="w-25"
-                  [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}">
-          <span (click)="showClubsRoster(element.club.nameEn)" class="hover"> {{element.club[config.name]}} </span>
+                  [ngClass]="{'my-club': element.club.nameEn | isMyClub | async}" matTooltip="Открыть состав" i18n-matTooltip>
+          <span (click)="showClubsRoster(element.club[config.name])" class="hover"> {{element.club[config.name]}} </span>
         </mat-cell>
       </div>
 
@@ -21,56 +21,56 @@
       <div matColumnDef="games">
         <mat-header-cell *matHeaderCellDef class="w-5" i18n="table header" matTooltip="Игр" i18n-matTooltip matTooltipPosition="before"> И</mat-header-cell>
         <mat-cell *matCellDef="let element" class="w-5"
-                  [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.games}} </mat-cell>
+                  [ngClass]="{'my-club': element.club.nameEn | isMyClub | async}"> {{element.games}} </mat-cell>
       </div>
 
       <!-- wins Column -->
       <div matColumnDef="wins">
         <mat-header-cell *matHeaderCellDef class="w-5" i18n="table header" matTooltip="Выиграно" i18n-matTooltip matTooltipPosition="before"> В</mat-header-cell>
         <mat-cell *matCellDef="let element" class="w-5"
-                  [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.wins}} </mat-cell>
+                  [ngClass]="{'my-club': element.club.nameEn | isMyClub | async}"> {{element.wins}} </mat-cell>
       </div>
 
       <!-- draws Column -->
       <div matColumnDef="draws">
         <mat-header-cell *matHeaderCellDef class="w-5" i18n="table header" matTooltip="Ничьи" i18n-matTooltip matTooltipPosition="before"> Н</mat-header-cell>
         <mat-cell *matCellDef="let element" class="w-5"
-                  [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.draws}} </mat-cell>
+                  [ngClass]="{'my-club': element.club.nameEn | isMyClub | async}"> {{element.draws}} </mat-cell>
       </div>
 
       <!-- loses Column -->
       <div matColumnDef="loses">
         <mat-header-cell *matHeaderCellDef class="w-5" i18n="table header" matTooltip="Поражения" i18n-matTooltip matTooltipPosition="before"> П</mat-header-cell>
         <mat-cell *matCellDef="let element" class="w-5"
-                  [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.loses}} </mat-cell>
+                  [ngClass]="{'my-club': element.club.nameEn | isMyClub | async}"> {{element.loses}} </mat-cell>
       </div>
 
       <!-- gf Column -->
       <div matColumnDef="gf">
         <mat-header-cell *matHeaderCellDef class="w-5" i18n="table header" matTooltip="Забитые мячи" i18n-matTooltip matTooltipPosition="before"> ЗМ</mat-header-cell>
         <mat-cell *matCellDef="let element" class="w-5"
-                  [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.gf}} </mat-cell>
+                  [ngClass]="{'my-club': element.club.nameEn | isMyClub | async}"> {{element.gf}} </mat-cell>
       </div>
 
       <!-- ga Column -->
       <div matColumnDef="ga">
         <mat-header-cell *matHeaderCellDef class="w-5" i18n="table header" matTooltip="Пропущенные мячи" i18n-matTooltip matTooltipPosition="before"> ПМ</mat-header-cell>
         <mat-cell *matCellDef="let element" class="w-5"
-                  [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.ga}} </mat-cell>
+                  [ngClass]="{'my-club': element.club.nameEn | isMyClub | async}"> {{element.ga}} </mat-cell>
       </div>
 
       <!-- gd Column -->
       <div matColumnDef="gd">
         <mat-header-cell *matHeaderCellDef class="w-5" i18n="table header" matTooltip="Разница мячей" i18n-matTooltip matTooltipPosition="before"> РМ</mat-header-cell>
         <mat-cell *matCellDef="let element" class="w-5"
-                  [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.gd}} </mat-cell>
+                  [ngClass]="{'my-club': element.club.nameEn | isMyClub | async}"> {{element.gd}} </mat-cell>
       </div>
 
       <!-- points Column -->
       <div matColumnDef="points">
         <mat-header-cell *matHeaderCellDef class="w-5" i18n="table header" matTooltip="Очки" i18n-matTooltip matTooltipPosition="before"> О</mat-header-cell>
         <mat-cell *matCellDef="let element" class="w-5"
-                  [ngClass]="{'my-club': isMyClubsTableRecord(element, curClub$ | async)}"> {{element.points}} </mat-cell>
+                  [ngClass]="{'my-club': element.club.nameEn | isMyClub | async}"> {{element.points}} </mat-cell>
       </div>
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

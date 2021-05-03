@@ -5,14 +5,11 @@ import {Observable, of} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {
   AppState,
-  selectClubByClubsNameEn,
   selectCurrentClub,
   selectMatchStatsByMatchId
 } from '../../../store/selectors/current-game.selectors';
-import {map, switchMap, take} from 'rxjs/operators';
 import {MatchStats1} from '../../../interfaces/match-stats1';
-import {resultSplitter} from '../../../utils/sort-roster';
-import {ConfigService} from "../../../services/config.service";
+import {ConfigService} from '../../../services/config.service';
 
 @Component({
   selector: 'app-schedule-list-item',
@@ -38,7 +35,7 @@ export class ScheduleListItemComponent implements OnInit {
     }
   }
 
-  getMatchOpponent(match: Match): { club: Observable<Club>, field: Observable<'H' | 'A'> } {
+  /*getMatchOpponent(match: Match): { club: Observable<Club>, field: Observable<'H' | 'A'> } {
     if (!match) {
       return null;
     }
@@ -56,9 +53,9 @@ export class ScheduleListItemComponent implements OnInit {
       })),
       field: this.currentClub$.pipe(map(curClub => match.homeNameEn === curClub.nameEn ? 'H' : 'A'))
     };
-  }
+  }*/
 
-  getMatchResultClass(match: Match, stats: MatchStats1): Observable<{[className: string]: boolean}> {
+  /*getMatchResultClass(match: Match, stats: MatchStats1): Observable<{[className: string]: boolean}> {
     return this.currentClub$.pipe(map(curClub => {
       const isHomeMatch = match.homeNameEn === curClub.nameEn;
       const resClass = {};
@@ -75,9 +72,9 @@ export class ScheduleListItemComponent implements OnInit {
       resClass['match-lost'] = !resClass['match-won'] && !resClass['match-draw'];
       return resClass;
     }));
-  }
+  }*/
 
-  getAdjustedResult(field: 'H' | 'A', matchStats: MatchStats1): string {
+  /*getAdjustedResult(field: 'H' | 'A', matchStats: MatchStats1): string {
     if (!matchStats?.result) {
       return '';
     } else {
@@ -87,6 +84,6 @@ export class ScheduleListItemComponent implements OnInit {
       }
       return matchStats?.result;
     }
-  }
+  }*/
 
 }

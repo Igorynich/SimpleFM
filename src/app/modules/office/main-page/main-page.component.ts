@@ -4,20 +4,17 @@ import {ActivatedRoute, Event, NavigationEnd, NavigationStart, Router} from '@an
 import {ROUTES} from '../../../constants/routes';
 import {CurrentGameService} from '../../../services/current-game.service';
 import {MatDialog} from '@angular/material/dialog';
-import {InfoDialogComponent} from '../../../shared/info-dialog/info-dialog.component';
 import {Store} from '@ngrx/store';
-import {CurrentGameState} from '../../../store/reducers/current-game.reducer';
-import {getBaseData, getClub, gotPlayers, loading} from '../../../store/actions/current-game.actions';
+import {getBaseData, gotPlayers, loading} from '../../../store/actions/current-game.actions';
 import {
   AppState,
-  curGameLoading,
   selectCurrentClub, selectCurrentPlayers,
   selectCurrentSeason,
   selectCurrentWeek
 } from '../../../store/selectors/current-game.selectors';
-import {combineLatest, Observable, of, Subscription} from 'rxjs';
+import {combineLatest, Subscription} from 'rxjs';
 import {Club} from '../../../interfaces/club';
-import {switchMap, take} from 'rxjs/operators';
+import {take} from 'rxjs/operators';
 import {CleanSubscriptions} from '../../../utils/clean-subscriptions';
 import {ConfigService} from '../../../services/config.service';
 import {StorageService} from '../../../services/storage.service';
@@ -34,33 +31,39 @@ export class MainPageComponent implements OnInit, OnDestroy {
     {
       nameEn: 'Roster',
       nameRu: 'Состав',
+      tooltip: $localize `Ваши игроки`,
       route: ROUTES.ROSTER
     },
     {
       nameEn: 'Schedule',
       nameRu: 'Расписание',
+      tooltip: $localize `Расписание матчей сезона`,
       route: ROUTES.SCHEDULE
     },
     {
       nameEn: 'Tables',
       nameRu: 'Таблицы',
+      tooltip: $localize `Турнирные таблицы`,
       route: ROUTES.TABLES
     },
     {
       nameEn: 'Finance',
       nameRu: 'Финансы',
+      tooltip: $localize `Информация о доходах и расходах текущего сезона`,
       route: ROUTES.FINANCE
     },
     {
       nameEn: 'Stadium',
       nameRu: 'Стадион',
+      tooltip: $localize `Информация о стадионе`,
       route: ROUTES.STADIUM
     },
     {
       nameEn: 'Transfer Market',
       nameRu: 'Трансфер Маркет',
+      tooltip: $localize `Покупка и продажа игроков`,
       route: ROUTES.TRANSFER_MARKET
-    }, {}, {}
+    },
   ];
   currentClub: Club;
   loading = false;

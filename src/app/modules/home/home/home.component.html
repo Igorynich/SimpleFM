@@ -10,7 +10,7 @@
   <div class="col-8">
     <mat-card class="enter-name-card">
       <div class="row justify-content-center">
-        <div class="col-12">
+        <div class="col-12 mt-4">
           <h2 class="enter-name-header text-center" i18n>
             Добро пожаловать в SimpleFM. Пожалуйста, введите свое имя, чтобы начать игру:
           </h2>
@@ -18,39 +18,61 @@
       </div>
 
       <div class="row justify-content-center">
-        <div class="col-5">
-          <mat-form-field i18n-hintLabel hintLabel="Максимум 20 символов" class="enter-name-ff w-100 mt-5">
-            <input matInput #input maxlength="20" i18n-placeholder placeholder="Введите имя" autocomplete="off" [formControl]="userName"
-                   (keyup.enter)="submitName()" autofocus>
-            <mat-hint align="end">{{input.value?.length || 0}}/20</mat-hint>
-          </mat-form-field>
+        <div class="col">
+          <div class="row mt-5">
+            <div class="col-3 justify-self-start">
+              <img src="../../../../assets/icons/sfm_192.png" alt="" class="">
+            </div>
+            <div class="col-6 mt-3 ml-4">
+              <mat-form-field i18n-hintLabel hintLabel="Максимум 20 символов" class="enter-name-ff w-100 mt-5">
+                <input matInput #input maxlength="20" i18n-placeholder placeholder="Введите имя" autocomplete="off" [formControl]="userName"
+                       (keyup.enter)="submitName()" autofocus>
+                <mat-hint align="end">{{input.value?.length || 0}}/20</mat-hint>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row mt-5 ml-4">
+            <div class="col-3">
+
+            </div>
+            <div class="col-4 mx-auto">
+              <button class="w-100" (click)="submitName()" [disabled]="userName.invalid" i18n mat-flat-button
+                      matTooltip="Начать игру" i18n-matTooltip color="primary">
+                Начать игру!
+              </button>
+            </div>
+            <div class="col-3 justify-self-start">
+              <ngx-auth-firebaseui-providers [providers]="authProviders" (onSuccess)="login1($event)"
+                                             matTooltip="Войти с Google" i18n-matTooltip></ngx-auth-firebaseui-providers>
+              <!--<span class="hover" (click)="login()" i18n>Войти с учеткой Google</span>-->
+            </div>
+          </div>
+
         </div>
+
       </div>
 
-      <div class="row justify-content-center mt-5">
+
+
+      <!--<div class="row justify-content-end mt-5">
         <div class="col-4">
-          <button class="w-100" (click)="submitName()" [disabled]="userName.invalid" i18n mat-flat-button>
-            Начать игру!
-          </button>
+          <ngx-auth-firebaseui-providers [providers]="authProviders" (onSuccess)="login1($event)"
+                                         matTooltip="Войти с Google" i18n-matTooltip></ngx-auth-firebaseui-providers>
+          &lt;!&ndash;<span class="hover" (click)="login()" i18n>Войти с учеткой Google</span>&ndash;&gt;
         </div>
-      </div>
+      </div>-->
 
-      <div class="row justify-content-end mt-5">
-        <div class="col-4">
-          <span class="hover" (click)="login()" i18n>Войти с учеткой Google</span>
-        </div>
-      </div>
-
-      <div class="row justify-content-center" *ngIf="!!savedGameData">
+      <div class="row justify-content-center mt-4" *ngIf="!!savedGameData">
         <div class="col-6">
           <h5 class="text-center" i18n>Или продолжить прошлую игру?</h5>
-          <div class="row">
+          <div class="row mt-3">
             <div class="col-11">
-              <button mat-flat-button class="w-100 text-center" (click)="loadSavedGame()" i18n>
+              <button mat-flat-button class="w-100 text-center" (click)="loadSavedGame()" i18n
+                      matTooltip="Загрузить сохранение" i18n-matTooltip>
                 {{savedGameData.userName}}({{savedGameData.club[config.name]}}) - сезон {{savedGameData.season + 1}}, неделя {{savedGameData.week + 1}}
               </button>
             </div>
-            <div class="col-1" (click)="deleteSavedGame()">
+            <div class="col-1" (click)="deleteSavedGame()" matTooltip="Удалить сохранение" i18n-matTooltip>
               <button mat-mini-fab><mat-icon>delete</mat-icon></button>
             </div>
           </div>

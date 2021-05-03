@@ -20,7 +20,7 @@
           <app-schedule-tours-list [schedule]="schedule$ | async" [selectedWeek]="selectedWeek.num"
                                    (weekSelected)="setWeekTo($event)">
           </app-schedule-tours-list>
-          <app-schedule-tour-matches-list [tour]="selectedWeek.num + 1" [week]="leagueTourToWeek(selectedWeek.num) + 1"
+          <app-schedule-tour-matches-list [tour]="selectedWeek.num + 1" [week]="selectedWeek.num | leagueTourToWeek | async"
                                           [schedule]="selectedWeek.schedule">
           </app-schedule-tour-matches-list>
         </mat-tab>

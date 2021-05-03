@@ -3,3 +3,7 @@
   padding-left: .25rem;
   padding-right: .25rem;
 }
+
+.user-info {
+  @apply border-2 border-green-400 border-solid rounded-lg;
+}

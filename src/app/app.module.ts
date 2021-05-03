@@ -32,7 +32,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     MatProgressSpinnerModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     // MatPasswordStrengthModule,
-    // NgxAuthFirebaseUIModule.forRoot(environment.firebaseConfig)  // auth ui module
+    NgxAuthFirebaseUIModule.forRoot(environment.firebaseConfig, () => undefined, {toastMessageOnAuthSuccess: false})  // auth ui module
   ],
   providers: [],
   bootstrap: [AppComponent]

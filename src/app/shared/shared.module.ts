@@ -19,6 +19,15 @@ import {MatIconModule} from '@angular/material/icon';
 import { ReportDialogComponent } from './report-dialog/report-dialog.component';
 import { TooltipsComponent } from './tooltips/tooltips.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {AppComponent} from '../app.component';
+import {IsMyClubPipe} from '../pipes/is-my-club.pipe';
+import {Match1ToMatchPipe} from '../pipes/match1-to-match.pipe';
+import {KeysPipe} from '../pipes/keys.pipe';
+import {MatchOpponentPipe} from '../pipes/match-opponent.pipe';
+import {MatchResultClassPipe} from '../pipes/match-result-class.pipe';
+import {AdjustedMatchResultPipe} from '../pipes/adjusted-match-result.pipe';
+import {LeagueTourToWeekPipe} from '../pipes/league-tour-to-week.pipe';
+import {CupRoundToWeekPipe} from '../pipes/cup-round-to-week.pipe';
 
 
 
@@ -33,7 +42,15 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     PlayersListDialogComponent,
     FeedbackDialogComponent,
     ReportDialogComponent,
-    TooltipsComponent
+    TooltipsComponent,
+    IsMyClubPipe,
+    Match1ToMatchPipe,
+    KeysPipe,
+    MatchOpponentPipe,
+    MatchResultClassPipe,
+    AdjustedMatchResultPipe,
+    LeagueTourToWeekPipe,
+    CupRoundToWeekPipe
   ],
   imports: [
     CommonModule,
@@ -51,7 +68,15 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     NavigateToOfficeComponent,
     MatchTooltipDirective,
     MatchResultComponent,
-    TooltipsComponent
+    TooltipsComponent,
+    IsMyClubPipe,
+    Match1ToMatchPipe,
+    KeysPipe,
+    MatchOpponentPipe,
+    MatchResultClassPipe,
+    AdjustedMatchResultPipe,
+    LeagueTourToWeekPipe,
+    CupRoundToWeekPipe
   ],
   entryComponents: [
   ]

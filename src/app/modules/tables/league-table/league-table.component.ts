@@ -27,9 +27,9 @@ export class LeagueTableComponent implements OnInit {
     this.curClub$ = this.store.select(selectCurrentClub);
   }
 
-  isMyClubsTableRecord(element: LeagueTable, curClub: Club): boolean {
+  /*isMyClubsTableRecord(element: LeagueTable, curClub: Club): boolean {
     return element.club.nameEn === curClub.nameEn;
-  }
+  }*/
 
   showClubsRoster(clubName: string) {
     const dialogRef = this.dialog.open(PlayersListDialogComponent, {

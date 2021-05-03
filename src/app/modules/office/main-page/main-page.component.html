@@ -17,8 +17,8 @@
         <div class="col-12" *ngIf="router.url === '/' + ROUTES.OFFICE">
           <mat-card class="office-card--bot-panel h-100">
             <div class="row h-100">
-              <div class="col-3 h-50 py-2" *ngFor="let card of cards; let i = index">
-                <mat-card class="h-100 hover" (click)="navigateToCard(card)">
+              <div class="col-4 h-50 py-2" *ngFor="let card of cards; let i = index">
+                <mat-card class="h-100 hover" (click)="navigateToCard(card)" [matTooltip]="card.tooltip" matTooltipPosition="above">
                   {{card[config.name] || ('Card' + i)}}
                 </mat-card>
               </div>

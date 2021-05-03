@@ -1,17 +1,22 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {
-  AppState, getCupRoundsNum, getCurrentCountryLeagues, getLeaguePlayersStats,
+  AppState,
+  getCupRoundsNum,
+  getCurrentCountryLeagues,
+  getLeaguePlayersStats,
   selectCupScheduleByLeaguesNameEn,
-  selectCurrentClub, selectCurrentWeek,
-  selectLeagueScheduleByLeaguesNameEn, selectLeagueTableByLeaguesNameEn
+  selectCurrentClub,
+  selectCurrentWeek,
+  selectLeagueScheduleByLeaguesNameEn,
+  selectLeagueTableByLeaguesNameEn
 } from '../../../store/selectors/current-game.selectors';
 import {distinctUntilChanged, map, startWith, switchMap, take, tap} from 'rxjs/operators';
 import {combineLatest, Observable, Subscription} from 'rxjs';
 import {LeagueTable} from '../../../interfaces/league-table';
 import {CleanSubscriptions} from '../../../utils/clean-subscriptions';
 import {Club} from '../../../interfaces/club';
-import {getLeagueWeek, leagueTourToWeek} from '../../../utils/sort-roster';
+import {getLeagueWeek} from '../../../utils/sort-roster';
 import {Match1} from '../../../interfaces/match1';
 import {Player} from '../../../interfaces/player';
 import {FormControl} from '@angular/forms';
@@ -22,7 +27,8 @@ import {ConfigService} from '../../../services/config.service';
 @Component({
   selector: 'app-tables-main-page',
   templateUrl: './tables-main-page.component.html',
-  styleUrls: ['./tables-main-page.component.css']
+  styleUrls: ['./tables-main-page.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TablesMainPageComponent implements OnInit, OnDestroy {
 
@@ -36,7 +42,7 @@ export class TablesMainPageComponent implements OnInit, OnDestroy {
   };
   leagueOrCupTab = 0;
   table$: Observable<LeagueTable[]>;
-  leaguePlayersStats$;
+  leaguePlayersStats$: Observable<Map<Player, { goals?: number, assists?: number, 'g+a'?: number }>>;
   // selectedLeagueTab;
   selectedLeagueName: FormControl;
   allLeagues$: Observable<League[]>;
@@ -106,9 +112,9 @@ export class TablesMainPageComponent implements OnInit, OnDestroy {
     };
   }
 
-  leagueTourToWeek(tour: number): number {
+  /*leagueTourToWeek(tour: number): number {
     let cupRounds;
     this.store.select(getCupRoundsNum).pipe(take(1)).subscribe(value => cupRounds = value);
     return leagueTourToWeek(tour, cupRounds);
-  }
+  }*/
 }

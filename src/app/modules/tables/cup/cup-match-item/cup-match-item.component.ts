@@ -23,6 +23,8 @@ export class CupMatchItemComponent implements OnInit {
   @Input() matchIndex = 0;
 
   curClub$: Observable<Club>;
+  heightInRem = 0;
+  matchHeader = '';
   matchStats$: Observable<MatchStats1>;
 
   readonly BASE_WIDTH_REM = 6;
@@ -33,22 +35,24 @@ export class CupMatchItemComponent implements OnInit {
   ngOnInit(): void {
     this.curClub$ = this.store.select(selectCurrentClub);
     this.matchStats$ = this.store.select(selectMatchStatsByMatchId, {matchId: this.match.id});
+    this.heightInRem = this.BASE_WIDTH_REM * Math.pow(2, this.roundIndex);
+    this.matchHeader = this.getMatchHeader();
   }
 
-  match1ToMatch(match: Match1): Match {
+  /*match1ToMatch(match: Match1): Match {
     return {...match, homeNameEn: match.home.nameEn, awayNameEn: match.away.nameEn};
-  }
+  }*/
 
-  isMyClub$(match: Match1): { home: Observable<boolean>, away: Observable<boolean> } {
+  /*isMyClub$(match: Match1): { home: Observable<boolean>, away: Observable<boolean> } {
     return {
       home: this.curClub$.pipe(map(value => value.nameEn === match.home?.nameEn)),
       away: this.curClub$.pipe(map(value => value.nameEn === match.away?.nameEn))
     };
-  }
+  }*/
 
-  getHeightInRem(): number {
+  /*getHeightInRem(): number {
     return this.BASE_WIDTH_REM * Math.pow(2, this.roundIndex);
-  }
+  }*/
 
   getMatchHeader(): string {
     switch (this.numOfRounds - this.roundIndex) {

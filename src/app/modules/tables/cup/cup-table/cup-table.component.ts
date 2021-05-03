@@ -151,8 +151,8 @@ export class CupTableComponent implements OnInit {
     }, this.cupTreeNode);*/
   }
 
-  cupRoundToWeek(round: number): number {
+  /*cupRoundToWeek(round: number): number {
     return round * CUP_INTERVAL + 1;
-  }
+  }*/
 
 }

@@ -30,14 +30,14 @@ export class ScheduleMatchItemComponent implements OnInit {
     this.matchStats$ = this.store.select(selectMatchStatsByMatchId, {matchId: this.match.id});
   }
 
-  isMyClub$(match: Match1): { home: Observable<boolean>, away: Observable<boolean> } {
+  /*isMyClub$(match: Match1): { home: Observable<boolean>, away: Observable<boolean> } {
     return {
       home: this.curClub$.pipe(map(value => value.nameEn === match.home?.nameEn)),
       away: this.curClub$.pipe(map(value => value.nameEn === match.away?.nameEn))
     };
-  }
+  }*/
 
-  match1ToMatch(match: Match1): Match {
+  /*match1ToMatch(match: Match1): Match {
     return {...match, homeNameEn: match.home.nameEn, awayNameEn: match.away.nameEn};
-  }
+  }*/
 }

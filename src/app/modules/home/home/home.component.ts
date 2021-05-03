@@ -1,4 +1,4 @@
-import {AuthProvider} from 'ngx-auth-firebaseui';
+import {AuthProvider, Theme} from 'ngx-auth-firebaseui';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {UserService} from '../../../services/user.service';
@@ -15,6 +15,9 @@ import {SnackBarService} from '../../../services/snack-bar.service';
 import {ConfigService} from '../../../services/config.service';
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {startLoadingSavedGame} from '../../../store/actions/current-game.actions';
+import {MatDialog} from '@angular/material/dialog';
+import {ConfirmationDialogComponent} from '../../../shared/confirmation-dialog/confirmation-dialog.component';
+import {take} from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -24,7 +27,8 @@ import {startLoadingSavedGame} from '../../../store/actions/current-game.actions
 })
 export class HomeComponent implements OnInit {
 
-  // authProviders = [AuthProvider.Google, AuthProvider.Twitter];
+  authProviders = [AuthProvider.Google];
+  authTheme = Theme.RAISED;
   // googleForm: FormGroup;
   isGoogleLogin = false;
   userName: FormControl;
@@ -34,7 +38,8 @@ export class HomeComponent implements OnInit {
   constructor(private router: Router, private userService: UserService, private fs: FirebaseService, private fb: FormBuilder,
               private storage: StorageService, private store: Store<AppState>,
               private snack: SnackBarService,
-              public config: ConfigService) { }
+              public config: ConfigService,
+              private dialog: MatDialog) { }
 
   ngOnInit() {
     this.userName = new FormControl('', [Validators.required, Validators.maxLength(20)]);
@@ -71,13 +76,19 @@ export class HomeComponent implements OnInit {
         const token = value.credential.accessToken;
         const user: firebase.User = value.user;
         this.userService.userName = user.displayName;
-        this.router.navigate([ROUTES.OFFICE]).catch(reason => {
-          console.error('Navigation fail by ', reason);
-        });
+
       }, error => {
         console.error('GOOGLE LOGIN ERROR', error);
       });
     }
+  }
+
+  login1(ev: firebase.UserInfo) {
+    console.log('google login1', ev);
+    this.userService.userName = ev.displayName;
+    this.router.navigate([ROUTES.OFFICE]).catch(reason => {
+      console.error('Navigation fail by ', reason);
+    });
   }
 
   printUser(event) {
@@ -89,9 +100,15 @@ export class HomeComponent implements OnInit {
   }
 
   deleteSavedGame() {
-    this.storage.clearStorage();
-    this.savedGame = null;
-    this.savedGameData = null;
+    this.dialog.open(ConfirmationDialogComponent, {
+      width: '350px'
+    }).afterClosed().pipe(take(1)).subscribe(value => {
+      if (value) {
+        this.storage.clearStorage();
+        this.savedGame = null;
+        this.savedGameData = null;
+      }
+    });
   }
 
   loadSavedGame() {

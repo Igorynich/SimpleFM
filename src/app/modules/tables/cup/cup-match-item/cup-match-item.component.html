@@ -1,24 +1,24 @@
-<div class="flex flex-auto w-42 text-xs left-border" [ngStyle]="{'height.rem': getHeightInRem()}">
+<div class="flex flex-auto w-42 text-xs left-border" [ngStyle]="{'height.rem': heightInRem}">
     <div class="col flex w-100">
         <div class="row self-center w-100" [ngStyle]="{'height.rem': BASE_WIDTH_REM, 'border': '2px dashed black'}">
             <div class="col-12 text-center underline p-0">
-                {{getMatchHeader()}}
+                {{matchHeader}}
             </div>
             <div class="flex col-12 justify-self-center text-center">
-                <div [ngClass]="{'my-club': (isMyClub$(match).home | async)}" class="self-center w-100">
+                <div [ngClass]="{'my-club': match.home?.nameEn | isMyClub | async}" class="self-center w-100">
                 <ng-container *ngIf="match.home">{{match.home[config.name]}}</ng-container>
                 <ng-container *ngIf="!match.home">---</ng-container>
               </div>
             </div>
             <div class="flex col-12 text-center align-middle">
               <div *ngIf="(matchStats$ | async)?.result" class="self-center w-100"
-                    [appMatchTooltip]="match1ToMatch(match)">{{(matchStats$ | async).result}}</div>
+                    [appMatchTooltip]="match | match1ToMatch">{{(matchStats$ | async).result}}</div>
                 <div *ngIf="!(matchStats$ | async)?.result" i18n class="self-center w-100">
                 против
               </div>
             </div>
             <div class="flex col-12 text-center">
-              <div [ngClass]="{'my-club': (isMyClub$(match).away | async)}" class="self-center w-100">
+              <div [ngClass]="{'my-club': match.away?.nameEn | isMyClub | async}" class="self-center w-100">
                 <ng-container *ngIf="match.away">{{match.away[config.name]}}</ng-container>
                 <ng-container *ngIf="!match.away">---</ng-container>
               </div>

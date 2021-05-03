@@ -2,7 +2,7 @@
   <div class="col">
     <div class="flex flex-row">
       <div class="flex-auto" *ngFor="let round of cupSchedule; let i = index">
-        <p i18n class="w-100 text-center">Неделя {{cupRoundToWeek(i + 1)}}</p>
+        <p i18n class="w-100 text-center">Неделя {{i + 1 | cupRoundToWeek}}</p>
         <div class="flex flex-col">
           <app-cup-match-item [match]="match" [roundIndex]="i" *ngFor="let match of round; let j = index"
                               [numOfRounds]="cupSchedule.length" [matchIndex]="j"></app-cup-match-item>
