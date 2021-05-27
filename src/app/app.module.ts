@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
 
 import { AppComponent } from './app.component';
 import {AngularFireModule} from '@angular/fire';
@@ -15,6 +15,11 @@ import {EffectsModule} from '@ngrx/effects';
 import {CurrentGameEffects} from './store/effects/current-game.effects';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import {FirebaseService} from './services/firebase.service';
+
+/*export function loadConfig(fb: FirebaseService) {
+  return () => fb.getClubs().subscribe(value => console.log('APP_INIT clubs', value));
+}*/
 
 @NgModule({
   declarations: [
@@ -34,7 +39,14 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     // MatPasswordStrengthModule,
     NgxAuthFirebaseUIModule.forRoot(environment.firebaseConfig, () => undefined, {toastMessageOnAuthSuccess: false})  // auth ui module
   ],
-  providers: [],
+  providers: [
+    /*{ provide: APP_INITIALIZER,
+      useFactory: loadConfig,
+      deps: [FirebaseService],
+      multi: true }*/
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+

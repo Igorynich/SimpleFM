@@ -83,7 +83,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
               private storage: StorageService) { }
 
   ngOnInit() {
-    console.log('OFFICE COMPONENTN');
+    console.log('OFFICE COMPONENTNxx');
     this._loadSub = this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationStart) {
         console.log('NAV START');

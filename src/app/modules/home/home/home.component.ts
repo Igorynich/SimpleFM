@@ -9,7 +9,7 @@ import firebase from 'firebase';
 import {StorageService} from '../../../services/storage.service';
 import {Club} from '../../../interfaces/club';
 import {Store} from '@ngrx/store';
-import {AppState} from '../../../store/selectors/current-game.selectors';
+import {AppState, selectCurrentWeek} from '../../../store/selectors/current-game.selectors';
 import {CurrentGameState} from '../../../store/reducers/current-game.reducer';
 import {SnackBarService} from '../../../services/snack-bar.service';
 import {ConfigService} from '../../../services/config.service';

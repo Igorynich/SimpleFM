@@ -70,4 +70,5 @@ export class CupMatchItemComponent implements OnInit {
       }
     }
   }
+
 }
